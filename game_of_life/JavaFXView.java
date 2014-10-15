@@ -105,14 +105,25 @@ public class JavaFXView extends Application {
 
         playButton.setOnAction(e->{
             controller.pause();
+            if(playButton.getText().equals("Stop")){
+                playButton.setText("Play");
+            } else {
+                playButton.setText("Stop");
+            }
         });
 
         advGenButton.setOnAction(e->{
             controller.advGen();
         });
 
+        // cell drawing handler
         c.setOnMouseDragged(e->{
-            controller.setCell((int)e.getX(),(int)e.getY());
+                controller.setCell((int) e.getX(), (int) e.getY());
+        });
+
+        //time speed handler
+        speedBar.valueProperty().addListener(e->{
+            controller.setSleepTime((int)speedBar.getValue());
         });
     }
 

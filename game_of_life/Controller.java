@@ -47,20 +47,28 @@ public class Controller extends Application {
         logic.clear();
         view.setDrawMatrix(logic.getCurrentGrid());
     }
-
+    //pauses/unpauses auto gen progression
     public void pause(){
         setLogicRunning(!logicRunning);
     }
 
+    //advaces the generation by one (mvc)
     public void advGen(){
         logic.genAdvance();
         view.setGeneration(logic.getGenNumber());
         view.setDrawMatrix(logic.getCurrentGrid());
     }
-
+    //sets the cell (mvc) prevents drawing out of borders
     public void setCell(int x, int y){
-        logic.setCell(x,y,1);
-        view.setDrawMatrix(logic.getCurrentGrid());
+        if((x>3 && x <view.getWidth()-3) && (y>3 && y<view.getHeight()-3)) {
+            logic.setCell(x, y, 1);
+            view.setDrawMatrix(logic.getCurrentGrid());
+        }
+    }
+
+    //changes time between generations
+    public void setSleepTime(int time){
+        sleepTime=time;
     }
 
     //Assigns view and logic
@@ -68,7 +76,7 @@ public class Controller extends Application {
         this.view=view;
         this.logic=logic;
 }
-
+    //setter and getter for logicRunning boolean, see pause/unpause
     public boolean isLogicRunning() {
         return logicRunning;
     }
