@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -25,10 +26,6 @@ public class JavaFXView extends Application {
     //controller
     Controller controller;
 
-    //Stage and config to launch app from diff code
-    private Stage primaryStage;
-    Configuration configuration;
-
     //Label to hold current generation number
     Label genLabel;
 
@@ -41,9 +38,6 @@ public class JavaFXView extends Application {
     //matrix of ints to hold data to draw
     int[][] drawMatrix;
 
-    //speed between generations
-    int timeValue;
-
     //Width, Height and scale of canvas
     private static final int width = 200;
     private static final int height = 200;
@@ -53,12 +47,17 @@ public class JavaFXView extends Application {
 
     }
     public void start(Stage primaryStage){
-        //BorderPane as the main Pane of the visualizer and GUI stuff inits
+        //BorderPane as the main Pane of the visualizer and GUI stuff inits, Pane to store canvas (zoom exper.)
         BorderPane mainPane = new BorderPane();
+        Pane drawStore = new Pane();
         genLabel = new Label("");
         c = new Canvas(width,height);
         c.setScaleX(scale);
         c.setScaleY(scale);
+        c.setStyle("-fx-stroke-type: inside");
+        c.setTranslateX(width*scale/2);
+        c.setTranslateY(height*scale/2);
+        drawStore.getChildren().add(c);
 
         /*Buttons:
          *clearButton- Resets the canvas to its original state (all white)
@@ -72,6 +71,7 @@ public class JavaFXView extends Application {
         /* buttonBox holds the buttons at the bottom of the screen in horizontal alignment
          * speedBar changes the time between new generations are drawn to the sreen
          * zoomBar controls the zoom (borderpane prevents from moving canvas around so its centered)
+         * Separate HBoxes to hold the bars together with info labels
          * genLabel shows the current generation obtained from the logic
          */
         HBox buttonBox = new HBox();
@@ -82,7 +82,7 @@ public class JavaFXView extends Application {
         ScrollBar speedBar = new ScrollBar();
         speedBar.setMin(10); //minimum 10ms
         speedBar.setMax(1000); //max 1 second
-        speedBar.setValue(50); //initial value
+        speedBar.setValue(50); //init value
 
         ScrollBar zoomBar = new ScrollBar();
         zoomBar.setMin(1);
@@ -91,14 +91,22 @@ public class JavaFXView extends Application {
         zoomBar.setOrientation(Orientation.VERTICAL);
 
         //placing the gui components into main pane
-        mainPane.setCenter(c);
+        mainPane.setCenter(drawStore);
         mainPane.setBottom(buttonBox);
         mainPane.setTop(speedBar);
         mainPane.setRight(zoomBar);
 
         //Initalizing the Stage and creating a Scene for the main pane
+        primaryStage.setMinWidth(400);
+        primaryStage.setMinHeight(400);
+        primaryStage.setOnCloseRequest(e->{
+            System.exit(0);
+        });
         primaryStage.setScene(new Scene(mainPane,(width*scale)+50,(height*scale)+50)); //the window size with addi
         primaryStage.show();                                                           //tional 50px for gui stuff
+
+        //debug
+        System.out.println(c.getTranslateX()+" "+ c.getTranslateY());
 
         //setting up event handlers
         clearButton.setOnAction(e->controller.clear());
@@ -116,15 +124,47 @@ public class JavaFXView extends Application {
             controller.advGen();
         });
 
-        // cell drawing handler
+        // cell drawing handler && moving the pane around
         c.setOnMouseDragged(e->{
+            if(!e.isControlDown()) {
                 controller.setCell((int) e.getX(), (int) e.getY());
+            } else {
+                c.setTranslateX(e.getSceneX());
+                c.setTranslateY(e.getSceneY());
+            }
         });
 
         //time speed handler
-        speedBar.valueProperty().addListener(e->{
-            controller.setSleepTime((int)speedBar.getValue());
+        speedBar.valueProperty().addListener(e -> {
+            controller.setSleepTime((int) speedBar.getValue());
         });
+
+        //zoom bar hadnler
+
+        zoomBar.valueProperty().addListener(e -> {
+            rescale(zoomBar.getValue());
+        });
+        //translating the canvas (useful when zoomed in)
+        /*mainPane.setOnKeyPressed(e -> {
+            if (e.isControlDown()) {
+                switch (e.getCode()) {
+                    case LEFT: {
+                        c.setTranslateX(c.getTranslateX() - 10);
+                    }
+                    case RIGHT: {
+                        c.setTranslateX(c.getTranslateX() + 10);
+                    }
+                    case UP: {
+                        c.setTranslateY(c.getTranslateY() - 10);
+                    }
+                    case DOWN: {
+                        c.setTranslateY(c.getTranslateY() + 10);
+                    }
+                }
+
+            }
+        });*/
+
     }
 
     public void setDrawMatrix(int[][] matrix){
@@ -158,6 +198,12 @@ public class JavaFXView extends Application {
 
     public void setController(Controller c){
         controller=c;
+    }
+
+    public void rescale(double scale){
+        this.scale=scale;
+        c.setScaleX(scale);
+        c.setScaleY(scale);
     }
 
 }
