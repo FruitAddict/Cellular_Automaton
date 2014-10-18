@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class Controller extends Application {
     //Holds logic and view for the MVC pattern
     private GameOfLifeLogic logic;
-    private JavaFXView view;
+    private View view;
 
     //boolean to stop the auto logic updates
     private boolean logicRunning=true;
@@ -19,26 +19,30 @@ public class Controller extends Application {
     int sleepTime = 50;
 
     public void start(Stage primaryStage){
-        /* Creates a new View and Logic, assigns them to the variables in this controller
-         *class, passes this instance of the controller to the view and logic
+
+        /**
+         * Creates a new View and Logic, assigns them to the variables in this controller
+         * class, passes this instance of the controller to the view and logic
          * and starts the view using its own primarystage (JavaFX apps
          * can only be run on one thread)
          */
-        JavaFXView view = new JavaFXView();
+        View view = new View();
         GameOfLifeLogic logic = new GameOfLifeLogic(view.getWidth(),view.getHeight());
         setThings(view,logic);
         view.setController(this);
+        view.setColorsArray(logic.getColors());
         view.start(primaryStage);
 
         //initial clear call to prepare for running
         clear();
 
-        /* New thread obtaining new data from the logic
-         *and passing it to the view
-         */
-                Handler handler = new Handler();
-                Thread loopThread = new Thread(handler);
-                loopThread.start();
+         /**
+          *  New thread obtaining new data from the logic
+          * and passing it to the view
+          */
+          Handler handler = new Handler();
+          Thread loopThread = new Thread(handler);
+          loopThread.start();
 
     }
 
@@ -71,8 +75,12 @@ public class Controller extends Application {
         sleepTime=time;
     }
 
+    public int getSleepTime(){
+        return sleepTime;
+    }
+
     //Assigns view and logic
-    public void setThings(JavaFXView view, GameOfLifeLogic logic){
+    public void setThings(View view, GameOfLifeLogic logic){
         this.view=view;
         this.logic=logic;
 }

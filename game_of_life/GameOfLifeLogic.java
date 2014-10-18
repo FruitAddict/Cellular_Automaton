@@ -1,5 +1,7 @@
 package MVCCA;
 
+import javafx.scene.paint.Color;
+
 /**
  * Created by FruitAddict on 2014-10-14.
  */
@@ -13,6 +15,9 @@ public class GameOfLifeLogic {
 
     //holds the current generation number
     int genNumber;
+
+    //collor array
+    Color[] colorArray = {Color.WHITE, Color.RED, Color.BLACK};
 
     //constructor taking w and height as arguements. inits the grid and clears it
     public GameOfLifeLogic(int width, int height){
@@ -30,8 +35,9 @@ public class GameOfLifeLogic {
                 currentGrid[i][j] = 0;
             }
         }
-        /*This part of the method fill the borders of array with 3-cell thick
-         *walls. This operation simplifies the process of avoiding NPE's later on.
+        /**
+         * This part of the method fill the borders of array with 3-cell thick
+         * walls. This operation simplifies the process of avoiding NPE's later on.
          */
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -52,8 +58,9 @@ public class GameOfLifeLogic {
     }
 
     private int[][] copyArray(int[][] src){
-        /*Performs a deep copy of 2d array
-         *Regular System.arraycopy and .clone() methods copied only the outermost layer
+        /**
+         * Performs a deep copy of 2d array
+         * Regular System.arraycopy and .clone() methods copied only the outermost layer
          * so this thing was needed, probably not the most efficient way to do this
          */
         int[][] result = new int[width][height];
@@ -66,9 +73,10 @@ public class GameOfLifeLogic {
     }
 
     public void genAdvance(){
-        /* Advances the generation by one by creating a snapshot of the current grid
+        /**
+         * Advances the generation by one by creating a snapshot of the current grid
          * for the resolver to work on- passing x and y coordinates of the cell
-         * , current value of that cell and the snapshot to the resolver method
+         * current value of that cell and the snapshot to the resolver method
          */
         int[][] snapshot = copyArray(currentGrid);
         genNumber++;
@@ -81,8 +89,9 @@ public class GameOfLifeLogic {
     }
 
     private int resolve(int x, int y, int currentValue, int[][] snapshot) {
-        /*Resolver counts the number of neighbours of the given cell
-         *based on the snapshot and returns a correct new value of the cell
+        /**
+         * Resolver counts the number of neighbours of the given cell
+         * based on the snapshot and returns a correct new value of the cell
          * based on rules here: http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
          * If the entry value of the cell is 2, it returns 2 instantly(border)
          */
@@ -146,6 +155,10 @@ public class GameOfLifeLogic {
 
     public int getGenNumber(){
         return genNumber;
+    }
+
+    public Color[] getColors(){
+        return colorArray;
     }
 
 }
