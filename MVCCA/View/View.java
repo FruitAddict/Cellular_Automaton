@@ -1,19 +1,16 @@
-package MVCCA;
+package MVCCA.View;
 
+import MVCCA.Controller.Controller;
 import javafx.application.Application;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import javax.security.auth.login.Configuration;
 
 
 /**
@@ -26,6 +23,8 @@ public class View extends Application {
     Label genLabel;
     Canvas c;
     MenuBar mainBar;
+    MenuItem speedOption;
+    VBox menusPane;
     int[][] drawMatrix;
     public static Color[] colorsArray;
     private static final int width = 200;
@@ -33,10 +32,15 @@ public class View extends Application {
     private static double scale = 4.5;
 
     public void start(Stage primaryStage){
-        //BorderPane as the main Pane of the visualizer and GUI stuff inits, Pane to store canvas
-        BorderPane mainPane = new BorderPane();
+
+        BorderPane canvasPane = new BorderPane(); //canvas
+        BorderPane mainPane = new BorderPane(); //main
+        menusPane = new VBox(); //menu pane
+        mainPane.setCenter(canvasPane);
+        mainPane.setRight(menusPane);
         Pane drawStore = new Pane();
         genLabel = new Label("");
+        genLabel.setStyle("-fx-background-color: turquoise");
         c = new Canvas(width,height);
         c.setScaleX(scale);
         c.setScaleY(scale);
@@ -51,8 +55,11 @@ public class View extends Application {
          * advGenButton - manually advances the generation of the cells by one
          */
         Button clearButton = new Button("Clear");
-        Button playButton = new Button("Stop");
+        clearButton.setStyle("-fx-background-color: paleturquoise");
+        ToggleButton playButton = new ToggleButton("Stop");
+        playButton.setStyle("-fx-background-color: paleturquoise");
         Button advGenButton = new Button("Advance Generation");
+        advGenButton.setStyle("-fx-background-color: paleturquoise");
 
         /**
          * buttonBox holds the buttons at the bottom of the screen in horizontal alignment
@@ -62,24 +69,14 @@ public class View extends Application {
          * genLabel shows the current generation obtained from the logic
          */
         HBox buttonBox = new HBox();
-        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setAlignment(Pos.BOTTOM_LEFT);
         buttonBox.setSpacing(5); //spacing between buttons in this box
         buttonBox.getChildren().addAll(genLabel,clearButton,playButton,advGenButton); //adding buttons to the box
 
-        /* ScrollBar speedBar = new ScrollBar();
-        speedBar.setMin(10); //minimum 10ms
-        speedBar.setMax(1000); //max 1 second
-        speedBar.setValue(50); //init value */
-
-        ScrollBar zoomBar = new ScrollBar();
-        zoomBar.setMin(1);
-        zoomBar.setMax(10);
-        zoomBar.setValue(scale);
-        zoomBar.setOrientation(Orientation.VERTICAL);
 
         //placing the gui components into main pane
-        mainPane.setCenter(drawStore);
-        mainPane.setBottom(buttonBox);
+        canvasPane.setCenter(drawStore);
+        canvasPane.setBottom(buttonBox);
 
         /**
          * Menus and handlers for menu items
@@ -88,9 +85,9 @@ public class View extends Application {
         mainBar = new MenuBar();
         Menu menuView = new Menu("View");
 
-        MenuItem speedOption = new MenuItem("Time Between Generations");
+        speedOption = new MenuItem("Time Between Generations");
         speedOption.setOnAction(e->{
-            createNumberChoiceStage();
+            createGenTimePane();
         });
         menuView.getItems().add(speedOption);
 
@@ -99,7 +96,9 @@ public class View extends Application {
         //Initalizing the Stage and creating a Scene for the main pane
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(400);
-        primaryStage.setOnCloseRequest(e-> System.exit(0));
+        primaryStage.setOnCloseRequest(e -> System.exit(0));
+        primaryStage.setTitle("Cellular Automatons");
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
         Scene primaryScene = new Scene(mainPane,(width*scale)+50,(height*scale)+50);
         ((BorderPane)primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
@@ -135,37 +134,6 @@ public class View extends Application {
                 c.setLayoutY(e.getY());
             }
         });
-
-        //time speed handler
-        /*speedBar.valueProperty().addListener(e -> {
-            controller.setSleepTime((int) speedBar.getValue());
-        });
-
-
-        zoomBar.valueProperty().addListener(e -> {
-            rescale(zoomBar.getValue());
-        });
-        //translating the canvas (useful when zoomed in)
-        mainPane.setOnKeyPressed(e -> {
-            if (e.isControlDown()) {
-                switch (e.getCode()) {
-                    case LEFT: {
-                        c.setTranslateX(c.getTranslateX() - 10);
-                    }
-                    case RIGHT: {
-                        c.setTranslateX(c.getTranslateX() + 10);
-                    }
-                    case UP: {
-                        c.setTranslateY(c.getTranslateY() - 10);
-                    }
-                    case DOWN: {
-                        c.setTranslateY(c.getTranslateY() + 10);
-                    }
-                }
-
-            }
-        });*/
-
     }
 
     public void setDrawMatrix(int[][] matrix){
@@ -212,41 +180,18 @@ public class View extends Application {
         colorsArray = colorArray;
     }
 
-    public void createNumberChoiceStage(){
-        mainBar.setDisable(true);
-        Stage n = new Stage();
-        n.setResizable(false);
-        n.setTitle("Time between generations.");
-        n.setScene(new Scene(new NumberChoice(10,1000)));
-        n.show();
-        n.setOnCloseRequest(e->{
-            mainBar.setDisable(false);
+    public void createGenTimePane(){
+        speedOption.setDisable(true);
+        NumberPane genTimePane = new NumberPane("Time between generations",10,1000,"ms",controller);
+        menusPane.getChildren().add(genTimePane);
+        genTimePane.setOnMouseClicked(e->{
+            if(e.isControlDown()){
+                menusPane.getChildren().remove(genTimePane);
+                speedOption.setDisable(false);
+            }
         });
-    }
+        ;
 
-    private class NumberChoice extends Pane{
-        /**
-         * Widget pane to initially control time between generations
-         * Will be reused later. Made to avoid too much code in lambda (all of this is
-         * too confusing already anyway)
-         */
-        int minValue;
-        int maxValue;
-
-        public NumberChoice(int min, int max){
-            this.minValue=min;
-            this.maxValue=max;
-
-            Button incrementButton = new Button("Increment");
-            Button decrementBUtton = new Button("Decrement");
-            Label currentValue = new Label(Integer.toString(controller.getSleepTime()));
-            currentValue.setPrefWidth(100);
-
-            HBox contentBox = new HBox();
-            contentBox.setAlignment(Pos.CENTER);
-            contentBox.getChildren().addAll(decrementBUtton,currentValue,incrementButton);
-            this.getChildren().add(contentBox);
-        }
     }
 
 }

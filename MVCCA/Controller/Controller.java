@@ -1,5 +1,7 @@
-package MVCCA;
+package MVCCA.Controller;
 
+import MVCCA.Logic.GameOfLifeLogic;
+import MVCCA.View.View;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -16,7 +18,7 @@ public class Controller extends Application {
     private boolean logicRunning=true;
 
     //time for the thread to sleep between genrations, initialy 50 ms
-    int sleepTime = 50;
+    int sleepTime = 25;
 
     public void start(Stage primaryStage){
 

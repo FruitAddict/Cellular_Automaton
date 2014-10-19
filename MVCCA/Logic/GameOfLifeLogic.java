@@ -1,11 +1,11 @@
-package MVCCA;
+package MVCCA.Logic;
 
 import javafx.scene.paint.Color;
 
 /**
  * Created by FruitAddict on 2014-10-14.
  */
-public class GameOfLifeLogic {
+public class GameOfLifeLogic extends Logic {
     //holds the current version of grid, prone to changes
     int[][] currentGrid;
 
