@@ -1,7 +1,16 @@
 package MVCCA.Logic;
 
 /**
- * Created by FruitAddict on 2014-10-19.
+ * Abstract class for automaton logic
  */
 public abstract class Logic {
+    private String logicName;
+
+    public String getName(){
+        return logicName;
+    }
+
+    public void setLogicName(String s){
+        logicName = s;
+    }
 }

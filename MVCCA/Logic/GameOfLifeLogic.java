@@ -7,17 +7,17 @@ import javafx.scene.paint.Color;
  */
 public class GameOfLifeLogic extends Logic {
     //holds the current version of grid, prone to changes
-    int[][] currentGrid;
+    private int[][] currentGrid;
 
     //width and height, assigned on creation
-    private int width;
-    private int height;
+    final private int width;
+    final private int height;
 
     //holds the current generation number
-    int genNumber;
+    private int genNumber;
 
-    //collor array
-    Color[] colorArray = {Color.WHITE, Color.RED, Color.BLACK};
+    //color array
+    final private Color[] colorArray = {Color.WHITE, Color.RED, Color.BLACK};
 
     //constructor taking w and height as arguements. inits the grid and clears it
     public GameOfLifeLogic(int width, int height){
@@ -65,9 +65,7 @@ public class GameOfLifeLogic extends Logic {
          */
         int[][] result = new int[width][height];
         for(int i=0;i<width;i++){
-            for(int j=0;j<height;j++){
-                result[i][j]=src[i][j];
-            }
+            System.arraycopy(src[i], 0, result[i], 0, height);
         }
         return result;
     }

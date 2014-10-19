@@ -17,15 +17,15 @@ public class Controller extends Application {
     //boolean to stop the auto logic updates
     private boolean logicRunning=true;
 
-    //time for the thread to sleep between genrations, initialy 50 ms
-    int sleepTime = 25;
+    //time for the thread to sleep between generations, initially 50 ms
+    private int sleepTime = 25;
 
     public void start(Stage primaryStage){
 
         /**
          * Creates a new View and Logic, assigns them to the variables in this controller
          * class, passes this instance of the controller to the view and logic
-         * and starts the view using its own primarystage (JavaFX apps
+         * and starts the view using its own primaryStage (JavaFX apps
          * can only be run on one thread)
          */
         View view = new View();
@@ -58,7 +58,7 @@ public class Controller extends Application {
         setLogicRunning(!logicRunning);
     }
 
-    //advaces the generation by one (mvc)
+    //advances the generation by one (mvc)
     public void advGen(){
         logic.genAdvance();
         view.setGeneration(logic.getGenNumber());
@@ -112,6 +112,7 @@ public class Controller extends Application {
                 try {
                     Thread.sleep(sleepTime);
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         }

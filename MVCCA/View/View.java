@@ -19,34 +19,37 @@ import javafx.stage.Stage;
 public class View extends Application {
 
 
-    Controller controller;
-    Label genLabel;
-    Canvas c;
-    MenuBar mainBar;
-    MenuItem speedOption;
-    VBox menusPane;
-    int[][] drawMatrix;
-    public static Color[] colorsArray;
-    private static final int width = 200;
-    private static final int height = 200;
-    private static double scale = 4.5;
+    private Controller controller;
+    private Label genLabel;
+    private Canvas canvas;
+    private MenuItem speedOption;
+    private MenuItem cameraOption;
+    private VBox menusPane;
+    private int[][] drawMatrix;
+    private Color[] colorsArray;
+    private final int width = 200;
+    private final int height = 200;
+
+    public static double scale = 4.5;
 
     public void start(Stage primaryStage){
 
         BorderPane canvasPane = new BorderPane(); //canvas
         BorderPane mainPane = new BorderPane(); //main
         menusPane = new VBox(); //menu pane
+        menusPane.setSpacing(25);
+        menusPane.setMaxWidth(width*scale/5);
         mainPane.setCenter(canvasPane);
         mainPane.setRight(menusPane);
         Pane drawStore = new Pane();
         genLabel = new Label("");
         genLabel.setStyle("-fx-background-color: turquoise");
-        c = new Canvas(width,height);
-        c.setScaleX(scale);
-        c.setScaleY(scale);
-        c.setTranslateX(width*scale/2);
-        c.setTranslateY(height*scale/2);
-        drawStore.getChildren().add(c);
+        canvas = new Canvas(width,height);
+        canvas.setScaleX(scale);
+        canvas.setScaleY(scale);
+        canvas.setTranslateX(380);
+        canvas.setTranslateY(360);
+        drawStore.getChildren().add(canvas);
 
         /**
          * Buttons:
@@ -71,7 +74,7 @@ public class View extends Application {
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.BOTTOM_LEFT);
         buttonBox.setSpacing(5); //spacing between buttons in this box
-        buttonBox.getChildren().addAll(genLabel,clearButton,playButton,advGenButton); //adding buttons to the box
+        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton); //adding buttons to the box
 
 
         //placing the gui components into main pane
@@ -82,33 +85,36 @@ public class View extends Application {
          * Menus and handlers for menu items
          * 1-thread allowing in progress
          */
-        mainBar = new MenuBar();
+        MenuBar mainBar = new MenuBar();
         Menu menuView = new Menu("View");
+        Menu menuLogic = new Menu("Logic");
+
 
         speedOption = new MenuItem("Time Between Generations");
-        speedOption.setOnAction(e->{
-            createGenTimePane();
-        });
-        menuView.getItems().add(speedOption);
+        speedOption.setOnAction(e-> createGenTimePane());
+        cameraOption = new MenuItem("Camera Position");
+        cameraOption.setOnAction(e-> createCamOptionPane());
 
-        mainBar.getMenus().add(menuView);
+        menuView.getItems().addAll(speedOption, cameraOption);
+
+        mainBar.getMenus().addAll(menuView,menuLogic);
 
         //Initalizing the Stage and creating a Scene for the main pane
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(400);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Cellular Automatons");
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("\\resources\\icon.png")));
         Scene primaryScene = new Scene(mainPane,(width*scale)+50,(height*scale)+50);
         ((BorderPane)primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
         primaryStage.show();
 
         //debug
-        System.out.println(c.getTranslateX()+" "+ c.getTranslateY());
+        System.out.println(canvas.getTranslateX()+" "+ canvas.getTranslateY());
 
         //setting up event handlers
-        clearButton.setOnAction(e->controller.clear());
+        clearButton.setOnAction(e -> controller.clear());
 
         playButton.setOnAction(e->{
             controller.pause();
@@ -119,19 +125,15 @@ public class View extends Application {
             }
         });
 
-        advGenButton.setOnAction(e->{
-            controller.advGen();
-        });
+        advGenButton.setOnAction(e-> controller.advGen());
 
         // cell drawing handler && moving the pane around
-        c.setOnMouseDragged(e->{
-            controller.setCell((int) e.getX(), (int) e.getY());
-        });
+        canvas.setOnMouseDragged(e -> controller.setCell((int) e.getX(), (int) e.getY()));
 
         drawStore.setOnMouseDragged(e -> {
             if (e.isControlDown()) {
-                c.setLayoutX(e.getX());
-                c.setLayoutY(e.getY());
+                canvas.setLayoutX(e.getX());
+                canvas.setLayoutY(e.getY());
             }
         });
     }
@@ -146,7 +148,7 @@ public class View extends Application {
          * This method obtains the pixelwriter for the canvas and draws pixels to the screen
          * with respect to the data stored in drawMatrix
          */
-        GraphicsContext gc = c.getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 gc.getPixelWriter().setColor(i, j, colorsArray[drawMatrix[i][j]]);
@@ -170,19 +172,40 @@ public class View extends Application {
         controller=c;
     }
 
+    public double getScale() {
+        return scale;
+    }
+
+    public void setScale(double scale) {
+        View.scale = scale;
+    }
+
     public void rescale(double scale){
-        this.scale=scale;
-        c.setScaleX(scale);
-        c.setScaleY(scale);
+        setScale(scale);
+        canvas.setScaleX(scale);
+        canvas.setScaleY(scale);
     }
 
     public void setColorsArray(Color[] colorArray){
         colorsArray = colorArray;
     }
 
-    public void createGenTimePane(){
+    public void translateCanvas(double x, double y){
+        canvas.setTranslateX(x);
+        canvas.setTranslateY(y);
+    }
+
+    public Canvas getCanvas(){
+        return canvas;
+    }
+
+    public Controller getController(){
+        return controller;
+    }
+
+    private void createGenTimePane(){
         speedOption.setDisable(true);
-        NumberPane genTimePane = new NumberPane("Time between generations",10,1000,"ms",controller);
+        NumberPane genTimePane = new NumberPane(10,1000,this);
         menusPane.getChildren().add(genTimePane);
         genTimePane.setOnMouseClicked(e->{
             if(e.isControlDown()){
@@ -190,8 +213,20 @@ public class View extends Application {
                 speedOption.setDisable(false);
             }
         });
-        ;
 
+
+    }
+
+    private void createCamOptionPane(){
+        cameraOption.setDisable(true);
+        CameraPane cameraPane = new CameraPane(this);
+        menusPane.getChildren().add(cameraPane);
+        cameraPane.setOnMouseClicked(e->{
+            if(e.isControlDown()){
+                menusPane.getChildren().remove(cameraPane);
+                cameraOption.setDisable(false);
+            }
+        });
     }
 
 }
