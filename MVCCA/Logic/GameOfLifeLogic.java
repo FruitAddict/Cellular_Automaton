@@ -1,9 +1,13 @@
 package MVCCA.Logic;
 
+import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
 
 /**
- * Created by FruitAddict on 2014-10-14.
+ * Logic class for Conway's game of life. Extends abstract Logic class (for use with controller)
+ * contains rules for advancing to the new generation as well as making chosen cells alive
+ * stores its colors array for use with some viewer (breaks mvc but just a little: D)
  */
 public class GameOfLifeLogic extends Logic {
     //holds the current version of grid, prone to changes
@@ -13,11 +17,8 @@ public class GameOfLifeLogic extends Logic {
     final private int width;
     final private int height;
 
-    //holds the current generation number
-    private int genNumber;
-
     //color array
-    final private Color[] colorArray = {Color.WHITE, Color.RED, Color.BLACK};
+    final private Color[] colorArray = {Color.BLACK, Color.RED, Color.PURPLE};
 
     //constructor taking w and height as arguements. inits the grid and clears it
     public GameOfLifeLogic(int width, int height){
@@ -25,9 +26,10 @@ public class GameOfLifeLogic extends Logic {
         this.height=height;
         currentGrid = new int[width][height];
         clear();
+        setLogicName("Game of Life");
 
     }
-
+    @Override
     public void clear() {
         //Initially sets values of the whole array to 0 (dead cells)
         for (int i = 0; i < width; i++) {
@@ -52,31 +54,19 @@ public class GameOfLifeLogic extends Logic {
         }
 
     }
-
+    @Override
     public int[][] getCurrentGrid(){
         return currentGrid;
     }
 
-    private int[][] copyArray(int[][] src){
-        /**
-         * Performs a deep copy of 2d array
-         * Regular System.arraycopy and .clone() methods copied only the outermost layer
-         * so this thing was needed, probably not the most efficient way to do this
-         */
-        int[][] result = new int[width][height];
-        for(int i=0;i<width;i++){
-            System.arraycopy(src[i], 0, result[i], 0, height);
-        }
-        return result;
-    }
-
+    @Override
     public void genAdvance(){
         /**
          * Advances the generation by one by creating a snapshot of the current grid
          * for the resolver to work on- passing x and y coordinates of the cell
          * current value of that cell and the snapshot to the resolver method
          */
-        int[][] snapshot = copyArray(currentGrid);
+        int[][] snapshot = Utilities.copy2DArray(currentGrid, width, height);
         genNumber++;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -145,10 +135,12 @@ public class GameOfLifeLogic extends Logic {
             return 2;
         }
     }
-
+    @Override
     public void setCell(int x, int y, int value){
         //changes the value of a single cell in the current grid
-        currentGrid[x][y] = value;
+        if((x>3 && x <width-3) && (y>3 && y<height-3)) {
+            currentGrid[x][y] = value;
+        }
     }
 
     public int getGenNumber(){

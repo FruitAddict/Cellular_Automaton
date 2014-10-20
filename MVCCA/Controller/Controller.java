@@ -1,6 +1,9 @@
 package MVCCA.Controller;
 
 import MVCCA.Logic.GameOfLifeLogic;
+import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Logic.LangtonsAntLogic;
+import MVCCA.Logic.Utilities.LogicStorage;
 import MVCCA.View.View;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -11,7 +14,7 @@ import javafx.stage.Stage;
  */
 public class Controller extends Application {
     //Holds logic and view for the MVC pattern
-    private GameOfLifeLogic logic;
+    private Logic logic;
     private View view;
 
     //boolean to stop the auto logic updates
@@ -29,7 +32,7 @@ public class Controller extends Application {
          * can only be run on one thread)
          */
         View view = new View();
-        GameOfLifeLogic logic = new GameOfLifeLogic(view.getWidth(),view.getHeight());
+        Logic logic = LogicStorage.getGameOfLifeLogic(view.getWidth(), view.getHeight());
         setThings(view,logic);
         view.setController(this);
         view.setColorsArray(logic.getColors());
@@ -66,10 +69,8 @@ public class Controller extends Application {
     }
     //sets the cell (mvc) prevents drawing out of borders
     public void setCell(int x, int y){
-        if((x>3 && x <view.getWidth()-3) && (y>3 && y<view.getHeight()-3)) {
             logic.setCell(x, y, 1);
             view.setDrawMatrix(logic.getCurrentGrid());
-        }
     }
 
     //changes time between generations
@@ -82,7 +83,7 @@ public class Controller extends Application {
     }
 
     //Assigns view and logic
-    public void setThings(View view, GameOfLifeLogic logic){
+    public void setThings(View view, Logic logic){
         this.view=view;
         this.logic=logic;
 }
@@ -93,6 +94,18 @@ public class Controller extends Application {
 
     public void setLogicRunning(boolean logicRunning) {
         this.logicRunning = logicRunning;
+    }
+
+    public String getLogicName(){
+        return logic.getName();
+    }
+
+    public void changeLogic(Logic logic){
+        pause();
+        this.logic = logic;
+        view.changeStageName(getLogicName());
+        view.setColorsArray(logic.getColors());
+        pause();
     }
 
 

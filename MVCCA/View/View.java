@@ -1,6 +1,7 @@
 package MVCCA.View;
 
 import MVCCA.Controller.Controller;
+import MVCCA.Logic.Utilities.LogicStorage;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,12 +19,14 @@ import javafx.stage.Stage;
  */
 public class View extends Application {
 
-
+    private Stage primaryStage;
     private Controller controller;
     private Label genLabel;
     private Canvas canvas;
     private MenuItem speedOption;
     private MenuItem cameraOption;
+    private MenuItem lifeLogic;
+    private MenuItem antLogic;
     private VBox menusPane;
     private int[][] drawMatrix;
     private Color[] colorsArray;
@@ -32,19 +35,20 @@ public class View extends Application {
 
     public static double scale = 4.5;
 
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
 
+        this.primaryStage = primaryStage;
         BorderPane canvasPane = new BorderPane(); //canvas
         BorderPane mainPane = new BorderPane(); //main
         menusPane = new VBox(); //menu pane
         menusPane.setSpacing(25);
-        menusPane.setMaxWidth(width*scale/5);
+        menusPane.setMaxWidth(width * scale / 5);
         mainPane.setCenter(canvasPane);
         mainPane.setRight(menusPane);
         Pane drawStore = new Pane();
         genLabel = new Label("");
         genLabel.setStyle("-fx-background-color: turquoise");
-        canvas = new Canvas(width,height);
+        canvas = new Canvas(width, height);
         canvas.setScaleX(scale);
         canvas.setScaleY(scale);
         canvas.setTranslateX(380);
@@ -91,52 +95,64 @@ public class View extends Application {
 
 
         speedOption = new MenuItem("Time Between Generations");
-        speedOption.setOnAction(e-> createGenTimePane());
+        speedOption.setOnAction(e -> createGenTimePane());
         cameraOption = new MenuItem("Camera Position");
-        cameraOption.setOnAction(e-> createCamOptionPane());
+        cameraOption.setOnAction(e -> createCamOptionPane());
+
+        lifeLogic = new MenuItem("Game of Life logic");
+        lifeLogic.setOnAction(e-> controller.changeLogic(LogicStorage.getGameOfLifeLogic(width,height)));
+        antLogic = new MenuItem("Langton's Ant logic");
+        antLogic.setOnAction(e-> controller.changeLogic(LogicStorage.getLangtonsAntLogic(width,height)));
 
         menuView.getItems().addAll(speedOption, cameraOption);
+        menuLogic.getItems().addAll(lifeLogic,antLogic);
 
-        mainBar.getMenus().addAll(menuView,menuLogic);
+        mainBar.getMenus().addAll(menuView, menuLogic);
 
         //Initalizing the Stage and creating a Scene for the main pane
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(400);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
-        primaryStage.setTitle("Cellular Automatons");
+        primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("\\resources\\icon.png")));
-        Scene primaryScene = new Scene(mainPane,(width*scale)+50,(height*scale)+50);
-        ((BorderPane)primaryScene.getRoot()).setTop(mainBar);
+        Scene primaryScene = new Scene(mainPane, (width * scale) + 50, (height * scale) + 50);
+        ((BorderPane) primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
         primaryStage.show();
 
         //debug
-        System.out.println(canvas.getTranslateX()+" "+ canvas.getTranslateY());
+        System.out.println(canvas.getTranslateX() + " " + canvas.getTranslateY());
 
         //setting up event handlers
         clearButton.setOnAction(e -> controller.clear());
 
-        playButton.setOnAction(e->{
+        playButton.setOnAction(e -> {
             controller.pause();
-            if(playButton.getText().equals("Stop")){
+            if (playButton.getText().equals("Stop")) {
                 playButton.setText("Play");
             } else {
                 playButton.setText("Stop");
             }
         });
 
-        advGenButton.setOnAction(e-> controller.advGen());
+        advGenButton.setOnAction(e -> controller.advGen());
 
         // cell drawing handler && moving the pane around
-        canvas.setOnMouseDragged(e -> controller.setCell((int) e.getX(), (int) e.getY()));
-
-        drawStore.setOnMouseDragged(e -> {
+        canvas.setOnMouseDragged(e -> {
             if (e.isControlDown()) {
-                canvas.setLayoutX(e.getX());
-                canvas.setLayoutY(e.getY());
+                canvas.setTranslateX(e.getX());
+                canvas.setTranslateY(e.getY());
+            } else {
+                controller.setCell((int) e.getX(), (int) e.getY());
+                redraw();
             }
         });
+        canvas.setOnMousePressed(e->{
+            controller.setCell((int)e.getX(), (int)e.getY());
+        });
     }
+
+
 
     public void setDrawMatrix(int[][] matrix){
         drawMatrix=matrix;
@@ -172,6 +188,7 @@ public class View extends Application {
         controller=c;
     }
 
+
     public double getScale() {
         return scale;
     }
@@ -203,7 +220,16 @@ public class View extends Application {
         return controller;
     }
 
+    public void changeStageName(String s){
+        primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
+    }
+
     private void createGenTimePane(){
+        /**
+         * those two last methods are very simmiliar
+         * disable speed option from the menu, reenable when the widget pane is closed
+         * create new widget pane
+         */
         speedOption.setDisable(true);
         NumberPane genTimePane = new NumberPane(10,1000,this);
         menusPane.getChildren().add(genTimePane);
