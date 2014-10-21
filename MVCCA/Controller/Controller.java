@@ -19,7 +19,7 @@ public class Controller extends Application {
     private Logic logic;
     private View view;
 
-    int fps = 1;
+    int fps = 30;
     Duration duration = Duration.millis(1000/fps);
     Timeline timeline;
     //initially 60fps
@@ -105,6 +105,7 @@ public class Controller extends Application {
         view.setColorsArray(logic.getColors());
         view.updateButtons();
         setFramesPerSecond(Duration.millis(1000/fps));
+        advGen();
     }
 
     public void setFps(int f){

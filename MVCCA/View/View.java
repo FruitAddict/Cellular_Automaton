@@ -118,7 +118,7 @@ public class View extends Application {
         primaryStage.setMinHeight(400);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("\\resources\\icon.png")));
+        primaryStage.getIcons().add(new Image("resources\\icon.png"));
         Scene primaryScene = new Scene(mainPane, (width * scale) + 50, (height * scale) + 50);
         ((BorderPane) primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
@@ -137,15 +137,10 @@ public class View extends Application {
 
         advGenButton.setOnAction(e -> controller.advGen());
 
-        // cell drawing handler && moving the pane around
+        // cell drawing handler
         canvas.setOnMouseDragged(e -> {
-            if (e.isControlDown()) {
-                canvas.setTranslateX(e.getX());
-                canvas.setTranslateY(e.getY());
-            } else {
                 controller.setCell((int) e.getX(), (int) e.getY());
                 redraw();
-            }
         });
         canvas.setOnMousePressed(e->{
             controller.setCell((int)e.getX(), (int)e.getY());

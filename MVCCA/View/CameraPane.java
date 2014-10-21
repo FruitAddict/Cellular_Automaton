@@ -21,10 +21,10 @@ public class CameraPane extends BorderPane {
         Button down = new Button("down");
         Button left = new Button("left");
         Button right = new Button("right");
-        up.setStyle("-fx-background-color: Wheat");
-        down.setStyle("-fx-background-color: Wheat");
-        left.setStyle("-fx-background-color: Wheat");
-        right.setStyle("-fx-background-color: Wheat");
+        up.setStyle("-fx-background-color: White");
+        down.setStyle("-fx-background-color: White");
+        left.setStyle("-fx-background-color: White");
+        right.setStyle("-fx-background-color: White");
 
         Label center = new Label(view.getCanvas().getTranslateX()+" "+view.getCanvas().getTranslateY());
         center.setStyle("-fx-background-color: WHITE");
