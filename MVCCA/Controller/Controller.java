@@ -1,27 +1,28 @@
 package MVCCA.Controller;
 
-import MVCCA.Logic.GameOfLifeLogic;
 import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.LangtonsAntLogic;
 import MVCCA.Logic.Utilities.LogicStorage;
 import MVCCA.View.View;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
- * Created by FruitAddict on 2014-10-14.
+ * MVC Controller class.
  */
+@SuppressWarnings("unchecked")
+
 public class Controller extends Application {
     //Holds logic and view for the MVC pattern
     private Logic logic;
     private View view;
 
-    //boolean to stop the auto logic updates
-    private boolean logicRunning=true;
-
-    //time for the thread to sleep between generations, initially 50 ms
-    private int sleepTime = 25;
+    int fps = 1;
+    Duration duration = Duration.millis(1000/fps);
+    Timeline timeline;
+    //initially 60fps
 
     public void start(Stage primaryStage){
 
@@ -40,15 +41,11 @@ public class Controller extends Application {
 
         //initial clear call to prepare for running
         clear();
+        view.updateButtons();
 
-         /**
-          *  New thread obtaining new data from the logic
-          * and passing it to the view
-          */
-          Handler handler = new Handler();
-          Thread loopThread = new Thread(handler);
-          loopThread.start();
-
+        timeline = new Timeline(new KeyFrame(duration, RenderHandler.getInstance(logic,view)));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     //handles clearing the screen and drawing the borders
@@ -58,7 +55,8 @@ public class Controller extends Application {
     }
     //pauses/unpauses auto gen progression
     public void pause(){
-        setLogicRunning(!logicRunning);
+        setLogicRunning(!LogicStorage.isPaused());
+        view.updateButtons();
     }
 
     //advances the generation by one (mvc)
@@ -74,26 +72,22 @@ public class Controller extends Application {
     }
 
     //changes time between generations
-    public void setSleepTime(int time){
-        sleepTime=time;
-    }
-
-    public int getSleepTime(){
-        return sleepTime;
+    public void setFramesPerSecond(Duration fps){
+        duration=fps;
+        timeline.stop();
+        timeline = new Timeline(new KeyFrame(duration, RenderHandler.getInstance(logic, view)));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     //Assigns view and logic
-    public void setThings(View view, Logic logic){
-        this.view=view;
-        this.logic=logic;
-}
-    //setter and getter for logicRunning boolean, see pause/unpause
-    public boolean isLogicRunning() {
-        return logicRunning;
+    public void setThings(View view, Logic logic) {
+        this.view = view;
+        this.logic = logic;
     }
 
     public void setLogicRunning(boolean logicRunning) {
-        this.logicRunning = logicRunning;
+        LogicStorage.setPaused(logicRunning);
     }
 
     public String getLogicName(){
@@ -101,33 +95,25 @@ public class Controller extends Application {
     }
 
     public void changeLogic(Logic logic){
-        pause();
+        /**
+         * Changes the current logic.
+         * setFramesPerSecond method used to renew the timeline (gameloop) using the new logic and view.
+         * no fancy methods for this as I'd have to rewrite the same code.
+         */
         this.logic = logic;
         view.changeStageName(getLogicName());
         view.setColorsArray(logic.getColors());
-        pause();
+        view.updateButtons();
+        setFramesPerSecond(Duration.millis(1000/fps));
     }
 
-
-    private class Handler implements Runnable{
-        /* Handler runnable class that contains the while gen-adv loop
-         *  everything MVC
-         */
-        public void run() {
-            while (true) {
-                if(isLogicRunning()) {
-                    Platform.runLater(() -> {
-                        logic.genAdvance();
-                        view.setGeneration(logic.getGenNumber());
-                        view.setDrawMatrix(logic.getCurrentGrid());
-                    });
-                }
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
+    public void setFps(int f){
+        fps=f;
+        setFramesPerSecond(Duration.millis(1000/fps));
     }
+
+    public int getFps(){
+        return fps;
+    }
+
 }

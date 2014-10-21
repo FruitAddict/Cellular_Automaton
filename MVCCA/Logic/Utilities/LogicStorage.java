@@ -11,6 +11,7 @@ public class LogicStorage {
 
     static volatile LangtonsAntLogic logicAnt=null;
     static volatile GameOfLifeLogic logicLife=null;
+    static volatile boolean paused = false;
 
     public static synchronized LangtonsAntLogic getLangtonsAntLogic(int x, int y){
             if(logicAnt!=null){
@@ -27,5 +28,13 @@ public class LogicStorage {
             logicLife = new GameOfLifeLogic(x,y);
             return logicLife;
         }
+    }
+
+    public static synchronized boolean isPaused(){
+        return paused;
+    }
+
+    public static synchronized  void setPaused(Boolean bool){
+        paused = bool;
     }
 }

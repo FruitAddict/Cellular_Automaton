@@ -1,6 +1,5 @@
 package MVCCA.View;
 
-import MVCCA.Controller.Controller;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 public class NumberPane extends BorderPane {
     /**
@@ -19,18 +19,18 @@ public class NumberPane extends BorderPane {
     public NumberPane(int min, int max, View view){
 
         Button incrementButton = new Button("+");
-        incrementButton.setStyle("-fx-background-color: PERU; -fx-fill: WHITE");
+        incrementButton.setStyle("-fx-background-color: WHITE; -fx-fill: WHITE");
         incrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 20));
 
         Button decrementButton = new Button("-");
-        decrementButton.setStyle("-fx-background-color: ORCHID; -fx-fill: WHITE");
+        decrementButton.setStyle("-fx-background-color: WHITE; -fx-fill: WHITE");
         decrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 20));
 
-        Label currentValue = new Label(view.getController().getSleepTime()+" ms");
+        Label currentValue = new Label(view.getController().getFps()+" fps");
         currentValue.setPrefWidth(100);
         currentValue.setStyle("-fx-background-color: WHITE");
 
-        Label nameLabel = new Label("Time Control");
+        Label nameLabel = new Label("Target FPS");
         nameLabel.setFont(Font.font("Helvetica",FontWeight.NORMAL,FontPosture.REGULAR,20));
         nameLabel.setStyle("-fx-background-color: LIGHTBLUE");
 
@@ -42,17 +42,18 @@ public class NumberPane extends BorderPane {
         this.setAlignment(nameLabel,Pos.CENTER);
 
         incrementButton.setOnAction(e->{
-            if(view.getController().getSleepTime()<max){
-                currentValue.setText(Integer.toString(view.getController().getSleepTime()+1)+" ms");
-                view.getController().setSleepTime(view.getController().getSleepTime()+1);
+            if(view.getController().getFps()<200) {
+                view.getController().setFps(view.getController().getFps() + 1);
+                currentValue.setText(view.getController().getFps() + " fps");
+            }
+        });
+        decrementButton.setOnAction(e->{
+            if(view.getController().getFps()>1) {
+                view.getController().setFps(view.getController().getFps() - 1);
+                currentValue.setText(view.getController().getFps() + " fps");
             }
         });
 
-        decrementButton.setOnAction(e -> {
-            if (view.getController().getSleepTime() > min) {
-                currentValue.setText(Integer.toString(view.getController().getSleepTime()-1)+" ms");
-                view.getController().setSleepTime(view.getController().getSleepTime()-1);
-            }
-        });
+
     }
 }

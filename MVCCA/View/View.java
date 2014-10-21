@@ -22,12 +22,14 @@ public class View extends Application {
     private Stage primaryStage;
     private Controller controller;
     private Label genLabel;
+    private Label additionalMessageLabel;
     private Canvas canvas;
-    private MenuItem speedOption;
+    private MenuItem fpsOption;
     private MenuItem cameraOption;
     private MenuItem lifeLogic;
     private MenuItem antLogic;
     private VBox menusPane;
+    ToggleButton playButton;
     private int[][] drawMatrix;
     private Color[] colorsArray;
     private final int width = 200;
@@ -48,6 +50,8 @@ public class View extends Application {
         Pane drawStore = new Pane();
         genLabel = new Label("");
         genLabel.setStyle("-fx-background-color: turquoise");
+        additionalMessageLabel = new Label("");
+        additionalMessageLabel.setStyle("-fx-background-color: turquoise");
         canvas = new Canvas(width, height);
         canvas.setScaleX(scale);
         canvas.setScaleY(scale);
@@ -63,7 +67,7 @@ public class View extends Application {
          */
         Button clearButton = new Button("Clear");
         clearButton.setStyle("-fx-background-color: paleturquoise");
-        ToggleButton playButton = new ToggleButton("Stop");
+        playButton = new ToggleButton();
         playButton.setStyle("-fx-background-color: paleturquoise");
         Button advGenButton = new Button("Advance Generation");
         advGenButton.setStyle("-fx-background-color: paleturquoise");
@@ -78,7 +82,7 @@ public class View extends Application {
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.BOTTOM_LEFT);
         buttonBox.setSpacing(5); //spacing between buttons in this box
-        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton); //adding buttons to the box
+        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton, additionalMessageLabel); //adding buttons to the box
 
 
         //placing the gui components into main pane
@@ -94,8 +98,8 @@ public class View extends Application {
         Menu menuLogic = new Menu("Logic");
 
 
-        speedOption = new MenuItem("Time Between Generations");
-        speedOption.setOnAction(e -> createGenTimePane());
+        fpsOption = new MenuItem("FPS");
+        fpsOption.setOnAction(e -> createGenTimePane());
         cameraOption = new MenuItem("Camera Position");
         cameraOption.setOnAction(e -> createCamOptionPane());
 
@@ -104,7 +108,7 @@ public class View extends Application {
         antLogic = new MenuItem("Langton's Ant logic");
         antLogic.setOnAction(e-> controller.changeLogic(LogicStorage.getLangtonsAntLogic(width,height)));
 
-        menuView.getItems().addAll(speedOption, cameraOption);
+        menuView.getItems().addAll(fpsOption, cameraOption);
         menuLogic.getItems().addAll(lifeLogic,antLogic);
 
         mainBar.getMenus().addAll(menuView, menuLogic);
@@ -128,11 +132,7 @@ public class View extends Application {
 
         playButton.setOnAction(e -> {
             controller.pause();
-            if (playButton.getText().equals("Stop")) {
-                playButton.setText("Play");
-            } else {
-                playButton.setText("Stop");
-            }
+            updateButtons();
         });
 
         advGenButton.setOnAction(e -> controller.advGen());
@@ -224,19 +224,31 @@ public class View extends Application {
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
     }
 
+    public void setAdditionalMessage(String s){
+        additionalMessageLabel.setText(s);
+    }
+
+    public void updateButtons(){
+        if (LogicStorage.isPaused()) {
+            playButton.setText("Play");
+        } else if(!LogicStorage.isPaused()) {
+            playButton.setText("Stop");
+        }
+    }
+
     private void createGenTimePane(){
         /**
          * those two last methods are very simmiliar
          * disable speed option from the menu, reenable when the widget pane is closed
          * create new widget pane
          */
-        speedOption.setDisable(true);
-        NumberPane genTimePane = new NumberPane(10,1000,this);
+        fpsOption.setDisable(true);
+        NumberPane genTimePane = new NumberPane(2,60,this);
         menusPane.getChildren().add(genTimePane);
         genTimePane.setOnMouseClicked(e->{
             if(e.isControlDown()){
                 menusPane.getChildren().remove(genTimePane);
-                speedOption.setDisable(false);
+                fpsOption.setDisable(false);
             }
         });
 

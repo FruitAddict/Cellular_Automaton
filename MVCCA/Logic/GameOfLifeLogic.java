@@ -17,8 +17,11 @@ public class GameOfLifeLogic extends Logic {
     final private int width;
     final private int height;
 
+    //additional message, can be anything. Can be retrieved by controller
+    String additionalMessage;
+
     //color array
-    final private Color[] colorArray = {Color.BLACK, Color.RED, Color.PURPLE};
+    final private Color[] colorArray = {Color.BLACK, Color.RED, Color.AQUAMARINE};
 
     //constructor taking w and height as arguements. inits the grid and clears it
     public GameOfLifeLogic(int width, int height){
@@ -149,6 +152,11 @@ public class GameOfLifeLogic extends Logic {
 
     public Color[] getColors(){
         return colorArray;
+    }
+
+    @Override
+    public String getAdditionalMessage(){
+        return additionalMessage;
     }
 
 }

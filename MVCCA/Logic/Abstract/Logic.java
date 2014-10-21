@@ -30,4 +30,6 @@ public abstract class Logic {
     public abstract int getGenNumber();
 
     public abstract Color[] getColors();
+
+    public abstract String getAdditionalMessage();
 }

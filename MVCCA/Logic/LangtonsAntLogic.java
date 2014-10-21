@@ -15,8 +15,9 @@ public class LangtonsAntLogic extends Logic {
     private final int width;
     private final int height;
     private int[][] currentGrid;
-    private final Color[] colorArray = {Color.PURPLE, Color.BLACK, Color.BLUE, Color.BLUE, Color.PURPLE, Color.YELLOW};
+    private final Color[] colorArray = {Color.AQUAMARINE, Color.BLACK, Color.GREEN, Color.BLUE, Color.PURPLE, Color.YELLOW};
     private ArrayList<Ant> antList;
+    String additionalMessage;
 
     public LangtonsAntLogic(int width, int height) {
         this.width = width;
@@ -56,6 +57,7 @@ public class LangtonsAntLogic extends Logic {
     public void genAdvance() {
         int[][] snapshot = Utilities.copy2DArray(currentGrid,width,height);
         genNumber++;
+        additionalMessage = "Number of ants: "+antList.size();
         for(Ant a: antList){
             a.update(snapshot);
         }
@@ -79,6 +81,10 @@ public class LangtonsAntLogic extends Logic {
     @Override
     public Color[] getColors() {
         return colorArray;
+    }
+
+    public String getAdditionalMessage(){
+        return additionalMessage;
     }
 
     private void createNewAnt(int x, int y) {
@@ -107,7 +113,6 @@ public class LangtonsAntLogic extends Logic {
         }
 
         public void update(int[][] snapshot){
-            System.out.println("Ant at "+positionX+" "+positionY);
             if(snapshot[positionX][positionY]==1){
                 currentGrid[positionX][positionY]=2;
                 move(1);

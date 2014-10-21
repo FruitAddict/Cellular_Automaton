@@ -1,0 +1,12 @@
+
+
+Feature: Seamless transition to the other side when crossing the border
+
+Feature: zooming
+
+Feature: quadtrees
+
+logic: random cave-like levels thingy
+
+
+URGE: FIX FPS
