@@ -1,6 +1,6 @@
 
 
-Feature: Seamless transition to the other side when crossing the border
+Feature: Seamless transition to the other side when crossing the border (langton done)
 
 Feature: zooming
 

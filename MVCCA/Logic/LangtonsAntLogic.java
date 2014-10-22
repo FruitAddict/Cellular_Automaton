@@ -5,6 +5,7 @@ import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Logic class for Langton's Ant, extends abstract class Logic for use with controller. Same deal
@@ -15,7 +16,7 @@ public class LangtonsAntLogic extends Logic {
     private final int width;
     private final int height;
     private int[][] currentGrid;
-    private final Color[] colorArray = {Color.AQUAMARINE, Color.BLACK, Color.GREEN, Color.BLUE, Color.PURPLE, Color.YELLOW};
+    private final Color[] colorArray = {Color.AQUAMARINE, Color.BLACK, Color.GREEN, Color.BLUE, Color.PURPLE, Color.YELLOW, Color.RED};
     private ArrayList<Ant> antList;
     String additionalMessage;
 
@@ -106,18 +107,21 @@ public class LangtonsAntLogic extends Logic {
 
         int currentDirection=3; //left=0 right =1
 
+        int antColorId;
+
         public Ant(int x, int y){
             System.out.println("New ant created succesfully at "+x+" "+y);
             positionX = x;
             positionY = y;
+            antColorId =2+ new Random().nextInt(5);
         }
 
         public void update(int[][] snapshot){
             if(snapshot[positionX][positionY]==1){
-                currentGrid[positionX][positionY]=2;
+                currentGrid[positionX][positionY]=antColorId;
                 move(1);
             }
-            else if(snapshot[positionX][positionY]==2){
+            else if(snapshot[positionX][positionY]!=1){
                 currentGrid[positionX][positionY]=1;
                 move(2);
             }
@@ -127,11 +131,18 @@ public class LangtonsAntLogic extends Logic {
             switch(currentDirection){
                 case 1: {
                     if(side==1){
-                        positionX-=1;
+                        if(positionX-1>2){
+                        positionX-=1;} else {
+                            positionX=width-4;
+                        }
                         currentDirection = 4;
                         break;
                     } else {
-                        positionX+=1;
+                        if(positionX+1<width-3) {
+                            positionX += 1;
+                        }else {
+                            positionX=3;
+                        }
                         currentDirection = 2;
                         break;
                     }
@@ -139,11 +150,19 @@ public class LangtonsAntLogic extends Logic {
 
                 case 2: {
                     if(side==1){
-                        positionY-=1;
+                        if(positionY-1>2) {
+                            positionY -= 1;
+                        }else {
+                            positionY = height-4;
+                        }
                         currentDirection=1;
                         break;
                     }else {
-                        positionY+=1;
+                        if(positionY+1<height-3) {
+                            positionY += 1;
+                        } else {
+                            positionY=3;
+                        }
                         currentDirection=3;
                         break;
                     }
@@ -151,11 +170,19 @@ public class LangtonsAntLogic extends Logic {
 
                 case 3:{
                     if(side==1){
-                        positionX+=1;
+                        if(positionX+1<width-3) {
+                            positionX += 1;
+                        } else {
+                            positionX=3;
+                        }
                         currentDirection=2;
                         break;
                     }else {
-                        positionX-=1;
+                        if(positionX-1>2) {
+                            positionX -= 1;
+                        } else {
+                            positionX=width-4;
+                        }
                         currentDirection=4;
                         break;
                     }
@@ -163,11 +190,19 @@ public class LangtonsAntLogic extends Logic {
 
                 case 4:{
                     if(side==1){
-                        positionY+=1;
+                        if(positionY+1<height-3) {
+                            positionY += 1;
+                        } else {
+                            positionY = 3;
+                        }
                         currentDirection=3;
                         break;
                     } else {
-                        positionY-=1;
+                        if( positionY-1 >2) {
+                            positionY -= 1;
+                        } else {
+                            positionY=height-4;
+                        }
                         currentDirection=1;
                         break;
                     }

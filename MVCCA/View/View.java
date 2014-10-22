@@ -35,7 +35,7 @@ public class View extends Application {
     private final int width = 200;
     private final int height = 200;
 
-    public static double scale = 4.5;
+    public static double scale = 4;
 
     public void start(Stage primaryStage) {
 
@@ -55,8 +55,8 @@ public class View extends Application {
         canvas = new Canvas(width, height);
         canvas.setScaleX(scale);
         canvas.setScaleY(scale);
-        canvas.setTranslateX(380);
-        canvas.setTranslateY(360);
+        canvas.setTranslateX(330);
+        canvas.setTranslateY(310);
         drawStore.getChildren().add(canvas);
 
         /**
@@ -118,7 +118,7 @@ public class View extends Application {
         primaryStage.setMinHeight(400);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
-        primaryStage.getIcons().add(new Image("resources\\icon.png"));
+        primaryStage.getIcons().add(new Image("icon.png"));
         Scene primaryScene = new Scene(mainPane, (width * scale) + 50, (height * scale) + 50);
         ((BorderPane) primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
