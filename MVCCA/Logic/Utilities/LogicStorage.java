@@ -1,5 +1,6 @@
 package MVCCA.Logic.Utilities;
 
+import MVCCA.Logic.CaveGeneratorLogic;
 import MVCCA.Logic.GameOfLifeLogic;
 import MVCCA.Logic.LangtonsAntLogic;
 
@@ -11,6 +12,7 @@ public class LogicStorage {
 
     static volatile LangtonsAntLogic logicAnt=null;
     static volatile GameOfLifeLogic logicLife=null;
+    static volatile CaveGeneratorLogic logicCave=null;
     static volatile boolean paused = false;
 
     public static synchronized LangtonsAntLogic getLangtonsAntLogic(int x, int y){
@@ -27,6 +29,14 @@ public class LogicStorage {
         } else {
             logicLife = new GameOfLifeLogic(x,y);
             return logicLife;
+        }
+    }
+    public static synchronized CaveGeneratorLogic getCaveGeneratorLogic(int x, int y){
+        if(logicCave!=null){
+            return logicCave;
+        } else {
+            logicCave = new CaveGeneratorLogic(x,y);
+            return logicCave;
         }
     }
 

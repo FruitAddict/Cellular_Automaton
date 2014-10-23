@@ -19,7 +19,7 @@ public class Controller extends Application {
     private Logic logic;
     private View view;
 
-    int fps = 60;
+    int fps = 30;
     Duration duration = Duration.millis(1000/fps);
     Timeline timeline;
     //initially 60fps
@@ -115,6 +115,18 @@ public class Controller extends Application {
 
     public int getFps(){
         return fps;
+    }
+
+    public String getUtilityButtonName(){
+        return logic.getUtilityButtonName();
+    }
+
+    public Logic getLogic(){
+        return logic;
+    }
+
+    public void utilityAction(){
+        logic.performUtilityAction();
     }
 
 }

@@ -32,4 +32,8 @@ public abstract class Logic {
     public abstract Color[] getColors();
 
     public abstract String getAdditionalMessage();
+
+    public abstract String getUtilityButtonName();
+
+    public abstract void performUtilityAction();
 }

@@ -1,6 +1,7 @@
 package MVCCA.View;
 
 import MVCCA.Controller.Controller;
+import MVCCA.Logic.CaveGeneratorLogic;
 import MVCCA.Logic.Utilities.LogicStorage;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -26,10 +27,12 @@ public class View extends Application {
     private Canvas canvas;
     private MenuItem fpsOption;
     private MenuItem cameraOption;
-    private MenuItem lifeLogic;
-    private MenuItem antLogic;
     private VBox menusPane;
-    ToggleButton playButton;
+    private HBox buttonBox;
+    private ToggleButton playButton;
+    private Button utilityButton;
+    private Button clearButton;
+    private Button advGenButton;
     private int[][] drawMatrix;
     private Color[] colorsArray;
     private final int width = 200;
@@ -64,13 +67,16 @@ public class View extends Application {
          * clearButton- Resets the canvas to its original state (all white)
          * playButton - stops/resumes progression of the generations
          * advGenButton - manually advances the generation of the cells by one
+         * utilityButton - custom button to be used by logic's quirks
          */
-        Button clearButton = new Button("Clear");
+        clearButton = new Button("Clear");
         clearButton.setStyle("-fx-background-color: paleturquoise");
         playButton = new ToggleButton();
         playButton.setStyle("-fx-background-color: paleturquoise");
-        Button advGenButton = new Button("Advance Generation");
+        advGenButton = new Button("Advance Generation");
         advGenButton.setStyle("-fx-background-color: paleturquoise");
+        utilityButton = new Button(controller.getUtilityButtonName());
+        utilityButton.setStyle("-fx-background-color: paleturquoise");
 
         /**
          * buttonBox holds the buttons at the bottom of the screen in horizontal alignment
@@ -79,10 +85,10 @@ public class View extends Application {
          * Separate HBoxes to hold the bars together with info labels
          * genLabel shows the current generation obtained from the logic
          */
-        HBox buttonBox = new HBox();
+        buttonBox = new HBox();
         buttonBox.setAlignment(Pos.BOTTOM_LEFT);
         buttonBox.setSpacing(5); //spacing between buttons in this box
-        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton, additionalMessageLabel); //adding buttons to the box
+        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton,utilityButton, additionalMessageLabel); //adding buttons to the box
 
 
         //placing the gui components into main pane
@@ -103,13 +109,15 @@ public class View extends Application {
         cameraOption = new MenuItem("Camera Position");
         cameraOption.setOnAction(e -> createCamOptionPane());
 
-        lifeLogic = new MenuItem("Game of Life logic");
-        lifeLogic.setOnAction(e-> controller.changeLogic(LogicStorage.getGameOfLifeLogic(width,height)));
-        antLogic = new MenuItem("Langton's Ant logic");
-        antLogic.setOnAction(e-> controller.changeLogic(LogicStorage.getLangtonsAntLogic(width,height)));
+        MenuItem lifeLogic = new MenuItem("Game of Life");
+        lifeLogic.setOnAction(e -> controller.changeLogic(LogicStorage.getGameOfLifeLogic(width, height)));
+        MenuItem antLogic = new MenuItem("Langton's Ant");
+        antLogic.setOnAction(e -> controller.changeLogic(LogicStorage.getLangtonsAntLogic(width, height)));
+        MenuItem caveLogic = new MenuItem("Cave Generator");
+        caveLogic.setOnAction(e -> controller.changeLogic(LogicStorage.getCaveGeneratorLogic(width, height)));
 
         menuView.getItems().addAll(fpsOption, cameraOption);
-        menuLogic.getItems().addAll(lifeLogic,antLogic);
+        menuLogic.getItems().addAll(lifeLogic, antLogic, caveLogic);
 
         mainBar.getMenus().addAll(menuView, menuLogic);
 
@@ -118,7 +126,7 @@ public class View extends Application {
         primaryStage.setMinHeight(400);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
-        primaryStage.getIcons().add(new Image("icon.png"));
+        primaryStage.getIcons().add(new Image("resources\\icon.png"));
         Scene primaryScene = new Scene(mainPane, (width * scale) + 50, (height * scale) + 50);
         ((BorderPane) primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
@@ -136,6 +144,8 @@ public class View extends Application {
         });
 
         advGenButton.setOnAction(e -> controller.advGen());
+
+        utilityButton.setOnAction(e->controller.utilityAction());
 
         // cell drawing handler
         canvas.setOnMouseDragged(e -> {
@@ -229,6 +239,20 @@ public class View extends Application {
         } else if(!LogicStorage.isPaused()) {
             playButton.setText("Stop");
         }
+        utilityButton.setText(controller.getUtilityButtonName());
+        if(utilityButton.getText().equals("")){
+            buttonBox.getChildren().remove(utilityButton);
+        }else{
+            buttonBox.getChildren().add(4,utilityButton);
+        }
+        if(controller.getLogic() instanceof CaveGeneratorLogic){
+            playButton.setDisable(true);
+            advGenButton.setDisable(true);
+        } else {
+            playButton.setDisable(false);
+            advGenButton.setDisable(false);
+        }
+
     }
 
     private void createGenTimePane(){

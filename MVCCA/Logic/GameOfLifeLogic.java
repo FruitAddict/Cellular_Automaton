@@ -79,6 +79,15 @@ public class GameOfLifeLogic extends Logic {
 
     }
 
+    @Override
+    public String getUtilityButtonName(){
+        return "";
+    }
+    @Override
+    public void performUtilityAction(){
+        //nothing
+    }
+
     private int resolve(int x, int y, int currentValue, int[][] snapshot) {
         /**
          * Resolver counts the number of neighbours of the given cell

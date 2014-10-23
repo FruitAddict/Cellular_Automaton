@@ -84,6 +84,16 @@ public class LangtonsAntLogic extends Logic {
         return colorArray;
     }
 
+    @Override
+    public String getUtilityButtonName(){
+        return "";
+    }
+
+    @Override
+    public void performUtilityAction(){
+        //nothing
+    }
+
     public String getAdditionalMessage(){
         return additionalMessage;
     }
@@ -102,12 +112,12 @@ public class LangtonsAntLogic extends Logic {
          * Ant class, contains current coordinates, method to determine current direction
          * and method to advance itself to next generation
          */
-        int positionX;
-        int positionY;
+        private int positionX;
+        private int positionY;
 
-        int currentDirection=3; //left=0 right =1
+        private int currentDirection=3; //left=0 right =1
 
-        int antColorId;
+        private int antColorId;
 
         public Ant(int x, int y){
             System.out.println("New ant created succesfully at "+x+" "+y);
