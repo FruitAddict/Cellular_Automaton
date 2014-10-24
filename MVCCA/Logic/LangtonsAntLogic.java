@@ -1,6 +1,7 @@
 package MVCCA.Logic;
 
 import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
 
@@ -15,7 +16,7 @@ public class LangtonsAntLogic extends Logic {
 
     private final int width;
     private final int height;
-    private int[][] currentGrid;
+    private Grid currentGrid;
     private final Color[] colorArray = {Color.AQUAMARINE, Color.BLACK, Color.GREEN, Color.BLUE, Color.PURPLE, Color.YELLOW, Color.RED};
     private ArrayList<Ant> antList;
     String additionalMessage;
@@ -23,40 +24,21 @@ public class LangtonsAntLogic extends Logic {
     public LangtonsAntLogic(int width, int height) {
         this.width = width;
         this.height = height;
-        currentGrid = new int[width][height];
+        currentGrid = new Grid(width,height,1,0);
         clear();
-        setLogicName("Langton's Ant");
         antList = new ArrayList<>();
     }
     @Override
     public void clear() {
+        genNumber=0;
         //Initially sets values of the whole array to 0 (dead cells)
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                currentGrid[i][j] = 1;
-            }
-        }
-        /**
-         * This part of the method fill the borders of array with 3-cell thick
-         * walls. This operation simplifies the process of avoiding NPE's later on.
-         */
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (j < 3) {
-                    currentGrid[i][j] = 0;
-                } else if ((j > 2 || j < height - 3) && (i < 3 || i >= width - 3)) {
-                    currentGrid[i][j] = 0;
-                } else if (j >= height - 3) {
-                    currentGrid[i][j] = 0;
-                }
-            }
-        }
+        currentGrid.clear();
         antList = new ArrayList<>();
     }
 
     @Override
     public void genAdvance() {
-        int[][] snapshot = Utilities.copy2DArray(currentGrid,width,height);
+        int[][] snapshot = Utilities.copy2DArray(currentGrid.getGrid(),width,height);
         genNumber++;
         additionalMessage = "Number of ants: "+antList.size();
         for(Ant a: antList){
@@ -66,7 +48,7 @@ public class LangtonsAntLogic extends Logic {
 
     @Override
     public int[][] getCurrentGrid() {
-        return currentGrid;
+        return currentGrid.getGrid();
     }
 
     @Override
@@ -128,11 +110,11 @@ public class LangtonsAntLogic extends Logic {
 
         public void update(int[][] snapshot){
             if(snapshot[positionX][positionY]==1){
-                currentGrid[positionX][positionY]=antColorId;
+                currentGrid.getGrid()[positionX][positionY]=antColorId;
                 move(1);
             }
             else if(snapshot[positionX][positionY]!=1){
-                currentGrid[positionX][positionY]=1;
+                currentGrid.getGrid()[positionX][positionY]=1;
                 move(2);
             }
         }

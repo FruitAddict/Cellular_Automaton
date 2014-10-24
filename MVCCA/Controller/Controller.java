@@ -33,7 +33,7 @@ public class Controller extends Application {
          * can only be run on one thread)
          */
         View view = new View();
-        Logic logic = LogicStorage.getGameOfLifeLogic(view.getWidth(), view.getHeight());
+        Logic logic = LogicStorage.getLangtonsAntLogic(view.getWidth(), view.getHeight());
         setThings(view,logic);
         view.setController(this);
         view.setColorsArray(logic.getColors());
@@ -91,7 +91,7 @@ public class Controller extends Application {
     }
 
     public String getLogicName(){
-        return logic.getName();
+        return LogicStorage.getLogicName(logic);
     }
 
     public void changeLogic(Logic logic){

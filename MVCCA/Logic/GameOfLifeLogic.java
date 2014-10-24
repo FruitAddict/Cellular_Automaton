@@ -1,6 +1,7 @@
 package MVCCA.Logic;
 
 import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
 
@@ -11,7 +12,7 @@ import javafx.scene.paint.Color;
  */
 public class GameOfLifeLogic extends Logic {
     //holds the current version of grid, prone to changes
-    private int[][] currentGrid;
+    Grid currentGrid;
 
     //width and height, assigned on creation
     final private int width;
@@ -27,39 +28,19 @@ public class GameOfLifeLogic extends Logic {
     public GameOfLifeLogic(int width, int height){
         this.width=width;
         this.height=height;
-        currentGrid = new int[width][height];
+        currentGrid = new Grid(width,height,0,2);
         clear();
-        setLogicName("Game of Life");
-
     }
     @Override
     public void clear() {
+        genNumber=0;
         //Initially sets values of the whole array to 0 (dead cells)
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                currentGrid[i][j] = 0;
-            }
-        }
-        /**
-         * This part of the method fill the borders of array with 3-cell thick
-         * walls. This operation simplifies the process of avoiding NPE's later on.
-         */
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (j < 3) {
-                    currentGrid[i][j] = 2;
-                } else if ((j > 2 || j < height - 3) && (i < 3 || i >= width - 3)) {
-                    currentGrid[i][j] = 2;
-                } else if (j >= height - 3) {
-                    currentGrid[i][j] = 2;
-                }
-            }
-        }
+        currentGrid.clear();
 
     }
     @Override
     public int[][] getCurrentGrid(){
-        return currentGrid;
+        return currentGrid.getGrid();
     }
 
     @Override
@@ -69,11 +50,11 @@ public class GameOfLifeLogic extends Logic {
          * for the resolver to work on- passing x and y coordinates of the cell
          * current value of that cell and the snapshot to the resolver method
          */
-        int[][] snapshot = Utilities.copy2DArray(currentGrid, width, height);
+        int[][] snapshot = Utilities.copy2DArray(currentGrid.getGrid(), width, height);
         genNumber++;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                currentGrid[i][j] = resolve(i, j, currentGrid[i][j], snapshot);
+                currentGrid.getGrid()[i][j] = resolve(i, j, currentGrid.getGrid()[i][j], snapshot);
             }
         }
 
@@ -151,7 +132,7 @@ public class GameOfLifeLogic extends Logic {
     public void setCell(int x, int y, int value){
         //changes the value of a single cell in the current grid
         if((x>3 && x <width-3) && (y>3 && y<height-3)) {
-            currentGrid[x][y] = value;
+            currentGrid.getGrid()[x][y] = value;
         }
     }
 

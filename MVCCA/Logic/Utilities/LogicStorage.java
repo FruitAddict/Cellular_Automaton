@@ -1,5 +1,6 @@
 package MVCCA.Logic.Utilities;
 
+import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.CaveGeneratorLogic;
 import MVCCA.Logic.GameOfLifeLogic;
 import MVCCA.Logic.LangtonsAntLogic;
@@ -38,6 +39,19 @@ public class LogicStorage {
             logicCave = new CaveGeneratorLogic(x,y);
             return logicCave;
         }
+    }
+
+    public static String getLogicName(Logic l){
+        if(l instanceof GameOfLifeLogic){
+            return "Conway's Game Of Life";
+        }
+        else if(l instanceof LangtonsAntLogic){
+            return "Langton's Ant";
+        }
+        else if(l instanceof  CaveGeneratorLogic){
+            return "Cave Generator";
+        }
+        return "Logic Name Not Found";
     }
 
     public static synchronized boolean isPaused(){

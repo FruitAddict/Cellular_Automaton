@@ -1,6 +1,7 @@
 package MVCCA.Logic;
 
 import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
 
@@ -10,7 +11,7 @@ import java.util.Random;
  * Created by FruitAddict on 2014-10-23.
  */
 public class CaveGeneratorLogic extends Logic {
-    int[][] currentGrid;
+    Grid currentGrid;
     int width;
     int height;
     Color[] colorArray = {Color.TEAL,Color.WHITE, Color.BLACK};
@@ -18,10 +19,8 @@ public class CaveGeneratorLogic extends Logic {
     public CaveGeneratorLogic(int width, int height){
         this.width=width;
         this.height=height;
-        currentGrid = new int[width][height];
+        currentGrid = new Grid(width,height,1,0);
         clear();
-        setLogicName("Cave Generator");
-
     }
 
     @Override
@@ -30,32 +29,14 @@ public class CaveGeneratorLogic extends Logic {
 
     @Override
     public int[][] getCurrentGrid() {
-        return currentGrid;
+        return currentGrid.getGrid();
     }
 
     @Override
     public void clear() {
         //Initially sets values of the whole array to 0 (dead cells)
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                currentGrid[i][j] = 1;
-            }
-        }
-        /**
-         * This part of the method fill the borders of array with 3-cell thick
-         * walls. This operation simplifies the process of avoiding NPE's later on.
-         */
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (j < 3) {
-                    currentGrid[i][j] = 0;
-                } else if ((j > 2 || j < height - 3) && (i < 3 || i >= width - 3)) {
-                    currentGrid[i][j] = 0;
-                } else if (j >= height - 3) {
-                    currentGrid[i][j] = 0;
-                }
-            }
-        }
+        genNumber=0;
+        currentGrid.clear();
     }
 
     @Override
@@ -86,10 +67,10 @@ public class CaveGeneratorLogic extends Logic {
 
     @Override
     public void performUtilityAction(){
-        int[][] snapshot = Utilities.copy2DArray(currentGrid,width,height);
+        int[][] snapshot = Utilities.copy2DArray(currentGrid.getGrid(),width,height);
         for (int i =0 ;i <width;i++){
             for(int j=0;j<height;j++){
-                currentGrid[i][j] = resolve(i,j,snapshot[i][j],snapshot);
+                currentGrid.getGrid()[i][j] = resolve(i,j,snapshot[i][j],snapshot);
             }
         }
         genNumber++;
@@ -161,9 +142,9 @@ public class CaveGeneratorLogic extends Logic {
             for(int j =4; j<height-3;j++){
                 int random = rng.nextInt(101);
                 if(random<=percent){
-                    currentGrid[i][j]=2;
+                    currentGrid.getGrid()[i][j]=2;
                 } else {
-                    currentGrid[i][j]=1;
+                    currentGrid.getGrid()[i][j]=1;
                 }
             }
         }

@@ -19,7 +19,7 @@ public class RenderHandler implements EventHandler {
     View view;
 
     public static synchronized RenderHandler getInstance(Logic l, View v){
-        if(instance != null && instance.logic.getName().equals(l.getName())){
+        if(instance != null && LogicStorage.getLogicName(instance.logic).equals(LogicStorage.getLogicName(l))){
             return instance;
         } else {
             instance = new RenderHandler();

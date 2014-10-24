@@ -8,5 +8,8 @@ Feature: quadtrees
 
 logic: random cave-like levels thingy
 
+rework:
+separate grid from the code (duplicates)
+
 
 URGE: FIX FPS

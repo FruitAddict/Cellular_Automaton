@@ -9,16 +9,6 @@ public abstract class Logic {
 
     public int genNumber;
 
-    private String logicName;
-
-    public String getName(){
-        return logicName;
-    }
-
-    public void setLogicName(String s){
-        logicName = s;
-    }
-
     public abstract void clear();
 
     public abstract void genAdvance();
