@@ -2,8 +2,10 @@ package MVCCA.Logic;
 
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Utilities.Grid;
+import MVCCA.Logic.Utilities.Point;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
+import static MVCCA.Logic.Utilities.Point.*;
 
 /**
  * Logic class for Conway's game of life. Extends abstract Logic class (for use with controller)
@@ -22,7 +24,7 @@ public class GameOfLifeLogic extends Logic {
     String additionalMessage;
 
     //color array
-    final private Color[] colorArray = {Color.BLACK, Color.RED, Color.AQUAMARINE};
+    final private Color[] colorArray = {Color.BLACK, Color.FLORALWHITE, Color.AQUAMARINE};
 
     //constructor taking w and height as arguements. inits the grid and clears it
     public GameOfLifeLogic(int width, int height){
@@ -39,8 +41,8 @@ public class GameOfLifeLogic extends Logic {
 
     }
     @Override
-    public int[][] getCurrentGrid(){
-        return currentGrid.getGrid();
+    public Grid getCurrentGrid(){
+        return currentGrid;
     }
 
     @Override
@@ -50,11 +52,11 @@ public class GameOfLifeLogic extends Logic {
          * for the resolver to work on- passing x and y coordinates of the cell
          * current value of that cell and the snapshot to the resolver method
          */
-        int[][] snapshot = Utilities.copy2DArray(currentGrid.getGrid(), width, height);
+        Grid snapshot = currentGrid.copy();
         genNumber++;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                currentGrid.getGrid()[i][j] = resolve(i, j, currentGrid.getGrid()[i][j], snapshot);
+                currentGrid.set(i,j,resolve(i, j, currentGrid.getGrid()[i][j], snapshot));
             }
         }
 
@@ -69,7 +71,7 @@ public class GameOfLifeLogic extends Logic {
         //nothing
     }
 
-    private int resolve(int x, int y, int currentValue, int[][] snapshot) {
+    private int resolve(int x, int y, int currentValue, Grid snapshot) {
         /**
          * Resolver counts the number of neighbours of the given cell
          * based on the snapshot and returns a correct new value of the cell
@@ -78,30 +80,97 @@ public class GameOfLifeLogic extends Logic {
          */
         if (currentValue != 2) {
             int numOfNeighbours = 0;
-            if (snapshot[x - 1][y - 1] == 1) {
-                numOfNeighbours++;
+
+            Point currentPosition = XY(x,y);
+            for(int i=0;i<8;i++){
+                Point check = currentPosition.merge(Utilities.Directions[i]);
+                if(snapshot.get(check.getX(),check.getY()) == 1){
+                    numOfNeighbours++;
+                } else if(snapshot.get(check.getX(),check.getY()) == 2){
+                    switch(i){
+                        case 0: {
+                            if(check.getX()==2 && check.getY()==2 && snapshot.get(width-4,height-4)==1){
+                                numOfNeighbours++;
+                            } else if(check.getX()==2 && snapshot.get(width-4,check.getY())==1){
+                                numOfNeighbours++;
+                            } else {
+                                if(snapshot.get(check.getX(),height-4)==1){
+                                    numOfNeighbours++;
+                                }
+                            }
+                            break;
+                        }
+
+                        case 1: {
+                            if(snapshot.get(check.getX(),height-4)==1){
+                                numOfNeighbours++;
+                            }
+                            break;
+                        }
+
+                        case 2: {
+                            if(check.getX()==width-3 && check.getY()==2 && snapshot.get(3,height-4)==1){
+                                numOfNeighbours++;
+                            }else if (check.getX() == width-3 && snapshot.get(3,check.getY())==1){
+                                numOfNeighbours++;
+                            } else {
+                                if(snapshot.get(check.getX(),height-4)==1){
+                                    numOfNeighbours++;
+                                }
+                            }
+                            break;
+                        }
+
+                        case 3: {
+                            if(snapshot.get(width-4,check.getY())==1){
+                                numOfNeighbours++;
+                            }
+                            break;
+                        }
+
+                        case 4: {
+                            if(snapshot.get(3,check.getY())==1){
+                                numOfNeighbours++;
+                            }
+                            break;
+                        }
+
+                        case 5: {
+                            if(check.getX()==2 && check.getY() == height-3 && snapshot.get(width-4,3)==1){
+                                numOfNeighbours++;
+                            } else if (check.getX()==2 && snapshot.get(width-4,check.getY())==1){
+                                numOfNeighbours++;
+                            } else {
+                                if(snapshot.get(check.getX(),3)==1){
+                                    numOfNeighbours++;
+                                }
+                            }
+                            break;
+                        }
+
+                        case 6: {
+                            if(snapshot.get(check.getX(),3)==1){
+                                numOfNeighbours++;
+                            }
+                            break;
+                        }
+
+                        case 7: {
+                            if(check.getX()==width-3 && check.getY() == height-3 && snapshot.get(3,3)==1){
+                                numOfNeighbours++;
+                            } else if(check.getX()==width-3 && snapshot.get(3,check.getY())==1){
+                                numOfNeighbours++;
+                            } else {
+                                if(snapshot.get(check.getX(),3)==1){
+                                    numOfNeighbours++;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
             }
-            if (snapshot[x][y - 1] == 1) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x + 1][y - 1] == 1) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x - 1][y] == 1) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x + 1][y] == 1) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x - 1][y + 1] == 1) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x][y + 1] == 1) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x + 1][y + 1] == 1) {
-                numOfNeighbours++;
-            }
+
 
             if (currentValue == 0) {
                 if (numOfNeighbours == 3) {
@@ -131,7 +200,7 @@ public class GameOfLifeLogic extends Logic {
     @Override
     public void setCell(int x, int y, int value){
         //changes the value of a single cell in the current grid
-        if((x>3 && x <width-3) && (y>3 && y<height-3)) {
+        if((x>=3 && x <width-3) && (y>=3 && y<height-3)) {
             currentGrid.getGrid()[x][y] = value;
         }
     }

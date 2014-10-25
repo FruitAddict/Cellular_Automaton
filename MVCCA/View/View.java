@@ -2,6 +2,7 @@ package MVCCA.View;
 
 import MVCCA.Controller.Controller;
 import MVCCA.Logic.CaveGeneratorLogic;
+import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.LogicStorage;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -33,7 +34,7 @@ public class View extends Application {
     private Button utilityButton;
     private Button clearButton;
     private Button advGenButton;
-    private int[][] drawMatrix;
+    private Grid drawMatrix;
     private Color[] colorsArray;
     private final int width = 200;
     private final int height = 200;
@@ -44,7 +45,7 @@ public class View extends Application {
 
         this.primaryStage = primaryStage;
         BorderPane canvasPane = new BorderPane(); //canvas
-        BorderPane mainPane = new BorderPane(); //main
+        BorderPane mainPane = new BorderPane();
         menusPane = new VBox(); //menu pane
         menusPane.setSpacing(25);
         menusPane.setMaxWidth(width * scale / 5);
@@ -93,7 +94,7 @@ public class View extends Application {
 
         //placing the gui components into main pane
         canvasPane.setCenter(drawStore);
-        canvasPane.setBottom(buttonBox);
+        mainPane.setBottom(buttonBox);
 
         /**
          * Menus and handlers for menu items
@@ -130,6 +131,7 @@ public class View extends Application {
         Scene primaryScene = new Scene(mainPane, (width * scale) + 50, (height * scale) + 50);
         ((BorderPane) primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         //debug
@@ -155,11 +157,24 @@ public class View extends Application {
         canvas.setOnMousePressed(e->{
             controller.setCell((int)e.getX(), (int)e.getY());
         });
+
+        //resizing
+        mainPane.widthProperty().addListener(e->{
+            scale = mainPane.getWidth()/width;
+            canvas.setScaleX(scale);
+            canvas.setScaleY(scale);
+        });
+
+        mainPane.heightProperty().addListener(e->{
+            scale = mainPane.getWidth()/width;
+            canvas.setScaleX(scale);
+            canvas.setScaleY(scale);
+        });
     }
 
 
 
-    public void setDrawMatrix(int[][] matrix){
+    public void setDrawMatrix(Grid matrix){
         drawMatrix=matrix;
         redraw();
     }
@@ -172,7 +187,7 @@ public class View extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                gc.getPixelWriter().setColor(i, j, colorsArray[drawMatrix[i][j]]);
+                gc.getPixelWriter().setColor(i, j, colorsArray[drawMatrix.get(i,j)]);
             }
         }
     }

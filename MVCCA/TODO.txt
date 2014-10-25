@@ -1,15 +1,6 @@
 
-
-Feature: Seamless transition to the other side when crossing the border (langton done)
-
 Feature: zooming
 
-Feature: quadtrees
+Feature: quadtrees- nope not possible in this model
 
-logic: random cave-like levels thingy
-
-rework:
-separate grid from the code (duplicates)
-
-
-URGE: FIX FPS
+rework: GUI REWORK

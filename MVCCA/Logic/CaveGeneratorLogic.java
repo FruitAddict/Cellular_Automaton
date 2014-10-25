@@ -2,19 +2,20 @@ package MVCCA.Logic;
 
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Utilities.Grid;
+import static MVCCA.Logic.Utilities.Point.*;
+import MVCCA.Logic.Utilities.Point;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
-
 import java.util.Random;
 
 /**
- * Created by FruitAddict on 2014-10-23.
+ * Cave Generator Logic
  */
 public class CaveGeneratorLogic extends Logic {
     Grid currentGrid;
     int width;
     int height;
-    Color[] colorArray = {Color.TEAL,Color.WHITE, Color.BLACK};
+    Color[] colorArray = {Color.AQUAMARINE,Color.WHITE, Color.BLACK};
 
     public CaveGeneratorLogic(int width, int height){
         this.width=width;
@@ -28,8 +29,8 @@ public class CaveGeneratorLogic extends Logic {
     }
 
     @Override
-    public int[][] getCurrentGrid() {
-        return currentGrid.getGrid();
+    public Grid getCurrentGrid() {
+        return currentGrid;
     }
 
     @Override
@@ -67,16 +68,16 @@ public class CaveGeneratorLogic extends Logic {
 
     @Override
     public void performUtilityAction(){
-        int[][] snapshot = Utilities.copy2DArray(currentGrid.getGrid(),width,height);
+        Grid snapshot = currentGrid.copy();
         for (int i =0 ;i <width;i++){
             for(int j=0;j<height;j++){
-                currentGrid.getGrid()[i][j] = resolve(i,j,snapshot[i][j],snapshot);
+                currentGrid.set(i,j,resolve(i,j,snapshot.get(i,j),snapshot));
             }
         }
         genNumber++;
 
     }
-    private int resolve(int x, int y, int currentValue, int[][] snapshot) {
+    private int resolve(int x, int y, int currentValue, Grid snapshot) {
         /**
          * Resolver counts the number of neighbours of the given cell
          * based on the snapshot and returns a correct new value of the cell
@@ -84,31 +85,17 @@ public class CaveGeneratorLogic extends Logic {
          * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
          * If the entry value of the cell is 0, returns 0 instantly (border)
          */
+
+        Point currentPosition = XY(x,y);
+
         if (currentValue != 0) {
             int numOfNeighbours = 0;
-            if (snapshot[x - 1][y - 1] == 2) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x][y - 1] == 2) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x + 1][y - 1] == 2) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x - 1][y] == 2) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x + 1][y] == 2) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x - 1][y + 1] == 2) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x][y + 1] == 2) {
-                numOfNeighbours++;
-            }
-            if (snapshot[x + 1][y + 1] == 2) {
-                numOfNeighbours++;
+
+            for(int i=0;i<8;i++){
+                Point check = currentPosition.merge(Utilities.Directions[i]);
+                if(snapshot.get(check.getX(),check.getY()) == 2) {
+                    numOfNeighbours++;
+                }
             }
 
             if (currentValue == 1) {

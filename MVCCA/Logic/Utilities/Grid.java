@@ -4,11 +4,11 @@ package MVCCA.Logic.Utilities;
  * Created by FruitAddict on 2014-10-24.
  */
 public class Grid {
-    public int[][] storage;
-    int width;
-    int height;
-    int planeId;
-    int borderId;
+    private int[][] storage;
+    private int width;
+    private int height;
+    private int planeId;
+    private int borderId;
 
     public Grid(int width, int height, int planeId, int borderId){
         this.planeId = planeId;
@@ -45,7 +45,17 @@ public class Grid {
         return storage[x][y];
     }
 
+    public void set(int x, int y,int value){
+        storage[x][y] = value;
+    }
+
     public int[][] getGrid(){
         return storage;
+    }
+
+    public Grid copy(){
+        Grid temp = new Grid(width,height,planeId,borderId);
+        temp.storage = Utilities.copy2DArray(this.getGrid(),width,height);
+        return temp;
     }
 }

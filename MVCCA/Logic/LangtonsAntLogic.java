@@ -38,7 +38,7 @@ public class LangtonsAntLogic extends Logic {
 
     @Override
     public void genAdvance() {
-        int[][] snapshot = Utilities.copy2DArray(currentGrid.getGrid(),width,height);
+        Grid snapshot = currentGrid.copy();
         genNumber++;
         additionalMessage = "Number of ants: "+antList.size();
         for(Ant a: antList){
@@ -47,8 +47,8 @@ public class LangtonsAntLogic extends Logic {
     }
 
     @Override
-    public int[][] getCurrentGrid() {
-        return currentGrid.getGrid();
+    public Grid getCurrentGrid() {
+        return currentGrid;
     }
 
     @Override
@@ -108,13 +108,13 @@ public class LangtonsAntLogic extends Logic {
             antColorId =2+ new Random().nextInt(5);
         }
 
-        public void update(int[][] snapshot){
-            if(snapshot[positionX][positionY]==1){
-                currentGrid.getGrid()[positionX][positionY]=antColorId;
+        public void update(Grid snapshot){
+            if(snapshot.get(positionX,positionY)==1){
+                currentGrid.set(positionX,positionY,antColorId);
                 move(1);
             }
-            else if(snapshot[positionX][positionY]!=1){
-                currentGrid.getGrid()[positionX][positionY]=1;
+            else if(snapshot.get(positionX,positionY)!=1){
+                currentGrid.set(positionX,positionY,1);
                 move(2);
             }
         }

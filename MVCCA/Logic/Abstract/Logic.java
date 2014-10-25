@@ -1,5 +1,6 @@
 package MVCCA.Logic.Abstract;
 
+import MVCCA.Logic.Utilities.Grid;
 import javafx.scene.paint.Color;
 
 /**
@@ -13,7 +14,7 @@ public abstract class Logic {
 
     public abstract void genAdvance();
 
-    public abstract int[][] getCurrentGrid();
+    public abstract Grid getCurrentGrid();
 
     public abstract void setCell(int x, int y, int value);
 
