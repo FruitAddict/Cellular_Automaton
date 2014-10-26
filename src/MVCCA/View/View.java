@@ -3,7 +3,8 @@ package MVCCA.View;
 import MVCCA.Controller.Controller;
 import MVCCA.Logic.CaveGeneratorLogic;
 import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.LogicStorage;
+import MVCCA.Logic.Utilities.Singletons;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,6 +19,8 @@ import javafx.stage.Stage;
 
 /**
  * REQUIRES JRE 8_20u
+ * WARNING:
+ * THIS CLASS IS A MESS
  */
 public class View extends Application {
 
@@ -28,6 +31,7 @@ public class View extends Application {
     private Canvas canvas;
     private MenuItem fpsOption;
     private MenuItem cameraOption;
+    private MenuItem infoOption;
     private VBox menusPane;
     private HBox buttonBox;
     private ToggleButton playButton;
@@ -44,14 +48,15 @@ public class View extends Application {
     public void start(Stage primaryStage) {
 
         this.primaryStage = primaryStage;
-        BorderPane canvasPane = new BorderPane(); //canvas
         BorderPane mainPane = new BorderPane();
+        BorderPane holdingPane = new BorderPane();
+        mainPane.setStyle("-fx-border-color: grey; -fx-border-width: 1");
+        holdingPane.setCenter(mainPane);
         menusPane = new VBox(); //menu pane
-        menusPane.setSpacing(25);
         menusPane.setMaxWidth(width * scale / 5);
-        mainPane.setCenter(canvasPane);
-        mainPane.setRight(menusPane);
-        Pane drawStore = new Pane();
+
+
+        holdingPane.setRight(menusPane);
         genLabel = new Label("");
         genLabel.setStyle("-fx-background-color: turquoise");
         additionalMessageLabel = new Label("");
@@ -59,9 +64,7 @@ public class View extends Application {
         canvas = new Canvas(width, height);
         canvas.setScaleX(scale);
         canvas.setScaleY(scale);
-        canvas.setTranslateX(330);
-        canvas.setTranslateY(310);
-        drawStore.getChildren().add(canvas);
+        mainPane.setCenter(canvas);
 
         /**
          * Buttons:
@@ -87,13 +90,12 @@ public class View extends Application {
          * genLabel shows the current generation obtained from the logic
          */
         buttonBox = new HBox();
-        buttonBox.setAlignment(Pos.BOTTOM_LEFT);
+        buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(5); //spacing between buttons in this box
         buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton,utilityButton, additionalMessageLabel); //adding buttons to the box
 
 
         //placing the gui components into main pane
-        canvasPane.setCenter(drawStore);
         mainPane.setBottom(buttonBox);
 
         /**
@@ -104,20 +106,50 @@ public class View extends Application {
         Menu menuView = new Menu("View");
         Menu menuLogic = new Menu("Logic");
 
-
+        /**
+         * menu options handlers
+         */
         fpsOption = new MenuItem("FPS");
-        fpsOption.setOnAction(e -> createGenTimePane());
+        fpsOption.setOnAction(e -> {
+            if(menusPane.getChildren().contains(Singletons.getNumberPane(this))){
+                menusPane.getChildren().remove(Singletons.getNumberPane(this));
+                fpsOption.setText("FPS");
+            }else {
+                menusPane.getChildren().add(Singletons.getNumberPane(this));
+                fpsOption.setText("FPS \u2713");
+            }
+
+        });
         cameraOption = new MenuItem("Camera Position");
-        cameraOption.setOnAction(e -> createCamOptionPane());
+        cameraOption.setOnAction(e -> {
+            if(menusPane.getChildren().contains(Singletons.getCameraPane(this))){
+                menusPane.getChildren().remove(Singletons.getCameraPane(this));
+                cameraOption.setText("Camera Position");
+            }else {
+                menusPane.getChildren().add(Singletons.getCameraPane(this));
+                cameraOption.setText("Camera Position \u2713");
+            }
+        });
+        //info pane must be changed each time logic is changed.
+        infoOption = new MenuItem("Info");
+        infoOption.setOnAction(e->{
+            if(menusPane.getChildren().contains(Singletons.getInfoPane(this))){
+                menusPane.getChildren().remove(Singletons.getCameraPane(this));
+                infoOption.setText("Info");
+            } else {
+                menusPane.getChildren().add(Singletons.getInfoPane(this));
+                infoOption.setText("Info \u2713");
+            }
+        });
 
         MenuItem lifeLogic = new MenuItem("Game of Life");
-        lifeLogic.setOnAction(e -> controller.changeLogic(LogicStorage.getGameOfLifeLogic(width, height)));
+        lifeLogic.setOnAction(e -> controller.changeLogic(Singletons.getGameOfLifeLogic(width, height)));
         MenuItem antLogic = new MenuItem("Langton's Ant");
-        antLogic.setOnAction(e -> controller.changeLogic(LogicStorage.getLangtonsAntLogic(width, height)));
+        antLogic.setOnAction(e -> controller.changeLogic(Singletons.getLangtonsAntLogic(width, height)));
         MenuItem caveLogic = new MenuItem("Cave Generator");
-        caveLogic.setOnAction(e -> controller.changeLogic(LogicStorage.getCaveGeneratorLogic(width, height)));
+        caveLogic.setOnAction(e -> controller.changeLogic(Singletons.getCaveGeneratorLogic(width, height)));
 
-        menuView.getItems().addAll(fpsOption, cameraOption);
+        menuView.getItems().addAll(fpsOption, cameraOption, infoOption);
         menuLogic.getItems().addAll(lifeLogic, antLogic, caveLogic);
 
         mainBar.getMenus().addAll(menuView, menuLogic);
@@ -128,14 +160,13 @@ public class View extends Application {
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
         primaryStage.getIcons().add(new Image("resources\\icon.png"));
-        Scene primaryScene = new Scene(mainPane, (width * scale) + 50, (height * scale) + 50);
+        Scene primaryScene = new Scene(holdingPane, (width * scale) + 50, (height * scale) + 50);
         ((BorderPane) primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
-        primaryStage.setResizable(false);
         primaryStage.show();
 
         //debug
-        System.out.println(canvas.getTranslateX() + " " + canvas.getTranslateY());
+        System.out.println("Canvas placed at:"+canvas.getTranslateX() + " " + canvas.getTranslateY());
 
         //setting up event handlers
         clearButton.setOnAction(e -> controller.clear());
@@ -209,27 +240,8 @@ public class View extends Application {
     }
 
 
-    public double getScale() {
-        return scale;
-    }
-
-    public void setScale(double scale) {
-        View.scale = scale;
-    }
-
-    public void rescale(double scale){
-        setScale(scale);
-        canvas.setScaleX(scale);
-        canvas.setScaleY(scale);
-    }
-
     public void setColorsArray(Color[] colorArray){
         colorsArray = colorArray;
-    }
-
-    public void translateCanvas(double x, double y){
-        canvas.setTranslateX(x);
-        canvas.setTranslateY(y);
     }
 
     public Canvas getCanvas(){
@@ -248,16 +260,22 @@ public class View extends Application {
         additionalMessageLabel.setText(s);
     }
 
+    public void reloadInfoPane(){
+        InfoPane p = Singletons.getInfoPane(this);
+        p.update(controller.getLogic());
+    }
+
     public void updateButtons(){
-        if (LogicStorage.isPaused()) {
+        if (Singletons.isPaused()) {
             playButton.setText("Play");
-        } else if(!LogicStorage.isPaused()) {
+        } else if(!Singletons.isPaused()) {
             playButton.setText("Stop");
         }
         utilityButton.setText(controller.getUtilityButtonName());
         if(utilityButton.getText().equals("")){
             buttonBox.getChildren().remove(utilityButton);
         }else{
+            buttonBox.getChildren().remove(utilityButton);
             buttonBox.getChildren().add(4,utilityButton);
         }
         if(controller.getLogic() instanceof CaveGeneratorLogic){
@@ -269,36 +287,4 @@ public class View extends Application {
         }
 
     }
-
-    private void createGenTimePane(){
-        /**
-         * those two last methods are very simmiliar
-         * disable speed option from the menu, reenable when the widget pane is closed
-         * create new widget pane
-         */
-        fpsOption.setDisable(true);
-        NumberPane genTimePane = new NumberPane(2,60,this);
-        menusPane.getChildren().add(genTimePane);
-        genTimePane.setOnMouseClicked(e->{
-            if(e.isControlDown()){
-                menusPane.getChildren().remove(genTimePane);
-                fpsOption.setDisable(false);
-            }
-        });
-
-
-    }
-
-    private void createCamOptionPane(){
-        cameraOption.setDisable(true);
-        CameraPane cameraPane = new CameraPane(this);
-        menusPane.getChildren().add(cameraPane);
-        cameraPane.setOnMouseClicked(e->{
-            if(e.isControlDown()){
-                menusPane.getChildren().remove(cameraPane);
-                cameraOption.setDisable(false);
-            }
-        });
-    }
-
 }

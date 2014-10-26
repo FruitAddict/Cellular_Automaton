@@ -1,13 +1,15 @@
 package MVCCA.Controller;
 
 import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Utilities.LogicStorage;
+import MVCCA.Logic.Utilities.Singletons;
 import MVCCA.View.View;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.time.LocalDateTime;
 
 /**
  * MVC Controller class.
@@ -32,8 +34,10 @@ public class Controller extends Application {
          * and starts the view using its own primaryStage (JavaFX apps
          * can only be run on one thread)
          */
+
+        System.out.println("Program started at: "+ LocalDateTime.now());
         View view = new View();
-        Logic logic = LogicStorage.getGameOfLifeLogic(view.getWidth(), view.getHeight());
+        Logic logic = Singletons.getGameOfLifeLogic(view.getWidth(), view.getHeight());
         setThings(view,logic);
         view.setController(this);
         view.setColorsArray(logic.getColors());
@@ -55,7 +59,7 @@ public class Controller extends Application {
     }
     //pauses/unpauses auto gen progression
     public void pause(){
-        setLogicRunning(!LogicStorage.isPaused());
+        setLogicRunning(!Singletons.isPaused());
         view.updateButtons();
     }
 
@@ -67,7 +71,7 @@ public class Controller extends Application {
     }
     //sets the cell (mvc) prevents drawing out of borders
     public void setCell(int x, int y){
-            logic.setCell(x, y, 1);
+            logic.setCell(x, y, 2);
             view.setDrawMatrix(logic.getCurrentGrid());
     }
 
@@ -87,11 +91,11 @@ public class Controller extends Application {
     }
 
     public void setLogicRunning(boolean logicRunning) {
-        LogicStorage.setPaused(logicRunning);
+        Singletons.setPaused(logicRunning);
     }
 
     public String getLogicName(){
-        return LogicStorage.getLogicName(logic);
+        return Singletons.getLogicName(logic);
     }
 
     public void changeLogic(Logic logic){
@@ -105,6 +109,7 @@ public class Controller extends Application {
         view.setColorsArray(logic.getColors());
         view.updateButtons();
         setFramesPerSecond(Duration.millis(1000/fps));
+        view.reloadInfoPane();
         advGen();
     }
 

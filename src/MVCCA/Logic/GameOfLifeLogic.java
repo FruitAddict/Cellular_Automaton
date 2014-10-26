@@ -24,13 +24,13 @@ public class GameOfLifeLogic extends Logic {
     String additionalMessage;
 
     //color array
-    final private Color[] colorArray = {Color.BLACK, Color.FLORALWHITE, Color.AQUAMARINE};
+    final private Color[] colorArray = {Color.AQUAMARINE, Color.BLACK, Color.WHITE, Color.LIGHTPINK,Color.ORANGE,Color.DARKRED};
 
     //constructor taking w and height as arguements. inits the grid and clears it
     public GameOfLifeLogic(int width, int height){
         this.width=width;
         this.height=height;
-        currentGrid = new Grid(width,height,0,2);
+        currentGrid = new Grid(width,height,1,0);
         clear();
     }
     @Override
@@ -76,25 +76,25 @@ public class GameOfLifeLogic extends Logic {
          * Resolver counts the number of neighbours of the given cell
          * based on the snapshot and returns a correct new value of the cell
          * based on rules here: http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
-         * If the entry value of the cell is 2, it returns 2 instantly(border)
+         * If the entry value of the cell is 0, it returns 0 instantly(border)
          */
-        if (currentValue != 2) {
+        if (currentValue != 0) {
             int numOfNeighbours = 0;
 
             Point currentPosition = XY(x,y);
             for(int i=0;i<8;i++){
                 Point check = currentPosition.merge(Utilities.Directions[i]);
-                if(snapshot.get(check.getX(),check.getY()) == 1){
+                if(snapshot.get(check.getX(),check.getY()) >=2 ){
                     numOfNeighbours++;
-                } else if(snapshot.get(check.getX(),check.getY()) == 2){
+                } else if(snapshot.get(check.getX(),check.getY()) == 0){
                     switch(i){
                         case 0: {
-                            if(check.getX()==2 && check.getY()==2 && snapshot.get(width-4,height-4)==1){
+                            if(check.getX()==2 && check.getY()==2 && snapshot.get(width-4,height-4)>=2){
                                 numOfNeighbours++;
-                            } else if(check.getX()==2 && snapshot.get(width-4,check.getY())==1){
+                            } else if(check.getX()==2 && snapshot.get(width-4,check.getY())>=2){
                                 numOfNeighbours++;
                             } else {
-                                if(snapshot.get(check.getX(),height-4)==1){
+                                if(snapshot.get(check.getX(),height-4)>=2){
                                     numOfNeighbours++;
                                 }
                             }
@@ -102,19 +102,19 @@ public class GameOfLifeLogic extends Logic {
                         }
 
                         case 1: {
-                            if(snapshot.get(check.getX(),height-4)==1){
+                            if(snapshot.get(check.getX(),height-4)>=2){
                                 numOfNeighbours++;
                             }
                             break;
                         }
 
                         case 2: {
-                            if(check.getX()==width-3 && check.getY()==2 && snapshot.get(3,height-4)==1){
+                            if(check.getX()==width-3 && check.getY()==2 && snapshot.get(3,height-4)>=2){
                                 numOfNeighbours++;
-                            }else if (check.getX() == width-3 && snapshot.get(3,check.getY())==1){
+                            }else if (check.getX() == width-3 && snapshot.get(3,check.getY())>=2){
                                 numOfNeighbours++;
                             } else {
-                                if(snapshot.get(check.getX(),height-4)==1){
+                                if(snapshot.get(check.getX(),height-4)>=2){
                                     numOfNeighbours++;
                                 }
                             }
@@ -122,26 +122,26 @@ public class GameOfLifeLogic extends Logic {
                         }
 
                         case 3: {
-                            if(snapshot.get(width-4,check.getY())==1){
+                            if(snapshot.get(width-4,check.getY())>=2){
                                 numOfNeighbours++;
                             }
                             break;
                         }
 
                         case 4: {
-                            if(snapshot.get(3,check.getY())==1){
+                            if(snapshot.get(3,check.getY())>=2){
                                 numOfNeighbours++;
                             }
                             break;
                         }
 
                         case 5: {
-                            if(check.getX()==2 && check.getY() == height-3 && snapshot.get(width-4,3)==1){
+                            if(check.getX()==2 && check.getY() == height-3 && snapshot.get(width-4,3)>=2){
                                 numOfNeighbours++;
-                            } else if (check.getX()==2 && snapshot.get(width-4,check.getY())==1){
+                            } else if (check.getX()==2 && snapshot.get(width-4,check.getY())>=2){
                                 numOfNeighbours++;
                             } else {
-                                if(snapshot.get(check.getX(),3)==1){
+                                if(snapshot.get(check.getX(),3)>=2){
                                     numOfNeighbours++;
                                 }
                             }
@@ -149,19 +149,19 @@ public class GameOfLifeLogic extends Logic {
                         }
 
                         case 6: {
-                            if(snapshot.get(check.getX(),3)==1){
+                            if(snapshot.get(check.getX(),3)>=2){
                                 numOfNeighbours++;
                             }
                             break;
                         }
 
                         case 7: {
-                            if(check.getX()==width-3 && check.getY() == height-3 && snapshot.get(3,3)==1){
+                            if(check.getX()==width-3 && check.getY() == height-3 && snapshot.get(3,3)>=2){
                                 numOfNeighbours++;
-                            } else if(check.getX()==width-3 && snapshot.get(3,check.getY())==1){
+                            } else if(check.getX()==width-3 && snapshot.get(3,check.getY())>=2){
                                 numOfNeighbours++;
                             } else {
-                                if(snapshot.get(check.getX(),3)==1){
+                                if(snapshot.get(check.getX(),3)>=2){
                                     numOfNeighbours++;
                                 }
                             }
@@ -172,29 +172,33 @@ public class GameOfLifeLogic extends Logic {
             }
 
 
-            if (currentValue == 0) {
+            if (currentValue == 1) {
                 if (numOfNeighbours == 3) {
-                    return 1;
+                    return 5;
                 } else {
-                    return 0;
+                    return 1;
                 }
 
             }
-            if (currentValue == 1) {
+            else if (currentValue >= 2) {
                 if (numOfNeighbours < 2) {
-                    return 0;
-                }
-                else if (numOfNeighbours == 2 || numOfNeighbours == 3) {
                     return 1;
                 }
-                else if (numOfNeighbours > 3) {
-                    return 0;
+                else if (numOfNeighbours == 2) {
+                    return 2;
+                }
+                else if (numOfNeighbours == 3){
+                    return 4;
+                }
+                else if (numOfNeighbours > 3 && numOfNeighbours <6) {
+                    return 1;
+                } else if(numOfNeighbours==7){
+                    return 1;
                 }
             }
-            System.out.println("Something went terribly wrong, are you sure that the board is all 0,1 and 2's?");
             return 1;
         } else {
-            return 2;
+            return 0;
         }
     }
     @Override

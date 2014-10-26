@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Logic class for Langton's Ant, extends abstract class Logic for use with controller. Same deal
@@ -18,7 +19,7 @@ public class LangtonsAntLogic extends Logic {
     private final int height;
     private Grid currentGrid;
     private final Color[] colorArray = {Color.AQUAMARINE, Color.BLACK, Color.GREEN, Color.BLUE, Color.PURPLE, Color.YELLOW, Color.RED};
-    private ArrayList<Ant> antList;
+    private CopyOnWriteArrayList<Ant> antList;
     String additionalMessage;
 
     public LangtonsAntLogic(int width, int height) {
@@ -26,14 +27,14 @@ public class LangtonsAntLogic extends Logic {
         this.height = height;
         currentGrid = new Grid(width,height,1,0);
         clear();
-        antList = new ArrayList<>();
+        antList = new CopyOnWriteArrayList<>();
     }
     @Override
     public void clear() {
         genNumber=0;
         //Initially sets values of the whole array to 0 (dead cells)
         currentGrid.clear();
-        antList = new ArrayList<>();
+        antList = new CopyOnWriteArrayList<>();
     }
 
     @Override
@@ -42,7 +43,7 @@ public class LangtonsAntLogic extends Logic {
         genNumber++;
         additionalMessage = "Number of ants: "+antList.size();
         for(Ant a: antList){
-            a.update(snapshot);
+            a.update(snapshot, antList);
         }
     }
 
@@ -102,13 +103,19 @@ public class LangtonsAntLogic extends Logic {
         private int antColorId;
 
         public Ant(int x, int y){
-            System.out.println("New ant created succesfully at "+x+" "+y);
             positionX = x;
             positionY = y;
             antColorId =2+ new Random().nextInt(5);
         }
 
-        public void update(Grid snapshot){
+        public void update(Grid snapshot, CopyOnWriteArrayList<Ant> antArrayList){
+            for(Ant ant : antArrayList){
+                if(ant != this){
+                    if(ant.getPositionX() == this.getPositionX() && ant.getPositionY() == this.getPositionY()){
+                        antArrayList.remove(ant);
+                    }
+                }
+            }
             if(snapshot.get(positionX,positionY)==1){
                 currentGrid.set(positionX,positionY,antColorId);
                 move(1);
@@ -201,6 +208,13 @@ public class LangtonsAntLogic extends Logic {
                 }
             }
 
+        }
+
+        public int getPositionX(){
+            return  positionX;
+        }
+        public int getPositionY(){
+            return positionY;
         }
     }
 }

@@ -58,7 +58,7 @@ public class CaveGeneratorLogic extends Logic {
 
     @Override
     public String getAdditionalMessage() {
-        return "Please adv. generations manually using Next button";
+        return "";
     }
 
     @Override

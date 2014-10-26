@@ -4,16 +4,23 @@ import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.CaveGeneratorLogic;
 import MVCCA.Logic.GameOfLifeLogic;
 import MVCCA.Logic.LangtonsAntLogic;
+import MVCCA.View.CameraPane;
+import MVCCA.View.InfoPane;
+import MVCCA.View.NumberPane;
+import MVCCA.View.View;
 
 /**
  * Created by FruitAddict on 2014-10-20.
  */
-public class LogicStorage {
-    private LogicStorage(){}
+public class Singletons {
+    private Singletons(){}
 
     static volatile LangtonsAntLogic logicAnt=null;
     static volatile GameOfLifeLogic logicLife=null;
     static volatile CaveGeneratorLogic logicCave=null;
+    static volatile CameraPane camPane = null;
+    static volatile NumberPane numPane = null;
+    static volatile InfoPane infoPane = null;
     static volatile boolean paused = false;
 
     public static synchronized LangtonsAntLogic getLangtonsAntLogic(int x, int y){
@@ -38,6 +45,33 @@ public class LogicStorage {
         } else {
             logicCave = new CaveGeneratorLogic(x,y);
             return logicCave;
+        }
+    }
+
+    public static synchronized CameraPane getCameraPane(View v){
+        if(camPane!=null){
+            return camPane;
+        }else {
+            camPane = new CameraPane(v);
+            return camPane;
+        }
+    }
+
+    public static synchronized NumberPane getNumberPane(View v){
+        if(numPane!=null){
+            return numPane;
+        } else {
+            numPane = new NumberPane(1,250,v);
+            return numPane;
+        }
+    }
+
+    public static synchronized InfoPane getInfoPane(View v){
+        if(infoPane!=null){
+            return infoPane;
+        } else {
+            infoPane = new InfoPane(v);
+            return infoPane;
         }
     }
 

@@ -1,7 +1,7 @@
 package MVCCA.Controller;
 
 import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Utilities.LogicStorage;
+import MVCCA.Logic.Utilities.Singletons;
 import MVCCA.View.View;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -19,7 +19,7 @@ public class RenderHandler implements EventHandler {
     View view;
 
     public static synchronized RenderHandler getInstance(Logic l, View v){
-        if(instance != null && LogicStorage.getLogicName(instance.logic).equals(LogicStorage.getLogicName(l))){
+        if(instance != null && Singletons.getLogicName(instance.logic).equals(Singletons.getLogicName(l))){
             return instance;
         } else {
             instance = new RenderHandler();
@@ -31,7 +31,7 @@ public class RenderHandler implements EventHandler {
 
     @Override
     public void handle(Event event) {
-        if(!LogicStorage.isPaused()) {
+        if(!Singletons.isPaused()) {
             logic.genAdvance();
             view.setAdditionalMessage(logic.getAdditionalMessage());
             view.setGeneration(logic.getGenNumber());
