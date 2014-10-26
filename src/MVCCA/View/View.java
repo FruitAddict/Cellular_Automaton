@@ -134,7 +134,7 @@ public class View extends Application {
         infoOption = new MenuItem("Info");
         infoOption.setOnAction(e->{
             if(menusPane.getChildren().contains(Singletons.getInfoPane(this))){
-                menusPane.getChildren().remove(Singletons.getCameraPane(this));
+                menusPane.getChildren().remove(Singletons.getInfoPane(this));
                 infoOption.setText("Info");
             } else {
                 menusPane.getChildren().add(Singletons.getInfoPane(this));
