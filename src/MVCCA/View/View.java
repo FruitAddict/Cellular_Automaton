@@ -50,7 +50,7 @@ public class View extends Application {
         this.primaryStage = primaryStage;
         BorderPane mainPane = new BorderPane();
         BorderPane holdingPane = new BorderPane();
-        mainPane.setStyle("-fx-border-color: #827970; -fx-border-width: 2");
+        mainPane.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         holdingPane.setCenter(mainPane);
         menusPane = new VBox(); //menu pane
         menusPane.setMaxWidth(width * scale / 5);
@@ -58,9 +58,9 @@ public class View extends Application {
 
         holdingPane.setRight(menusPane);
         genLabel = new Label("");
-        genLabel.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
+        genLabel.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 1 ; -fx-border-color: #827970");
         additionalMessageLabel = new Label("");
-        additionalMessageLabel.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
+        additionalMessageLabel.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 1 ; -fx-border-color: #827970");
         canvas = new Canvas(width, height);
         canvas.setScaleX(scale);
         canvas.setScaleY(scale);
@@ -74,13 +74,13 @@ public class View extends Application {
          * utilityButton - custom button to be used by logic's quirks
          */
         clearButton = new Button("Clear");
-        clearButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
+        clearButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 1 ; -fx-border-color: #827970");
         playButton = new ToggleButton();
-        playButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
+        playButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 1 ; -fx-border-color: #827970");
         advGenButton = new Button("Advance Generation");
-        advGenButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
+        advGenButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 1 ; -fx-border-color: #827970");
         utilityButton = new Button(controller.getUtilityButtonName());
-        utilityButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
+        utilityButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 1 ; -fx-border-color: #827970");
 
         /**
          * buttonBox holds the buttons at the bottom of the screen in horizontal alignment
@@ -93,8 +93,7 @@ public class View extends Application {
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(5); //spacing between buttons in this box
         buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton,utilityButton, additionalMessageLabel); //adding buttons to the box
-
-
+        buttonBox.setMaxHeight(15);
         //placing the gui components into main pane
         mainPane.setBottom(buttonBox);
 

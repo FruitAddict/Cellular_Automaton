@@ -5,6 +5,9 @@ import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Point;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
+
+import java.util.Random;
+
 import static MVCCA.Logic.Utilities.Point.*;
 
 /**
@@ -64,11 +67,19 @@ public class GameOfLifeLogic extends Logic {
 
     @Override
     public String getUtilityButtonName(){
-        return "";
+        return "Random";
     }
     @Override
     public void performUtilityAction(){
-        //nothing
+        Random rng = new Random();
+        for(int i = 1; i< width-1; i++){
+            for(int j =1; j<height-1;j++){
+                int random = rng.nextInt(101);
+                if(random<=25){
+                    setCell(i,j,2);
+                }
+            }
+        }
     }
 
     private int resolve(int x, int y, int currentValue, Grid snapshot) {
@@ -185,10 +196,10 @@ public class GameOfLifeLogic extends Logic {
                     return 1;
                 }
                 else if (numOfNeighbours == 2) {
-                    return 4;
+                    return 3;
                 }
                 else if (numOfNeighbours == 3){
-                    return 5;
+                    return 4;
                 }
                 else if (numOfNeighbours > 3 && numOfNeighbours <6) {
                     return 1;
@@ -204,7 +215,7 @@ public class GameOfLifeLogic extends Logic {
     @Override
     public void setCell(int x, int y, int value){
         //changes the value of a single cell in the current grid
-        if((x>=3 && x <width-3) && (y>=3 && y<height-3)) {
+        if((x>0 && x <width-1) && (y>0 && y<height-1)) {
             currentGrid.getGrid()[x][y] = value;
         }
     }
