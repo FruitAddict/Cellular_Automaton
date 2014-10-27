@@ -50,7 +50,7 @@ public class View extends Application {
         this.primaryStage = primaryStage;
         BorderPane mainPane = new BorderPane();
         BorderPane holdingPane = new BorderPane();
-        mainPane.setStyle("-fx-border-color: grey; -fx-border-width: 1");
+        mainPane.setStyle("-fx-border-color: #827970; -fx-border-width: 2");
         holdingPane.setCenter(mainPane);
         menusPane = new VBox(); //menu pane
         menusPane.setMaxWidth(width * scale / 5);
@@ -58,9 +58,9 @@ public class View extends Application {
 
         holdingPane.setRight(menusPane);
         genLabel = new Label("");
-        genLabel.setStyle("-fx-background-color: turquoise");
+        genLabel.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
         additionalMessageLabel = new Label("");
-        additionalMessageLabel.setStyle("-fx-background-color: turquoise");
+        additionalMessageLabel.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
         canvas = new Canvas(width, height);
         canvas.setScaleX(scale);
         canvas.setScaleY(scale);
@@ -74,13 +74,13 @@ public class View extends Application {
          * utilityButton - custom button to be used by logic's quirks
          */
         clearButton = new Button("Clear");
-        clearButton.setStyle("-fx-background-color: paleturquoise");
+        clearButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
         playButton = new ToggleButton();
-        playButton.setStyle("-fx-background-color: paleturquoise");
+        playButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
         advGenButton = new Button("Advance Generation");
-        advGenButton.setStyle("-fx-background-color: paleturquoise");
+        advGenButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
         utilityButton = new Button(controller.getUtilityButtonName());
-        utilityButton.setStyle("-fx-background-color: paleturquoise");
+        utilityButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-width: 2 ; -fx-border-color: #827970");
 
         /**
          * buttonBox holds the buttons at the bottom of the screen in horizontal alignment
@@ -142,6 +142,7 @@ public class View extends Application {
             }
         });
 
+
         MenuItem lifeLogic = new MenuItem("Game of Life");
         lifeLogic.setOnAction(e -> controller.changeLogic(Singletons.getGameOfLifeLogic(width, height)));
         MenuItem antLogic = new MenuItem("Langton's Ant");
@@ -163,6 +164,7 @@ public class View extends Application {
         Scene primaryScene = new Scene(holdingPane, (width * scale) + 50, (height * scale) + 50);
         ((BorderPane) primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
+        updateButtons();
         primaryStage.show();
 
         //debug
@@ -201,6 +203,10 @@ public class View extends Application {
             canvas.setScaleX(scale);
             canvas.setScaleY(scale);
         });
+
+        fpsOption.fire();
+        infoOption.fire();
+        cameraOption.fire();
     }
 
 
@@ -284,6 +290,16 @@ public class View extends Application {
         } else {
             playButton.setDisable(false);
             advGenButton.setDisable(false);
+        }
+        if(additionalMessageLabel.getText().equals("")){
+            if(buttonBox.getChildren().contains(additionalMessageLabel)){
+                buttonBox.getChildren().remove(additionalMessageLabel);
+            }
+        } else {
+            if(!buttonBox.getChildren().contains(additionalMessageLabel)){
+                buttonBox.getChildren().add(additionalMessageLabel);
+                }
+
         }
 
     }

@@ -30,9 +30,10 @@ public class InfoPane extends BorderPane {
         mainPane = new BorderPane();
         txArea = new TextArea();
         txArea.setWrapText(true);
-        this.setStyle("-fx-border-color: grey; -fx-border-width: 1");
+        this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         txArea.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 12));
         update(v.getController().getLogic());
+        txArea.setEditable(false);
     }
 
     public void update(Logic l){

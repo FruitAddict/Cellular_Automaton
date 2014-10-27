@@ -30,11 +30,11 @@ public class Grid {
          */
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if (j < 3) {
+                if (j < 1) {
                     storage[i][j] = borderId;
-                } else if ((j > 2 || j < height - 3) && (i < 3 || i >= width - 3)) {
+                } else if ((j > 0 || j < height - 1) && (i < 1 || i >= width - 1)) {
                     storage[i][j] = borderId;
-                } else if (j >= height - 3) {
+                } else if (j >= height - 1) {
                     storage[i][j] = borderId;
                 }
             }

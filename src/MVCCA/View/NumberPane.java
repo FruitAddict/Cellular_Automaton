@@ -39,7 +39,7 @@ public class NumberPane extends BorderPane {
         this.setCenter(contentBox);
         this.setTop(nameLabel);
         this.setAlignment(nameLabel,Pos.CENTER);
-        this.setStyle("-fx-border-color: grey; -fx-border-width: 1");
+        this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         incrementButton.setOnAction(e->{
             if(view.getController().getFps()<max) {
                 view.getController().setFps(view.getController().getFps() + 1);

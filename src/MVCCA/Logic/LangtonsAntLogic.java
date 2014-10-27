@@ -18,7 +18,7 @@ public class LangtonsAntLogic extends Logic {
     private final int width;
     private final int height;
     private Grid currentGrid;
-    private final Color[] colorArray = {Color.AQUAMARINE, Color.BLACK, Color.GREEN, Color.BLUE, Color.PURPLE, Color.YELLOW, Color.RED};
+    private final Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.web("94FF00"), Color.web("E89B0C"), Color.web("FF0005"), Color.web("440CE8"), Color.web("0DFCFF")};
     private CopyOnWriteArrayList<Ant> antList;
     String additionalMessage;
 
@@ -130,17 +130,17 @@ public class LangtonsAntLogic extends Logic {
             switch(currentDirection){
                 case 1: {
                     if(side==1){
-                        if(positionX-1>2){
+                        if(positionX-1>0){
                         positionX-=1;} else {
-                            positionX=width-4;
+                            positionX=width-2;
                         }
                         currentDirection = 4;
                         break;
                     } else {
-                        if(positionX+1<width-3) {
+                        if(positionX+1<width-1) {
                             positionX += 1;
                         }else {
-                            positionX=3;
+                            positionX=1;
                         }
                         currentDirection = 2;
                         break;
@@ -149,18 +149,18 @@ public class LangtonsAntLogic extends Logic {
 
                 case 2: {
                     if(side==1){
-                        if(positionY-1>2) {
+                        if(positionY-1>0) {
                             positionY -= 1;
                         }else {
-                            positionY = height-4;
+                            positionY = height-2;
                         }
                         currentDirection=1;
                         break;
                     }else {
-                        if(positionY+1<height-3) {
+                        if(positionY+1<height-1) {
                             positionY += 1;
                         } else {
-                            positionY=3;
+                            positionY=1;
                         }
                         currentDirection=3;
                         break;
@@ -169,18 +169,18 @@ public class LangtonsAntLogic extends Logic {
 
                 case 3:{
                     if(side==1){
-                        if(positionX+1<width-3) {
+                        if(positionX+1<width-1) {
                             positionX += 1;
                         } else {
-                            positionX=3;
+                            positionX=1;
                         }
                         currentDirection=2;
                         break;
                     }else {
-                        if(positionX-1>2) {
+                        if(positionX-1>0) {
                             positionX -= 1;
                         } else {
-                            positionX=width-4;
+                            positionX=width-2;
                         }
                         currentDirection=4;
                         break;
@@ -189,18 +189,18 @@ public class LangtonsAntLogic extends Logic {
 
                 case 4:{
                     if(side==1){
-                        if(positionY+1<height-3) {
+                        if(positionY+1<height-1) {
                             positionY += 1;
                         } else {
-                            positionY = 3;
+                            positionY = 1;
                         }
                         currentDirection=3;
                         break;
                     } else {
-                        if( positionY-1 >2) {
+                        if( positionY-1 >0) {
                             positionY -= 1;
                         } else {
-                            positionY=height-4;
+                            positionY=height-2;
                         }
                         currentDirection=1;
                         break;

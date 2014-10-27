@@ -21,10 +21,10 @@ public class GameOfLifeLogic extends Logic {
     final private int height;
 
     //additional message, can be anything. Can be retrieved by controller
-    String additionalMessage;
+    String additionalMessage="";
 
     //color array
-    final private Color[] colorArray = {Color.AQUAMARINE, Color.BLACK, Color.WHITE, Color.LIGHTPINK,Color.ORANGE,Color.DARKRED};
+    final private Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.WHITE, Color.color(1,76/255,80/255),Color.color(1,0,5/255),Color.color(127/255,0,3/255)};
 
     //constructor taking w and height as arguements. inits the grid and clears it
     public GameOfLifeLogic(int width, int height){
@@ -89,12 +89,12 @@ public class GameOfLifeLogic extends Logic {
                 } else if(snapshot.get(check.getX(),check.getY()) == 0){
                     switch(i){
                         case 0: {
-                            if(check.getX()==2 && check.getY()==2 && snapshot.get(width-4,height-4)>=2){
+                            if(check.getX()==0 && check.getY()==0 && snapshot.get(width-2,height-2)>=2){
                                 numOfNeighbours++;
-                            } else if(check.getX()==2 && snapshot.get(width-4,check.getY())>=2){
+                            } else if(check.getX()==0 && snapshot.get(width-2,check.getY())>=2){
                                 numOfNeighbours++;
                             } else {
-                                if(snapshot.get(check.getX(),height-4)>=2){
+                                if(snapshot.get(check.getX(),height-2)>=2){
                                     numOfNeighbours++;
                                 }
                             }
@@ -102,19 +102,19 @@ public class GameOfLifeLogic extends Logic {
                         }
 
                         case 1: {
-                            if(snapshot.get(check.getX(),height-4)>=2){
+                            if(snapshot.get(check.getX(),height-2)>=2){
                                 numOfNeighbours++;
                             }
                             break;
                         }
 
                         case 2: {
-                            if(check.getX()==width-3 && check.getY()==2 && snapshot.get(3,height-4)>=2){
+                            if(check.getX()==width-1 && check.getY()==0 && snapshot.get(1,height-2)>=2){
                                 numOfNeighbours++;
-                            }else if (check.getX() == width-3 && snapshot.get(3,check.getY())>=2){
+                            }else if (check.getX() == width-1 && snapshot.get(1,check.getY())>=2){
                                 numOfNeighbours++;
                             } else {
-                                if(snapshot.get(check.getX(),height-4)>=2){
+                                if(snapshot.get(check.getX(),height-2)>=2){
                                     numOfNeighbours++;
                                 }
                             }
@@ -122,26 +122,26 @@ public class GameOfLifeLogic extends Logic {
                         }
 
                         case 3: {
-                            if(snapshot.get(width-4,check.getY())>=2){
+                            if(snapshot.get(width-2,check.getY())>=2){
                                 numOfNeighbours++;
                             }
                             break;
                         }
 
                         case 4: {
-                            if(snapshot.get(3,check.getY())>=2){
+                            if(snapshot.get(1,check.getY())>=2){
                                 numOfNeighbours++;
                             }
                             break;
                         }
 
                         case 5: {
-                            if(check.getX()==2 && check.getY() == height-3 && snapshot.get(width-4,3)>=2){
+                            if(check.getX()==0 && check.getY() == height-1 && snapshot.get(width-2,1)>=2){
                                 numOfNeighbours++;
-                            } else if (check.getX()==2 && snapshot.get(width-4,check.getY())>=2){
+                            } else if (check.getX()==0 && snapshot.get(width-2,check.getY())>=2){
                                 numOfNeighbours++;
                             } else {
-                                if(snapshot.get(check.getX(),3)>=2){
+                                if(snapshot.get(check.getX(),1)>=2){
                                     numOfNeighbours++;
                                 }
                             }
@@ -149,19 +149,19 @@ public class GameOfLifeLogic extends Logic {
                         }
 
                         case 6: {
-                            if(snapshot.get(check.getX(),3)>=2){
+                            if(snapshot.get(check.getX(),1)>=2){
                                 numOfNeighbours++;
                             }
                             break;
                         }
 
                         case 7: {
-                            if(check.getX()==width-3 && check.getY() == height-3 && snapshot.get(3,3)>=2){
+                            if(check.getX()==width-1 && check.getY() == height-1 && snapshot.get(1,1)>=2){
                                 numOfNeighbours++;
-                            } else if(check.getX()==width-3 && snapshot.get(3,check.getY())>=2){
+                            } else if(check.getX()==width-1 && snapshot.get(1,check.getY())>=2){
                                 numOfNeighbours++;
                             } else {
-                                if(snapshot.get(check.getX(),3)>=2){
+                                if(snapshot.get(check.getX(),1)>=2){
                                     numOfNeighbours++;
                                 }
                             }
@@ -174,7 +174,7 @@ public class GameOfLifeLogic extends Logic {
 
             if (currentValue == 1) {
                 if (numOfNeighbours == 3) {
-                    return 5;
+                    return 2;
                 } else {
                     return 1;
                 }
@@ -185,10 +185,10 @@ public class GameOfLifeLogic extends Logic {
                     return 1;
                 }
                 else if (numOfNeighbours == 2) {
-                    return 2;
+                    return 4;
                 }
                 else if (numOfNeighbours == 3){
-                    return 4;
+                    return 5;
                 }
                 else if (numOfNeighbours > 3 && numOfNeighbours <6) {
                     return 1;

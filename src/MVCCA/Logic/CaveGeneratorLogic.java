@@ -15,7 +15,7 @@ public class CaveGeneratorLogic extends Logic {
     Grid currentGrid;
     int width;
     int height;
-    Color[] colorArray = {Color.AQUAMARINE,Color.WHITE, Color.BLACK};
+    Color[] colorArray = {Color.web("827970"),Color.WHITE, Color.BLACK};
 
     public CaveGeneratorLogic(int width, int height){
         this.width=width;
@@ -113,7 +113,6 @@ public class CaveGeneratorLogic extends Logic {
                     return 1;
                 }
             }
-            System.out.println("Something went terribly wrong, are you sure that the board is all 0,1 and 2's?");
             return 1;
         } else {
             return 0;
@@ -125,8 +124,8 @@ public class CaveGeneratorLogic extends Logic {
          * Fills the grid with random pixels
          */
         Random rng = new Random();
-        for(int i = 4; i< width-3; i++){
-            for(int j =4; j<height-3;j++){
+        for(int i = 1; i< width-1; i++){
+            for(int j =1; j<height-1;j++){
                 int random = rng.nextInt(101);
                 if(random<=percent){
                     currentGrid.getGrid()[i][j]=2;

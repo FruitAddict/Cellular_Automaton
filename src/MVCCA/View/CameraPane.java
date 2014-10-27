@@ -37,7 +37,7 @@ public class CameraPane extends BorderPane {
         name.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
 
         mainPane.setCenter(name);
-        this.setStyle("-fx-border-color: grey; -fx-border-width: 1");
+        this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         this.setTop(name);
         this.setCenter(mainPane);
         this.setBottom(applyButton);
