@@ -1,6 +1,7 @@
 package MVCCA.Logic;
 
 import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
 import static MVCCA.Logic.Utilities.Point.*;
 import MVCCA.Logic.Utilities.Point;
@@ -12,14 +13,47 @@ import java.util.Random;
  * Cave Generator Logic
  */
 public class CaveGeneratorLogic extends Logic {
-    Grid currentGrid;
-    int width;
-    int height;
-    Color[] colorArray = {Color.web("827970"),Color.WHITE, Color.BLACK};
+    private Grid currentGrid;
+    private int width;
+    private int height;
+    private Color[] colorArray = {Color.web("827970"),Color.WHITE, Color.BLACK};
+    private Resolver resolver;
 
     public CaveGeneratorLogic(int width, int height){
         this.width=width;
         this.height=height;
+        /**
+         * HARDCODED RESOLVER FOR CAVE GENERATOR
+         */
+        setResolver(new Resolver() {
+            /**
+             * Resolver counts the number of neighbours of the given cell
+             * based on the snapshot and returns a correct new value of the cell
+             * based on Cave Generator rules found here:
+             * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
+             * If the entry value of the cell is 0, returns 0 instantly (border)
+             */
+            @Override
+            public int ifDead(int n) {
+                if (n >=5) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            }
+
+            @Override
+            public int ifAlive(int n) {
+                if (n>=4 ) {
+                    return 2;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        /**
+         * END OF HARDCODED RESOLVER
+         */
         currentGrid = new Grid(width,height,1,0);
         clear();
     }
@@ -43,7 +77,7 @@ public class CaveGeneratorLogic extends Logic {
     @Override
     public void setCell(int x, int y, int value) {
         clear();
-        fillRandom(50);
+        Utilities.randomFill(this,width,height,50,2);
     }
 
     @Override
@@ -75,43 +109,22 @@ public class CaveGeneratorLogic extends Logic {
             }
         }
         genNumber++;
+    }
 
+    @Override
+    public void setResolver(Resolver r){
+        resolver = r;
     }
     private int resolve(int x, int y, int currentValue, Grid snapshot) {
-        /**
-         * Resolver counts the number of neighbours of the given cell
-         * based on the snapshot and returns a correct new value of the cell
-         * based on Cave Generator rules found here:
-         * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
-         * If the entry value of the cell is 0, returns 0 instantly (border)
-         */
-
-        Point currentPosition = XY(x,y);
 
         if (currentValue != 0) {
-            int numOfNeighbours = 0;
-
-            for(int i=0;i<8;i++){
-                Point check = currentPosition.merge(Utilities.Directions[i]);
-                if(snapshot.get(check.getX(),check.getY()) == 2) {
-                    numOfNeighbours++;
-                }
-            }
+            int numOfNeighbours = Utilities.getNumberOfNeighbours(x,y,width,height,snapshot);
 
             if (currentValue == 1) {
-                if (numOfNeighbours >=5) {
-                    return 2;
-                } else {
-                    return 1;
-                }
-
+                return resolver.ifDead(numOfNeighbours);
             }
             if (currentValue == 2) {
-                if (numOfNeighbours>=4 ) {
-                    return 2;
-                } else {
-                    return 1;
-                }
+               return resolver.ifAlive(numOfNeighbours);
             }
             return 1;
         } else {
@@ -119,20 +132,4 @@ public class CaveGeneratorLogic extends Logic {
         }
     }
 
-    public void fillRandom(int percent){
-        /**
-         * Fills the grid with random pixels
-         */
-        Random rng = new Random();
-        for(int i = 1; i< width-1; i++){
-            for(int j =1; j<height-1;j++){
-                int random = rng.nextInt(101);
-                if(random<=percent){
-                    currentGrid.getGrid()[i][j]=2;
-                } else {
-                    currentGrid.getGrid()[i][j]=1;
-                }
-            }
-        }
-    }
 }

@@ -1,6 +1,7 @@
 package MVCCA.Logic;
 
 import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
@@ -10,8 +11,9 @@ import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Logic class for Langton's Ant, extends abstract class Logic for use with controller. Same deal
- * as GameOfLife class
+ * Logic class for Langton's Ant, extends abstract class Logic for use with controller.
+ * Doesn't do anything with Resolver interface, as this automaton is not
+ * doable with those simple rulesets in the current state of this program/
  */
 public class LangtonsAntLogic extends Logic {
 
@@ -20,7 +22,8 @@ public class LangtonsAntLogic extends Logic {
     private Grid currentGrid;
     private final Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.web("94FF00"), Color.web("E89B0C"), Color.web("FF0005"), Color.web("440CE8"), Color.web("0DFCFF")};
     private CopyOnWriteArrayList<Ant> antList;
-    String additionalMessage;
+    private String additionalMessage;
+    private Resolver resolver;
 
     public LangtonsAntLogic(int width, int height) {
         this.width = width;
@@ -75,6 +78,11 @@ public class LangtonsAntLogic extends Logic {
     @Override
     public void performUtilityAction(){
         //nothing
+    }
+
+    @Override
+    public void setResolver(Resolver r) {
+
     }
 
     public String getAdditionalMessage(){

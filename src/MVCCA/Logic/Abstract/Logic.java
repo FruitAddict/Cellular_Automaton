@@ -27,4 +27,6 @@ public abstract class Logic {
     public abstract String getUtilityButtonName();
 
     public abstract void performUtilityAction();
+
+    public abstract void setResolver(Resolver r);
 }

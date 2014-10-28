@@ -3,4 +3,5 @@ Feature: zooming
 
 Feature: quadtrees- nope not possible in this model
 
-colors = monochromatyczne  http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors#Standard_colors https://color.adobe.com/
+Logic: Custom
+Brushes.

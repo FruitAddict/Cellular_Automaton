@@ -62,8 +62,10 @@ public class InfoPane extends BorderPane {
                 String linkText = reader.readLine();
                 link = new Hyperlink(linkText);
             } catch (IOException ex) {
-                link = new Hyperlink("No link found");
+                link = new Hyperlink("Error");
             }
+        } else {
+            link = new Hyperlink();
         }
         this.setTop(name);
         this.setCenter(txArea);

@@ -1,6 +1,7 @@
 package MVCCA.Controller;
 
 import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Singletons;
 import MVCCA.View.View;
 import javafx.animation.KeyFrame;
@@ -135,6 +136,12 @@ public class Controller extends Application {
     public void utilityAction(){
         logic.performUtilityAction();
         view.setDrawMatrix(logic.getCurrentGrid());
+    }
+
+    public void setResolver(Resolver r){
+        pause();
+        logic.setResolver(r);
+        pause();
     }
 
 }

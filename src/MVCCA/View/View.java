@@ -2,6 +2,7 @@ package MVCCA.View;
 
 import MVCCA.Controller.Controller;
 import MVCCA.Logic.CaveGeneratorLogic;
+import MVCCA.Logic.CustomLogic;
 import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Singletons;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
@@ -148,9 +149,11 @@ public class View extends Application {
         antLogic.setOnAction(e -> controller.changeLogic(Singletons.getLangtonsAntLogic(width, height)));
         MenuItem caveLogic = new MenuItem("Cave Generator");
         caveLogic.setOnAction(e -> controller.changeLogic(Singletons.getCaveGeneratorLogic(width, height)));
+        MenuItem customLogic = new MenuItem("Custom");
+        customLogic.setOnAction(e->controller.changeLogic(Singletons.getCustomLogic(width,height)));
 
         menuView.getItems().addAll(fpsOption, cameraOption, infoOption);
-        menuLogic.getItems().addAll(lifeLogic, antLogic, caveLogic);
+        menuLogic.getItems().addAll(lifeLogic, antLogic, caveLogic,customLogic);
 
         mainBar.getMenus().addAll(menuView, menuLogic);
 
@@ -299,6 +302,15 @@ public class View extends Application {
                 buttonBox.getChildren().add(additionalMessageLabel);
                 }
 
+        }
+        if(controller.getLogic() instanceof CustomLogic){
+            if(!menusPane.getChildren().contains(Singletons.getRulesetPane(this))){
+                menusPane.getChildren().add(Singletons.getRulesetPane(this));
+            }
+        } else {
+            if(menusPane.getChildren().contains(Singletons.getRulesetPane(this))){
+                menusPane.getChildren().remove(Singletons.getRulesetPane(this));
+            }
         }
 
     }
