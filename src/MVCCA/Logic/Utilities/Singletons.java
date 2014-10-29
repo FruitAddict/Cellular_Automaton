@@ -1,5 +1,6 @@
 package MVCCA.Logic.Utilities;
 
+import MVCCA.Logic.Abstract.Brush;
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.CaveGeneratorLogic;
 import MVCCA.Logic.CustomLogic;
@@ -13,15 +14,17 @@ import MVCCA.View.*;
 public class Singletons {
     private Singletons(){}
 
-    static volatile LangtonsAntLogic logicAnt=null;
-    static volatile GameOfLifeLogic logicLife=null;
-    static volatile CaveGeneratorLogic logicCave=null;
-    static volatile CustomLogic customLogic = null;
-    static volatile CameraPane camPane = null;
-    static volatile NumberPane numPane = null;
-    static volatile InfoPane infoPane = null;
-    static volatile RulesetPane rulesetPane = null;
-    static volatile boolean paused = false;
+    private static volatile LangtonsAntLogic logicAnt=null;
+    private static volatile GameOfLifeLogic logicLife=null;
+    private static volatile CaveGeneratorLogic logicCave=null;
+    private static volatile CustomLogic customLogic = null;
+    private static volatile CameraPane camPane = null;
+    private static volatile NumberPane numPane = null;
+    private static volatile InfoPane infoPane = null;
+    private static volatile RulesetPane rulesetPane = null;
+    private static volatile BrushPane brushPane = null;
+    private static volatile boolean paused = false;
+    private static volatile Brush basicBrush = null;
 
     public static synchronized LangtonsAntLogic getLangtonsAntLogic(int x, int y){
         return ((logicAnt!=null) ? logicAnt : (logicAnt = new LangtonsAntLogic(x,y)));
@@ -53,6 +56,10 @@ public class Singletons {
         return ((rulesetPane!=null) ? rulesetPane : (rulesetPane = new RulesetPane(v)));
     }
 
+    public static synchronized BrushPane getBrushPane(View v){
+        return((brushPane!=null) ? brushPane : (brushPane = new BrushPane(v)));
+    }
+
     public static String getLogicName(Logic l){
         if(l instanceof GameOfLifeLogic){
             return "Conway's Game Of Life";
@@ -75,4 +82,14 @@ public class Singletons {
     public static synchronized  void setPaused(Boolean bool){
         paused = bool;
     }
+
+    public static synchronized Brush getBasicBrush(){
+        return ((basicBrush!=null)?basicBrush:(basicBrush = new Brush() {
+            @Override
+            public void setCells(Grid g, int x, int y, int value) {
+                g.set(x,y,value);
+            }
+        }));
+    }
+
 }

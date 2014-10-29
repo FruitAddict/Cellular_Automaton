@@ -34,12 +34,15 @@ public class Controller extends Application {
          * class, passes this instance of the controller to the view and logic
          * and starts the view using its own primaryStage (JavaFX apps
          * can only be run on one thread)
+         *
+         * Sets the brush of starting logic to basic brush (1 pixel w/h)
          */
 
         System.out.println("Program started at: "+ LocalDateTime.now());
         View view = new View();
-        Logic logic = Singletons.getGameOfLifeLogic(view.getWidth(), view.getHeight());
-        setThings(view,logic);
+        logic = Singletons.getGameOfLifeLogic(view.getWidth(), view.getHeight());
+        logic.setBrush(Singletons.getBasicBrush());
+        setThings(view, logic);
         view.setController(this);
         view.setColorsArray(logic.getColors());
         view.start(primaryStage);
@@ -70,7 +73,7 @@ public class Controller extends Application {
         view.setGeneration(logic.getGenNumber());
         view.setDrawMatrix(logic.getCurrentGrid());
     }
-    //sets the cell (mvc) prevents drawing out of borders
+    //sets the cell (mvc) prevents drawing out of borders, uses default 1px wide drawing
     public void setCell(int x, int y){
             logic.setCell(x, y, 2);
             view.setDrawMatrix(logic.getCurrentGrid());
@@ -113,6 +116,10 @@ public class Controller extends Application {
         advGen();
         view.setAdditionalMessage(logic.getAdditionalMessage());
         view.updateButtons();
+
+        if(logic.getBrush()==null){
+            logic.setBrush(Singletons.getBasicBrush());
+        }
 
     }
 

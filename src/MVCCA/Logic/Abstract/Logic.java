@@ -29,4 +29,8 @@ public abstract class Logic {
     public abstract void performUtilityAction();
 
     public abstract void setResolver(Resolver r);
+
+    public abstract void setBrush(Brush b);
+
+    public abstract Brush getBrush();
 }

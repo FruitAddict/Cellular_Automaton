@@ -21,10 +21,10 @@ public class NumberPane extends BorderPane {
     public NumberPane(int min, int max, View view){
 
         Button incrementButton = new Button("+");
-        incrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 14));
+        incrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 10));
 
         Button decrementButton = new Button("-");
-        decrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 14));
+        decrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 10));
 
         Label currentValue = new Label(view.getController().getFps()+" fps");
         currentValue.setContentDisplay(ContentDisplay.CENTER);

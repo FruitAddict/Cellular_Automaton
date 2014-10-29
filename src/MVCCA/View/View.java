@@ -3,6 +3,7 @@ package MVCCA.View;
 import MVCCA.Controller.Controller;
 import MVCCA.Logic.CaveGeneratorLogic;
 import MVCCA.Logic.CustomLogic;
+import MVCCA.Logic.GameOfLifeLogic;
 import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Singletons;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
@@ -33,6 +34,7 @@ public class View extends Application {
     private MenuItem fpsOption;
     private MenuItem cameraOption;
     private MenuItem infoOption;
+    private MenuItem brushOption;
     private VBox menusPane;
     private HBox buttonBox;
     private ToggleButton playButton;
@@ -92,10 +94,9 @@ public class View extends Application {
          */
         buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setSpacing(5); //spacing between buttons in this box
-        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton,utilityButton, additionalMessageLabel); //adding buttons to the box
+        buttonBox.setSpacing(5);
+        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton,utilityButton, additionalMessageLabel);
         buttonBox.setMaxHeight(15);
-        //placing the gui components into main pane
         mainPane.setBottom(buttonBox);
 
         /**
@@ -107,57 +108,19 @@ public class View extends Application {
         Menu menuLogic = new Menu("Logic");
 
         /**
-         * menu options handlers
+         * loading menus
          */
-        fpsOption = new MenuItem("FPS");
-        fpsOption.setOnAction(e -> {
-            if(menusPane.getChildren().contains(Singletons.getNumberPane(this))){
-                menusPane.getChildren().remove(Singletons.getNumberPane(this));
-                fpsOption.setText("FPS");
-            }else {
-                menusPane.getChildren().add(Singletons.getNumberPane(this));
-                fpsOption.setText("FPS \u2713");
-            }
 
-        });
-        cameraOption = new MenuItem("Camera Position");
-        cameraOption.setOnAction(e -> {
-            if(menusPane.getChildren().contains(Singletons.getCameraPane(this))){
-                menusPane.getChildren().remove(Singletons.getCameraPane(this));
-                cameraOption.setText("Camera Position");
-            }else {
-                menusPane.getChildren().add(Singletons.getCameraPane(this));
-                cameraOption.setText("Camera Position \u2713");
-            }
-        });
-        //info pane must be changed each time logic is changed.
-        infoOption = new MenuItem("Info");
-        infoOption.setOnAction(e->{
-            if(menusPane.getChildren().contains(Singletons.getInfoPane(this))){
-                menusPane.getChildren().remove(Singletons.getInfoPane(this));
-                infoOption.setText("Info");
-            } else {
-                menusPane.getChildren().add(Singletons.getInfoPane(this));
-                infoOption.setText("Info \u2713");
-            }
-        });
+        loadViewMenus(menuView);
 
+        loadLogicMenus(menuLogic);
 
-        MenuItem lifeLogic = new MenuItem("Game of Life");
-        lifeLogic.setOnAction(e -> controller.changeLogic(Singletons.getGameOfLifeLogic(width, height)));
-        MenuItem antLogic = new MenuItem("Langton's Ant");
-        antLogic.setOnAction(e -> controller.changeLogic(Singletons.getLangtonsAntLogic(width, height)));
-        MenuItem caveLogic = new MenuItem("Cave Generator");
-        caveLogic.setOnAction(e -> controller.changeLogic(Singletons.getCaveGeneratorLogic(width, height)));
-        MenuItem customLogic = new MenuItem("Custom");
-        customLogic.setOnAction(e->controller.changeLogic(Singletons.getCustomLogic(width,height)));
-
-        menuView.getItems().addAll(fpsOption, cameraOption, infoOption);
-        menuLogic.getItems().addAll(lifeLogic, antLogic, caveLogic,customLogic);
 
         mainBar.getMenus().addAll(menuView, menuLogic);
 
-        //Initalizing the Stage and creating a Scene for the main pane
+        /**
+         * Scene and stage initialization, setting up menu to the top of the screen.
+         */
         primaryStage.setMinWidth(400);
         primaryStage.setMinHeight(400);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
@@ -172,7 +135,10 @@ public class View extends Application {
         //debug
         System.out.println("Canvas placed at:"+canvas.getTranslateX() + " " + canvas.getTranslateY());
 
-        //setting up event handlers
+        /**
+         * EVENT HANDLERS
+         * Enables all the info panes as default option
+         */
         clearButton.setOnAction(e -> controller.clear());
 
         playButton.setOnAction(e -> {
@@ -209,11 +175,17 @@ public class View extends Application {
         fpsOption.fire();
         infoOption.fire();
         cameraOption.fire();
+        /**
+         * /EVENT HANDLERS
+         */
     }
 
 
 
     public void setDrawMatrix(Grid matrix){
+        /**
+         * Most important method here, receives new grid and draws it to the screen.
+         */
         drawMatrix=matrix;
         redraw();
     }
@@ -247,6 +219,9 @@ public class View extends Application {
         controller=c;
     }
 
+    public double getScale(){
+        return scale;
+    }
 
     public void setColorsArray(Color[] colorArray){
         colorsArray = colorArray;
@@ -269,11 +244,18 @@ public class View extends Application {
     }
 
     public void reloadInfoPane(){
+        /**
+         * When logic is changed, reloads information text and link in the Info pane.
+         */
         InfoPane p = Singletons.getInfoPane(this);
         p.update(controller.getLogic());
     }
 
     public void updateButtons(){
+        /**
+         * Updates GUI depending on the info received from
+         * the controller.
+         */
         if (Singletons.isPaused()) {
             playButton.setText("Play");
         } else if(!Singletons.isPaused()) {
@@ -312,6 +294,79 @@ public class View extends Application {
                 menusPane.getChildren().remove(Singletons.getRulesetPane(this));
             }
         }
+        if((controller.getLogic() instanceof CustomLogic) || (controller.getLogic() instanceof GameOfLifeLogic)){
+                brushOption.setDisable(false);
+        } else {
+            brushOption.setDisable(true);
+            brushOption.setText("Brush");
+            if(menusPane.getChildren().contains(Singletons.getBrushPane(this))) {
+                menusPane.getChildren().remove(Singletons.getBrushPane(this));
+            }
+        }
 
+    }
+
+    public void loadLogicMenus(Menu m){
+        /**
+         * Menu items for loading logics to the program
+         */
+        MenuItem lifeLogic = new MenuItem("Game of Life");
+        lifeLogic.setOnAction(e -> controller.changeLogic(Singletons.getGameOfLifeLogic(width, height)));
+        MenuItem antLogic = new MenuItem("Langton's Ant");
+        antLogic.setOnAction(e -> controller.changeLogic(Singletons.getLangtonsAntLogic(width, height)));
+        MenuItem caveLogic = new MenuItem("Cave Generator");
+        caveLogic.setOnAction(e -> controller.changeLogic(Singletons.getCaveGeneratorLogic(width, height)));
+        MenuItem customLogic = new MenuItem("Custom");
+        customLogic.setOnAction(e->controller.changeLogic(Singletons.getCustomLogic(width,height)));
+        m.getItems().addAll(lifeLogic, antLogic, caveLogic,customLogic);
+    }
+
+    public void loadViewMenus(Menu m){
+        /**
+         * Menu items for loading view widgets to the menus pane
+         */
+        fpsOption = new MenuItem("FPS");
+        fpsOption.setOnAction(e -> {
+            if(menusPane.getChildren().contains(Singletons.getNumberPane(this))){
+                menusPane.getChildren().remove(Singletons.getNumberPane(this));
+                fpsOption.setText("FPS");
+            }else {
+                menusPane.getChildren().add(Singletons.getNumberPane(this));
+                fpsOption.setText("FPS \u2713");
+            }
+
+        });
+        cameraOption = new MenuItem("Camera Position");
+        cameraOption.setOnAction(e -> {
+            if(menusPane.getChildren().contains(Singletons.getCameraPane(this))){
+                menusPane.getChildren().remove(Singletons.getCameraPane(this));
+                cameraOption.setText("Camera Position");
+            }else {
+                menusPane.getChildren().add(Singletons.getCameraPane(this));
+                cameraOption.setText("Camera Position \u2713");
+            }
+        });
+        //info pane must be changed each time logic is changed.
+        infoOption = new MenuItem("Info");
+        infoOption.setOnAction(e->{
+            if(menusPane.getChildren().contains(Singletons.getInfoPane(this))){
+                menusPane.getChildren().remove(Singletons.getInfoPane(this));
+                infoOption.setText("Info");
+            } else {
+                menusPane.getChildren().add(Singletons.getInfoPane(this));
+                infoOption.setText("Info \u2713");
+            }
+        });
+        brushOption = new MenuItem("Brush");
+        brushOption.setOnAction(e->{
+            if(menusPane.getChildren().contains(Singletons.getBrushPane(this))){
+                menusPane.getChildren().remove(Singletons.getBrushPane(this));
+                brushOption.setText("Brush");
+            } else {
+                menusPane.getChildren().add(Singletons.getBrushPane(this));
+                brushOption.setText("Brush \u2713");
+            }
+        });
+        m.getItems().addAll(fpsOption, cameraOption, infoOption,brushOption);
     }
 }

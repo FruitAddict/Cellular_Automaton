@@ -1,5 +1,6 @@
 package MVCCA.Logic;
 
+import MVCCA.Logic.Abstract.Brush;
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
@@ -15,6 +16,7 @@ public class CustomLogic extends Logic {
     private Grid currentGrid;
     private final Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.web("94FF00"), Color.web("E89B0C"), Color.web("FF0005"), Color.web("440CE8"), Color.web("0DFCFF"), Color.web("FFFF66")};
     private Resolver resolver;
+    private Brush brush;
 
     public CustomLogic(int x, int y){
         width=x;
@@ -46,8 +48,8 @@ public class CustomLogic extends Logic {
 
     @Override
     public void setCell(int x, int y, int value) {
-        if((x>0 && x <width-1) && (y>0 && y<height-1)) {
-            currentGrid.set(x, y, value);
+        if((x>2 && x <width-3) && (y>2 && y<height-3)) {
+            brush.setCells(currentGrid,x,y,value);
         }
     }
 
@@ -80,6 +82,16 @@ public class CustomLogic extends Logic {
     public void setResolver(Resolver r) {
         resolver = null;
         resolver = r;
+    }
+
+    @Override
+    public void setBrush(Brush b) {
+        brush = b;
+    }
+
+    @Override
+    public Brush getBrush() {
+        return brush;
     }
 
     private int resolveCell(int x, int y, Grid snapshot, int currentValue){

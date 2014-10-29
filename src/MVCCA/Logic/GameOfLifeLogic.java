@@ -1,5 +1,6 @@
 package MVCCA.Logic;
 
+import MVCCA.Logic.Abstract.Brush;
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
@@ -18,17 +19,20 @@ import static MVCCA.Logic.Utilities.Point.*;
  */
 public class GameOfLifeLogic extends Logic {
     //holds the current version of grid, prone to changes
-    Grid currentGrid;
+    private Grid currentGrid;
 
     //width and height, assigned on creation
     final private int width;
     final private int height;
 
     //additional message, can be anything. Can be retrieved by controller
-    String additionalMessage="";
+    private String additionalMessage="";
 
     //resolver for use with cell udpating
-    Resolver resolver;
+    private Resolver resolver;
+
+    //Brush
+    private Brush brush;
 
     //color array
     final private Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.WHITE, Color.color(1,76/255,80/255),Color.color(1,0,5/255),Color.color(127/255,0,3/255)};
@@ -115,6 +119,16 @@ public class GameOfLifeLogic extends Logic {
         resolver = r;
     }
 
+    @Override
+    public void setBrush(Brush b) {
+        brush = b;
+    }
+
+    @Override
+    public Brush getBrush() {
+        return brush;
+    }
+
     private int resolve(int x, int y, int currentValue, Grid snapshot) {
         /**
          * Resolver counts the number of neighbours of the given cell
@@ -140,8 +154,8 @@ public class GameOfLifeLogic extends Logic {
     @Override
     public void setCell(int x, int y, int value){
         //changes the value of a single cell in the current grid
-        if((x>0 && x <width-1) && (y>0 && y<height-1)) {
-            currentGrid.getGrid()[x][y] = value;
+        if((x>2 && x <width-3) && (y>2 && y<height-3)) {
+            brush.setCells(currentGrid,x,y,value);
         }
     }
 

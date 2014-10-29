@@ -33,6 +33,8 @@ public class RulesetPane extends BorderPane {
         aliveGrid = new NeighbourGrid(1,2,1);
         deadGrid = new NeighbourGrid(1,2,0);
 
+        this.setMaxWidth(v.getWidth()*v.getScale()/5);
+
         Label nameLabel = new Label("Ruleset Editor");
         nameLabel.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
 
@@ -57,6 +59,7 @@ public class RulesetPane extends BorderPane {
         }
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         this.setTop(nameLabel);
+        this.setAlignment(nameLabel,Pos.CENTER);
         this.setCenter(aliveGrid);
         this.setBottom(buttonBox);
 
@@ -69,6 +72,7 @@ public class RulesetPane extends BorderPane {
         applyButton.setOnAction(e->{
             applyRules();
         });
+        
 
 
     }
@@ -82,7 +86,7 @@ public class RulesetPane extends BorderPane {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     int colorArrayLength = view.getController().getLogic().getColors().length;
-                    ValueRectangle rec = new ValueRectangle(i,j,50,value);
+                    ValueRectangle rec = new ValueRectangle(i,j,54,value);
                     rec.lastValue = 1;
                     value++;
                     this.add(rec,j,i);
@@ -138,7 +142,7 @@ public class RulesetPane extends BorderPane {
     }
 
     private void applyRules(){
-        view.getController().getLogic().setResolver(new Resolver() {
+        view.getController().setResolver(new Resolver() {
             @Override
             public int ifDead(int n) {
                 if(n==0){

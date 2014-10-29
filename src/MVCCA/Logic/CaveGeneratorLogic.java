@@ -1,5 +1,6 @@
 package MVCCA.Logic;
 
+import MVCCA.Logic.Abstract.Brush;
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
@@ -115,6 +116,17 @@ public class CaveGeneratorLogic extends Logic {
     public void setResolver(Resolver r){
         resolver = r;
     }
+
+    @Override
+    public void setBrush(Brush b) {
+        //nothing
+    }
+
+    @Override
+    public Brush getBrush() {
+        return null;
+    }
+
     private int resolve(int x, int y, int currentValue, Grid snapshot) {
 
         if (currentValue != 0) {

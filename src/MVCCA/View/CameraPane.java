@@ -25,7 +25,7 @@ public class CameraPane extends BorderPane {
         TextField yCoordInputField = new TextField(Double.toString(view.getCanvas().getTranslateY()));
 
         Button applyButton = new Button("Apply");
-        applyButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 14));
+        applyButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
 
 
         holdingBox.getChildren().addAll(xCoordInputField,yCoordInputField);

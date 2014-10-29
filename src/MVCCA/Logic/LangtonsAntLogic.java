@@ -1,5 +1,6 @@
 package MVCCA.Logic;
 
+import MVCCA.Logic.Abstract.Brush;
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
@@ -82,7 +83,17 @@ public class LangtonsAntLogic extends Logic {
 
     @Override
     public void setResolver(Resolver r) {
+        //nothing
+    }
 
+    @Override
+    public void setBrush(Brush b) {
+        //nothing
+    }
+
+    @Override
+    public Brush getBrush(){
+        return null;
     }
 
     public String getAdditionalMessage(){
