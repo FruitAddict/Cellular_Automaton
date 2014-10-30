@@ -25,11 +25,13 @@ public class LangtonsAntLogic extends Logic {
     private CopyOnWriteArrayList<Ant> antList;
     private String additionalMessage;
     private Resolver resolver;
+    private Brush brush;
 
     public LangtonsAntLogic(int width, int height) {
         this.width = width;
         this.height = height;
         currentGrid = new Grid(width,height,1,0);
+        Utilities.applyBrush(Utilities.getBasicBrushData(),this);
         clear();
         antList = new CopyOnWriteArrayList<>();
     }
@@ -88,12 +90,12 @@ public class LangtonsAntLogic extends Logic {
 
     @Override
     public void setBrush(Brush b) {
-        //nothing
+        brush = b;
     }
 
     @Override
     public Brush getBrush(){
-        return null;
+        return brush;
     }
 
     public String getAdditionalMessage(){

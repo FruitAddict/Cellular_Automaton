@@ -1,4 +1,5 @@
 package MVCCA.Logic.Utilities;
+import MVCCA.Logic.Abstract.Brush;
 import MVCCA.Logic.Abstract.Logic;
 
 import java.util.Random;
@@ -7,7 +8,14 @@ import static MVCCA.Logic.Utilities.Point.*;
 
 public class Utilities {
 
-    public final static Point[] Directions = {XY(-1,-1) , XY(0,-1), XY(1,-1) , XY(-1,0), XY(1,0) ,XY(-1,1), XY(0,1), XY(1,1)};
+    public final static Point[] DIRECTIONS = {XY(-1,-1) , XY(0,-1), XY(1,-1) , XY(-1,0), XY(1,0) ,XY(-1,1), XY(0,1), XY(1,1)};
+    public final static Point[][] POSITIONS = {
+            {XY(-2,-2),XY(-1,-2),XY(0,-2),XY(1,-2),XY(2,-2)},
+            {XY(-2,-1),XY(-1,-1),XY(0,-1),XY(1,-1),XY(2,-1)},
+            {XY(-2,0),XY(-1,0),XY(0,0),XY(1,0),XY(2,0)},
+            {XY(-2,1),XY(-1,1),XY(0,1),XY(1,1),XY(2,1)},
+            {XY(-2,2),XY(-1,2),XY(0,2),XY(1,2),XY(2,2)}
+    };
 
     public static int[][] copy2DArray(int[][] src, int width, int height){
         /**
@@ -22,7 +30,7 @@ public class Utilities {
         return result;
     }
 
-    public static int getNumberOfNeighbours(int x, int y,int width, int height, Grid snapshot){
+    public static int getNumberOfMooreNeighbours(int x, int y, int width, int height, Grid snapshot){
         /**
          * returns Number of Neighbours in von N. neighbourhood, goes over the borders
          * if border is met.
@@ -30,7 +38,7 @@ public class Utilities {
         int numOfNeighbours=0;
         Point currentPosition = XY(x,y);
         for(int i=0;i<8;i++){
-            Point check = currentPosition.merge(Utilities.Directions[i]);
+            Point check = currentPosition.merge(Utilities.DIRECTIONS[i]);
             if(snapshot.get(check.getX(),check.getY()) >=2 ){
                 numOfNeighbours++;
             } else if(snapshot.get(check.getX(),check.getY()) == 0){
@@ -134,5 +142,41 @@ public class Utilities {
                 }
             }
         }
+    }
+
+    public static void applyBrush(int[][] brushData, Logic logic){
+        /**
+         * Brush applying method, takes 2d int array as brushData and applies it
+         * to the given logic
+         */
+        Brush b = new Brush(brushData) {
+
+            @Override
+            public void setCells(Grid g, int x, int y, int value) {
+                for(int i=0; i <5;i++){
+                    for(int j=0;j <5;j++) {
+                        Point current = XY(x, y);
+                        Point merged = current.merge(Utilities.POSITIONS[i][j]);
+                        if (data[i][j]==2){
+                            g.set(merged.getX(),merged.getY(),2);
+                        }
+                    }
+                }
+            }
+        };
+        logic.setBrush(b);
+    }
+
+    public static int[][] getBasicBrushData(){
+        int[][] basicBrushData = new int[5][5];
+        for(int i =0 ;i <5 ;i++){
+            for(int j =0 ;j <5 ;j++){
+                basicBrushData[i][j] = 1;
+                if(i==2 && j ==2){
+                    basicBrushData[i][j]=2;
+                }
+            }
+        }
+        return basicBrushData;
     }
 }

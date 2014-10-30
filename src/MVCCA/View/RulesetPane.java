@@ -1,9 +1,12 @@
 package MVCCA.View;
 
 import MVCCA.Logic.Abstract.Resolver;
+import MVCCA.Logic.Utilities.Singletons;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -38,18 +41,26 @@ public class RulesetPane extends BorderPane {
         Label nameLabel = new Label("Ruleset Editor");
         nameLabel.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
 
-        Button aliveButton = new Button("Alive");
+        ToggleGroup group = new ToggleGroup();
+
+        RadioButton aliveButton = new RadioButton("Alive");
+        aliveButton.setToggleGroup(group);
+        aliveButton.fire();
         aliveButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
 
-        Button deadButton = new Button("Dead");
+        RadioButton deadButton = new RadioButton("Dead");
+        deadButton.setToggleGroup(group);
         deadButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
 
-        Button applyButton = new Button("Apply");
+
+
+        Button applyButton = new Button("Force Apply");
         applyButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
 
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(deadButton,applyButton,aliveButton);
+        buttonBox.setSpacing(25);
+        buttonBox.getChildren().addAll(deadButton,aliveButton);
 
         for(int i=0;i<3;i++){
             for(int j=0;j<3;j++){
@@ -72,6 +83,8 @@ public class RulesetPane extends BorderPane {
         applyButton.setOnAction(e->{
             applyRules();
         });
+
+        applyRules();
         
 
 
@@ -142,34 +155,26 @@ public class RulesetPane extends BorderPane {
     }
 
     private void applyRules(){
-        view.getController().setResolver(new Resolver() {
+        Singletons.getCustomLogic(view.getWidth(),view.getHeight()).setResolver(new Resolver() {
             @Override
             public int ifDead(int n) {
-                if(n==0){
+                if (n == 0) {
                     return deadRules[1][1];
-                }
-                else if(n==1){
+                } else if (n == 1) {
                     return deadRules[0][0];
-                }
-                else if(n==2){
+                } else if (n == 2) {
                     return deadRules[0][1];
-                }
-                else if(n==3){
+                } else if (n == 3) {
                     return deadRules[0][2];
-                }
-                else if(n==4){
+                } else if (n == 4) {
                     return deadRules[1][2];
-                }
-                else if(n==5){
+                } else if (n == 5) {
                     return deadRules[2][2];
-                }
-                else if(n==6){
+                } else if (n == 6) {
                     return deadRules[2][1];
-                }
-                else if(n==7){
+                } else if (n == 7) {
                     return deadRules[2][0];
-                }
-                else {
+                } else {
                     return deadRules[1][0];
                 }
 
@@ -177,31 +182,23 @@ public class RulesetPane extends BorderPane {
 
             @Override
             public int ifAlive(int n) {
-                if(n==0){
+                if (n == 0) {
                     return aliveRules[1][1];
-                }
-                else if(n==1){
+                } else if (n == 1) {
                     return aliveRules[0][0];
-                }
-                else if(n==2){
+                } else if (n == 2) {
                     return aliveRules[0][1];
-                }
-                else if(n==3){
+                } else if (n == 3) {
                     return aliveRules[0][2];
-                }
-                else if(n==4){
+                } else if (n == 4) {
                     return aliveRules[1][2];
-                }
-                else if(n==5){
+                } else if (n == 5) {
                     return aliveRules[2][2];
-                }
-                else if(n==6){
+                } else if (n == 6) {
                     return aliveRules[2][1];
-                }
-                else if(n==7){
+                } else if (n == 7) {
                     return aliveRules[2][0];
-                }
-                else {
+                } else {
                     return aliveRules[1][0];
                 }
             }

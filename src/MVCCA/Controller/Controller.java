@@ -3,6 +3,7 @@ package MVCCA.Controller;
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Singletons;
+import MVCCA.Logic.Utilities.Utilities;
 import MVCCA.View.View;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -40,8 +41,7 @@ public class Controller extends Application {
 
         System.out.println("Program started at: "+ LocalDateTime.now());
         View view = new View();
-        logic = Singletons.getGameOfLifeLogic(view.getWidth(), view.getHeight());
-        logic.setBrush(Singletons.getBasicBrush());
+        logic = Singletons.getGameOfLifeLogic(view.getWidth(),view.getHeight());
         setThings(view, logic);
         view.setController(this);
         view.setColorsArray(logic.getColors());
@@ -54,6 +54,7 @@ public class Controller extends Application {
         timeline = new Timeline(new KeyFrame(duration, RenderHandler.getInstance(logic,view)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
     }
 
     //handles clearing the screen and drawing the borders
@@ -116,11 +117,7 @@ public class Controller extends Application {
         advGen();
         view.setAdditionalMessage(logic.getAdditionalMessage());
         view.updateButtons();
-
-        if(logic.getBrush()==null){
-            logic.setBrush(Singletons.getBasicBrush());
-        }
-
+        Singletons.getBrushPane(view).update();
     }
 
     public void setFps(int f){
@@ -144,11 +141,4 @@ public class Controller extends Application {
         logic.performUtilityAction();
         view.setDrawMatrix(logic.getCurrentGrid());
     }
-
-    public void setResolver(Resolver r){
-        pause();
-        logic.setResolver(r);
-        pause();
-    }
-
 }

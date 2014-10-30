@@ -4,11 +4,8 @@ import MVCCA.Logic.Abstract.Brush;
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
-import static MVCCA.Logic.Utilities.Point.*;
-import MVCCA.Logic.Utilities.Point;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
-import java.util.Random;
 
 /**
  * Cave Generator Logic
@@ -19,6 +16,7 @@ public class CaveGeneratorLogic extends Logic {
     private int height;
     private Color[] colorArray = {Color.web("827970"),Color.WHITE, Color.BLACK};
     private Resolver resolver;
+    private Brush brush;
 
     public CaveGeneratorLogic(int width, int height){
         this.width=width;
@@ -56,6 +54,7 @@ public class CaveGeneratorLogic extends Logic {
          * END OF HARDCODED RESOLVER
          */
         currentGrid = new Grid(width,height,1,0);
+        Utilities.applyBrush(Utilities.getBasicBrushData(),this);
         clear();
     }
 
@@ -119,18 +118,18 @@ public class CaveGeneratorLogic extends Logic {
 
     @Override
     public void setBrush(Brush b) {
-        //nothing
+        brush = b;
     }
 
     @Override
     public Brush getBrush() {
-        return null;
+        return brush;
     }
 
     private int resolve(int x, int y, int currentValue, Grid snapshot) {
 
         if (currentValue != 0) {
-            int numOfNeighbours = Utilities.getNumberOfNeighbours(x,y,width,height,snapshot);
+            int numOfNeighbours = Utilities.getNumberOfMooreNeighbours(x, y, width, height, snapshot);
 
             if (currentValue == 1) {
                 return resolver.ifDead(numOfNeighbours);

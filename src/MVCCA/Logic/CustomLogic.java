@@ -22,6 +22,13 @@ public class CustomLogic extends Logic {
         width=x;
         height=y;
         currentGrid = new Grid(width,height,1,0);
+
+        /**
+         * Setting basic brush
+         */
+
+        Utilities.applyBrush(Utilities.getBasicBrushData(),this);
+
         clear();
     }
     @Override
@@ -96,7 +103,7 @@ public class CustomLogic extends Logic {
 
     private int resolveCell(int x, int y, Grid snapshot, int currentValue){
         if(currentValue!=0) {
-            int numberOfNeighbours = Utilities.getNumberOfNeighbours(x,y,width,height,snapshot);
+            int numberOfNeighbours = Utilities.getNumberOfMooreNeighbours(x, y, width, height, snapshot);
             if (currentValue == 1) {
                 return ((resolver!=null) ? resolver.ifDead(numberOfNeighbours) : 1);
             } else if (currentValue >= 2) {

@@ -4,13 +4,8 @@ import MVCCA.Logic.Abstract.Brush;
 import MVCCA.Logic.Abstract.Logic;
 import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.Point;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
-
-import java.util.Random;
-
-import static MVCCA.Logic.Utilities.Point.*;
 
 /**
  * Logic class for Conway's game of life. Extends abstract Logic class (for use with controller)
@@ -74,6 +69,13 @@ public class GameOfLifeLogic extends Logic {
          * END OF HARDCODED RESOLVER
          */
         currentGrid = new Grid(width,height,1,0);
+
+        /**
+         * Basic brush
+         */
+
+        Utilities.applyBrush(Utilities.getBasicBrushData(),this);
+
         clear();
     }
     @Override
@@ -138,7 +140,7 @@ public class GameOfLifeLogic extends Logic {
          */
         if (currentValue != 0) {
 
-            int numOfNeighbours = Utilities.getNumberOfNeighbours(x,y,width,height,snapshot);
+            int numOfNeighbours = Utilities.getNumberOfMooreNeighbours(x, y, width, height, snapshot);
 
             if (currentValue == 1) {
                 return resolver.ifDead(numOfNeighbours);

@@ -24,7 +24,6 @@ public class Singletons {
     private static volatile RulesetPane rulesetPane = null;
     private static volatile BrushPane brushPane = null;
     private static volatile boolean paused = false;
-    private static volatile Brush basicBrush = null;
 
     public static synchronized LangtonsAntLogic getLangtonsAntLogic(int x, int y){
         return ((logicAnt!=null) ? logicAnt : (logicAnt = new LangtonsAntLogic(x,y)));
@@ -81,15 +80,6 @@ public class Singletons {
 
     public static synchronized  void setPaused(Boolean bool){
         paused = bool;
-    }
-
-    public static synchronized Brush getBasicBrush(){
-        return ((basicBrush!=null)?basicBrush:(basicBrush = new Brush() {
-            @Override
-            public void setCells(Grid g, int x, int y, int value) {
-                g.set(x,y,value);
-            }
-        }));
     }
 
 }

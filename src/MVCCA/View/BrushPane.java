@@ -1,8 +1,6 @@
 package MVCCA.View;
 
-import MVCCA.Logic.Abstract.Brush;
-import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.Point;
+import MVCCA.Logic.Utilities.Utilities;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,7 +12,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import static MVCCA.Logic.Utilities.Point.*;
 
 /**
  * Pane to hold grid for creating custom brushes.
@@ -24,19 +21,15 @@ import static MVCCA.Logic.Utilities.Point.*;
 public class BrushPane extends BorderPane {
     private View view;
     private int[][] brushValues = new int[5][5];
-    private Point[][] positions = {
-            {XY(-2,-2),XY(-1,-2),XY(0,-2),XY(1,-2),XY(2,-2)},
-            {XY(-2,-1),XY(-1,-1),XY(0,-1),XY(1,-1),XY(2,-1)},
-            {XY(-2,0),XY(-1,0),XY(0,0),XY(1,0),XY(2,0)},
-            {XY(-2,1),XY(-1,1),XY(0,1),XY(1,1),XY(2,1)},
-            {XY(-2,2),XY(-1,2),XY(0,2),XY(1,2),XY(2,2)}
-    };
+    private BrushGrid grid;
+
 
     public BrushPane(View v){
         view = v;
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         HBox buttonBox = new HBox();
-        BrushGrid grid = new BrushGrid();
+        grid = new BrushGrid();
+        update();
 
         this.setMaxWidth(v.getWidth()*v.getScale()/5);
 
@@ -50,42 +43,46 @@ public class BrushPane extends BorderPane {
         buttonBox.getChildren().add(applyButton);
 
         this.setTop(nameLabel);
-        this.setAlignment(nameLabel,Pos.CENTER);
+        setAlignment(nameLabel, Pos.CENTER);
         this.setCenter(grid);
         this.setBottom(buttonBox);
 
         applyButton.setOnAction(e->{
             applyBrush();
         });
+        applyBrush();
+
+    }
+
+    public void update(){
+        for(int i =0 ;i <5 ;i++){
+            for(int j =0 ;j <5 ;j++){
+                brushValues[i][j] = view.getController().getLogic().getBrush().data[i][j];
+            }
+        }
+        grid.update();
     }
 
     private void applyBrush(){
-        view.getController().getLogic().setBrush((g, x, y, value) -> {
-            for(int i=0; i <5;i++){
-                for(int j=0;j <5;j++) {
-                    Point current = XY(x, y);
-                    Point merged = current.merge(positions[i][j]);
-                    if (brushValues[i][j]==2){
-                        g.set(merged.getX(),merged.getY(),2);
-                    }
-                }
-            }
-        });
+        Utilities.applyBrush(brushValues,view.getController().getLogic());
     }
 
     private class BrushGrid extends GridPane{
         public BrushGrid() {
-            for(int i =0 ;i <3 ;i++){
-                for(int j =0 ;j <3 ;j++){
-                    brushValues[i][j] = 1;
-                }
-            }
             this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
+            update();
+        }
+        public void update(){
+            this.getChildren().clear();
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
                     ValueRectangle rec = new ValueRectangle(i,j,32);
                     rec.setStroke(Color.web("827970"));
-                    rec.setFill(Color.WHITE);
+                    if(brushValues[i][j]==1){
+                        rec.setFill(Color.WHITE);
+                    }else {
+                        rec.setFill(Color.web("8279FF"));
+                    }
                     this.add(rec,j,i);
                     rec.setOnMouseClicked(e->{
                         if(rec.getFill()==Color.WHITE){
