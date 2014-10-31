@@ -1,11 +1,7 @@
 package MVCCA.Logic.Utilities;
 
-import MVCCA.Logic.Abstract.Brush;
+import MVCCA.Logic.*;
 import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.CaveGeneratorLogic;
-import MVCCA.Logic.CustomLogic;
-import MVCCA.Logic.GameOfLifeLogic;
-import MVCCA.Logic.LangtonsAntLogic;
 import MVCCA.View.*;
 
 /**
@@ -18,6 +14,7 @@ public class Singletons {
     private static volatile GameOfLifeLogic logicLife=null;
     private static volatile CaveGeneratorLogic logicCave=null;
     private static volatile CustomLogic customLogic = null;
+    private static volatile AnimalsGrazingLogic animalsGrazingLogic = null;
     private static volatile CameraPane camPane = null;
     private static volatile NumberPane numPane = null;
     private static volatile InfoPane infoPane = null;
@@ -37,6 +34,10 @@ public class Singletons {
 
     public static synchronized CustomLogic getCustomLogic(int x, int y){
         return ((customLogic!=null) ? customLogic : (customLogic = new CustomLogic(x,y)));
+    }
+
+    public static synchronized AnimalsGrazingLogic getAnimalLogic(int x, int y){
+        return ((animalsGrazingLogic !=null) ? animalsGrazingLogic : (animalsGrazingLogic = new AnimalsGrazingLogic(x,y)));
     }
 
     public static synchronized CameraPane getCameraPane(View v){
@@ -68,8 +69,12 @@ public class Singletons {
         }
         else if(l instanceof  CaveGeneratorLogic){
             return "Cave Generator";
-        } else if(l instanceof CustomLogic){
+        }
+        else if(l instanceof CustomLogic){
             return "Custom";
+        }
+        else if(l instanceof AnimalsGrazingLogic){
+            return "Animals Grazing";
         }
         return "Logic Name Not Found";
     }

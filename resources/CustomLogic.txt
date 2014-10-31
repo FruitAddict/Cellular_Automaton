@@ -1,0 +1,2 @@
+Please specify the ruleset yourself. There are 2 possible states of the cell: Alive or Dead.
+Select number of neighbours at which a dead cell turns alive, and where alive cell turns dead.

@@ -1,0 +1,4 @@
+Green pixels represent grass, red pixels represent grazing animals. 
+Grass is reproducing based on cellular automata rules with their chance of dying and staying alive customized (not always 100%).
+If two animals meet, they reproduce creating another animal.
+ If they step on grass, they eat it prolonging their lifespan. Each animal starts with 100 generation lifespan, eating grass prolongs it by 25.

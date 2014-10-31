@@ -41,9 +41,9 @@ public class InfoPane extends BorderPane {
         txArea.clear();
         Label name = new Label("Info ");
         name.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-
         File f = new File("resources\\"+l.getClass().getSimpleName()+".txt");
         if(f.exists()){
+            System.out.println("File found");
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(f));
                 String line;
@@ -61,11 +61,13 @@ public class InfoPane extends BorderPane {
                 BufferedReader reader = new BufferedReader(new FileReader(g));
                 String linkText = reader.readLine();
                 link = new Hyperlink(linkText);
+                link.setDisable(false);
             } catch (IOException ex) {
                 link = new Hyperlink("Error");
             }
         } else {
             link = new Hyperlink();
+            link.setDisable(true);
         }
         this.setTop(name);
         this.setCenter(txArea);

@@ -21,8 +21,6 @@ import javafx.stage.Stage;
 
 /**
  * REQUIRES JRE 8_20u
- * WARNING:
- * THIS CLASS IS A MESS
  */
 public class View extends Application {
 
@@ -175,6 +173,7 @@ public class View extends Application {
         fpsOption.fire();
         infoOption.fire();
         cameraOption.fire();
+        brushOption.fire();
         /**
          * /EVENT HANDLERS
          */
@@ -318,7 +317,9 @@ public class View extends Application {
         caveLogic.setOnAction(e -> controller.changeLogic(Singletons.getCaveGeneratorLogic(width, height)));
         MenuItem customLogic = new MenuItem("Custom");
         customLogic.setOnAction(e->controller.changeLogic(Singletons.getCustomLogic(width,height)));
-        m.getItems().addAll(lifeLogic, antLogic, caveLogic,customLogic);
+        MenuItem animalLogic = new MenuItem("Animal Logic");
+        animalLogic.setOnAction(e->controller.changeLogic(Singletons.getAnimalLogic(width,height)));
+        m.getItems().addAll(lifeLogic, antLogic, caveLogic,animalLogic,customLogic);
     }
 
     public void loadViewMenus(Menu m){
