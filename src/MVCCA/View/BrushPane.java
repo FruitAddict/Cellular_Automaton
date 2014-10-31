@@ -50,8 +50,6 @@ public class BrushPane extends BorderPane {
         applyButton.setOnAction(e->{
             applyBrush();
         });
-        applyBrush();
-
     }
 
     public void update(){
@@ -64,7 +62,8 @@ public class BrushPane extends BorderPane {
     }
 
     private void applyBrush(){
-        Utilities.applyBrush(brushValues,view.getController().getLogic());
+        int[][] copy = Utilities.copy2DArray(brushValues,5,5);
+        Utilities.applyBrush(copy,view.getController().getLogic());
     }
 
     private class BrushGrid extends GridPane{
