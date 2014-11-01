@@ -1,6 +1,7 @@
 package MVCCA.View;
 
 import MVCCA.Logic.Abstract.Logic;
+import MVCCA.Resources.Resources;
 import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -10,10 +11,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -41,34 +39,38 @@ public class InfoPane extends BorderPane {
         txArea.clear();
         Label name = new Label("Info ");
         name.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
-        File f = new File("resources\\"+l.getClass().getSimpleName()+".txt");
-        if(f.exists()){
-            System.out.println("File found");
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(f));
-                String line;
-                while((line = reader.readLine())!=null){
-                    txArea.appendText(line+"\n");
+        try (
+            InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName()+".txt");
+            )
+        {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
+            String line;
+            while((line = reader.readLine())!=null){
+                txArea.appendText(line+"\n");
+                if(line.contains("null")){
+                    txArea.clear();
+                    txArea.appendText("No information found");
+                    break;
                 }
-            }catch(IOException ex){
-                txArea.appendText("There was an error loading the info file.");
             }
+        }catch(Exception ex){
+            txArea.appendText("There was an error loading the info file.");
         }
 
-        File g = new File("resources\\"+l.getClass().getSimpleName()+"Link.txt");
-        if(g.exists()) {
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(g));
-                String linkText = reader.readLine();
-                link = new Hyperlink(linkText);
-                link.setDisable(false);
-            } catch (IOException ex) {
-                link = new Hyperlink("Error");
-            }
-        } else {
+
+        try (
+            InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName()+"Link.txt");
+            )
+        {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
+            String linkText = reader.readLine();
+            link = new Hyperlink(linkText);
+            link.setDisable(false);
+        } catch (Exception ex) {
             link = new Hyperlink();
             link.setDisable(true);
         }
+
         this.setTop(name);
         this.setCenter(txArea);
         this.setBottom(link);

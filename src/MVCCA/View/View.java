@@ -6,6 +6,7 @@ import MVCCA.Logic.CustomLogic;
 import MVCCA.Logic.GameOfLifeLogic;
 import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Singletons;
+import MVCCA.Resources.Resources;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -123,7 +124,8 @@ public class View extends Application {
         primaryStage.setMinHeight(400);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
-        primaryStage.getIcons().add(new Image("resources\\icon.png"));
+        Image icon = new Image(Resources.class.getResourceAsStream("icon.png"));
+        primaryStage.getIcons().add(icon);
         Scene primaryScene = new Scene(holdingPane, (width * scale) + 50, (height * scale) + 50);
         ((BorderPane) primaryScene.getRoot()).setTop(mainBar);
         primaryStage.setScene(primaryScene);
