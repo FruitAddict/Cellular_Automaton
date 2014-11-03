@@ -9,8 +9,8 @@ import MVCCA.Logic.Utilities.Grid;
 public abstract class Brush {
     public int[][] data = new int[5][5];
 
-    public Brush(int[][] data){
-        this.data=data;
+    public Brush(int[][] data) {
+        this.data = data;
     }
 
     public abstract void setCells(Grid g, int x, int y, int value);

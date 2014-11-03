@@ -24,14 +24,14 @@ public class BrushPane extends BorderPane {
     private BrushGrid grid;
 
 
-    public BrushPane(View v){
+    public BrushPane(View v) {
         view = v;
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         HBox buttonBox = new HBox();
         grid = new BrushGrid();
         update();
 
-        this.setMaxWidth(v.getWidth()*v.getScale()/5);
+        this.setMaxWidth(v.getWidth() * v.getScale() / 5);
 
         Label nameLabel = new Label("Brush Editor");
         nameLabel.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
@@ -47,59 +47,62 @@ public class BrushPane extends BorderPane {
         this.setCenter(grid);
         this.setBottom(buttonBox);
 
-        applyButton.setOnAction(e->{
+        applyButton.setOnAction(e -> {
             applyBrush();
         });
     }
 
-    public void update(){
-        for(int i =0 ;i <5 ;i++){
-            for(int j =0 ;j <5 ;j++){
+    public void update() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
                 brushValues[i][j] = view.getController().getLogic().getBrush().data[i][j];
             }
         }
         grid.update();
     }
 
-    private void applyBrush(){
-        int[][] copy = Utilities.copy2DArray(brushValues,5,5);
-        Utilities.applyBrush(copy,view.getController().getLogic());
+    private void applyBrush() {
+        int[][] copy = Utilities.copy2DArray(brushValues, 5, 5);
+        Utilities.applyBrush(copy, view.getController().getLogic());
     }
 
-    private class BrushGrid extends GridPane{
+    private class BrushGrid extends GridPane {
         public BrushGrid() {
             this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
             update();
         }
-        public void update(){
+
+        public void update() {
             this.getChildren().clear();
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
-                    ValueRectangle rec = new ValueRectangle(i,j,32);
+                    ValueRectangle rec = new ValueRectangle(i, j, 32);
                     rec.setStroke(Color.web("827970"));
-                    if(brushValues[i][j]==1){
+                    if (brushValues[i][j] == 1) {
                         rec.setFill(Color.WHITE);
-                    }else {
+                    } else {
                         rec.setFill(Color.web("8279FF"));
                     }
-                    this.add(rec,j,i);
-                    rec.setOnMouseClicked(e->{
-                        if(rec.getFill()==Color.WHITE){
-                            brushValues[rec.posX][rec.posY]=2;
+                    this.add(rec, j, i);
+                    rec.setOnMouseClicked(e -> {
+                        if (rec.getFill() == Color.WHITE) {
+                            brushValues[rec.posX][rec.posY] = 2;
                             rec.setFill(Color.web("8279FF"));
-                        } else{
-                            brushValues[rec.posX][rec.posY]=1;
+                        } else {
+                            brushValues[rec.posX][rec.posY] = 1;
                             rec.setFill(Color.WHITE);
                         }
                     });
                 }
             }
         }
-        private class ValueRectangle extends Rectangle{
+
+        private class ValueRectangle extends Rectangle {
             private int posX;
             private int posY;
-            public ValueRectangle(int posx, int posy, int side){
-                super(side,side);
+
+            public ValueRectangle(int posx, int posy, int side) {
+                super(side, side);
                 this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
                 posX = posx;
                 posY = posy;

@@ -7,7 +7,6 @@ import MVCCA.Logic.GameOfLifeLogic;
 import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Singletons;
 import MVCCA.Resources.Resources;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -25,6 +24,9 @@ import javafx.stage.Stage;
  */
 public class View extends Application {
 
+    public static double scale = 4;
+    private final int width = 200;
+    private final int height = 200;
     private Stage primaryStage;
     private Controller controller;
     private Label genLabel;
@@ -42,10 +44,6 @@ public class View extends Application {
     private Button advGenButton;
     private Grid drawMatrix;
     private Color[] colorsArray;
-    private final int width = 200;
-    private final int height = 200;
-
-    public static double scale = 4;
 
     public void start(Stage primaryStage) {
 
@@ -94,7 +92,7 @@ public class View extends Application {
         buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setSpacing(5);
-        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton,utilityButton, additionalMessageLabel);
+        buttonBox.getChildren().addAll(genLabel, clearButton, playButton, advGenButton, utilityButton, additionalMessageLabel);
         buttonBox.setMaxHeight(15);
         mainPane.setBottom(buttonBox);
 
@@ -133,7 +131,7 @@ public class View extends Application {
         primaryStage.show();
 
         //debug
-        System.out.println("Canvas placed at:"+canvas.getTranslateX() + " " + canvas.getTranslateY());
+        System.out.println("Canvas placed at:" + canvas.getTranslateX() + " " + canvas.getTranslateY());
 
         /**
          * EVENT HANDLERS
@@ -148,26 +146,26 @@ public class View extends Application {
 
         advGenButton.setOnAction(e -> controller.advGen());
 
-        utilityButton.setOnAction(e->controller.utilityAction());
+        utilityButton.setOnAction(e -> controller.utilityAction());
 
         // cell drawing handler
         canvas.setOnMouseDragged(e -> {
-                controller.setCell((int) e.getX(), (int) e.getY());
-                redraw();
+            controller.setCell((int) e.getX(), (int) e.getY());
+            redraw();
         });
-        canvas.setOnMousePressed(e->{
-            controller.setCell((int)e.getX(), (int)e.getY());
+        canvas.setOnMousePressed(e -> {
+            controller.setCell((int) e.getX(), (int) e.getY());
         });
 
         //resizing
-        mainPane.widthProperty().addListener(e->{
-            scale = mainPane.getWidth()/width;
+        mainPane.widthProperty().addListener(e -> {
+            scale = mainPane.getWidth() / width;
             canvas.setScaleX(scale);
             canvas.setScaleY(scale);
         });
 
-        mainPane.heightProperty().addListener(e->{
-            scale = mainPane.getWidth()/width;
+        mainPane.heightProperty().addListener(e -> {
+            scale = mainPane.getWidth() / width;
             canvas.setScaleX(scale);
             canvas.setScaleY(scale);
         });
@@ -182,12 +180,11 @@ public class View extends Application {
     }
 
 
-
-    public void setDrawMatrix(Grid matrix){
+    public void setDrawMatrix(Grid matrix) {
         /**
          * Most important method here, receives new grid and draws it to the screen.
          */
-        drawMatrix=matrix;
+        drawMatrix = matrix;
         redraw();
     }
 
@@ -199,52 +196,52 @@ public class View extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                gc.getPixelWriter().setColor(i, j, colorsArray[drawMatrix.get(i,j)]);
+                gc.getPixelWriter().setColor(i, j, colorsArray[drawMatrix.get(i, j)]);
             }
         }
     }
 
-    public void setGeneration(int gen){
-        genLabel.setText("Generation: "+gen);
+    public void setGeneration(int gen) {
+        genLabel.setText("Generation: " + gen);
     }
 
-    public int getWidth(){
+    public int getWidth() {
         return width;
     }
 
-    public int getHeight(){
+    public int getHeight() {
         return height;
     }
 
-    public void setController(Controller c){
-        controller=c;
-    }
-
-    public double getScale(){
+    public double getScale() {
         return scale;
     }
 
-    public void setColorsArray(Color[] colorArray){
+    public void setColorsArray(Color[] colorArray) {
         colorsArray = colorArray;
     }
 
-    public Canvas getCanvas(){
+    public Canvas getCanvas() {
         return canvas;
     }
 
-    public Controller getController(){
+    public Controller getController() {
         return controller;
     }
 
-    public void changeStageName(String s){
+    public void setController(Controller c) {
+        controller = c;
+    }
+
+    public void changeStageName(String s) {
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
     }
 
-    public void setAdditionalMessage(String s){
+    public void setAdditionalMessage(String s) {
         additionalMessageLabel.setText(s);
     }
 
-    public void reloadInfoPane(){
+    public void reloadInfoPane() {
         /**
          * When logic is changed, reloads information text and link in the Info pane.
          */
@@ -252,62 +249,62 @@ public class View extends Application {
         p.update(controller.getLogic());
     }
 
-    public void updateButtons(){
+    public void updateButtons() {
         /**
          * Updates GUI depending on the info received from
          * the controller.
          */
         if (Singletons.isPaused()) {
             playButton.setText("Play");
-        } else if(!Singletons.isPaused()) {
+        } else if (!Singletons.isPaused()) {
             playButton.setText("Stop");
         }
         utilityButton.setText(controller.getUtilityButtonName());
-        if(utilityButton.getText().equals("")){
+        if (utilityButton.getText().equals("")) {
             buttonBox.getChildren().remove(utilityButton);
-        }else{
+        } else {
             buttonBox.getChildren().remove(utilityButton);
-            buttonBox.getChildren().add(4,utilityButton);
+            buttonBox.getChildren().add(4, utilityButton);
         }
-        if(controller.getLogic() instanceof CaveGeneratorLogic){
+        if (controller.getLogic() instanceof CaveGeneratorLogic) {
             playButton.setDisable(true);
             advGenButton.setDisable(true);
         } else {
             playButton.setDisable(false);
             advGenButton.setDisable(false);
         }
-        if(additionalMessageLabel.getText().equals("")){
-            if(buttonBox.getChildren().contains(additionalMessageLabel)){
+        if (additionalMessageLabel.getText().equals("")) {
+            if (buttonBox.getChildren().contains(additionalMessageLabel)) {
                 buttonBox.getChildren().remove(additionalMessageLabel);
             }
         } else {
-            if(!buttonBox.getChildren().contains(additionalMessageLabel)){
+            if (!buttonBox.getChildren().contains(additionalMessageLabel)) {
                 buttonBox.getChildren().add(additionalMessageLabel);
-                }
+            }
 
         }
-        if(controller.getLogic() instanceof CustomLogic){
-            if(!menusPane.getChildren().contains(Singletons.getRulesetPane(this))){
+        if (controller.getLogic() instanceof CustomLogic) {
+            if (!menusPane.getChildren().contains(Singletons.getRulesetPane(this))) {
                 menusPane.getChildren().add(Singletons.getRulesetPane(this));
             }
         } else {
-            if(menusPane.getChildren().contains(Singletons.getRulesetPane(this))){
+            if (menusPane.getChildren().contains(Singletons.getRulesetPane(this))) {
                 menusPane.getChildren().remove(Singletons.getRulesetPane(this));
             }
         }
-        if((controller.getLogic() instanceof CustomLogic) || (controller.getLogic() instanceof GameOfLifeLogic)){
-                brushOption.setDisable(false);
+        if ((controller.getLogic() instanceof CustomLogic) || (controller.getLogic() instanceof GameOfLifeLogic)) {
+            brushOption.setDisable(false);
         } else {
             brushOption.setDisable(true);
             brushOption.setText("Brush");
-            if(menusPane.getChildren().contains(Singletons.getBrushPane(this))) {
+            if (menusPane.getChildren().contains(Singletons.getBrushPane(this))) {
                 menusPane.getChildren().remove(Singletons.getBrushPane(this));
             }
         }
 
     }
 
-    public void loadLogicMenus(Menu m){
+    public void loadLogicMenus(Menu m) {
         /**
          * Menu items for loading logics to the program
          */
@@ -318,22 +315,22 @@ public class View extends Application {
         MenuItem caveLogic = new MenuItem("Cave Generator");
         caveLogic.setOnAction(e -> controller.changeLogic(Singletons.getCaveGeneratorLogic(width, height)));
         MenuItem customLogic = new MenuItem("Custom");
-        customLogic.setOnAction(e->controller.changeLogic(Singletons.getCustomLogic(width,height)));
+        customLogic.setOnAction(e -> controller.changeLogic(Singletons.getCustomLogic(width, height)));
         MenuItem animalLogic = new MenuItem("Animal Logic");
-        animalLogic.setOnAction(e->controller.changeLogic(Singletons.getAnimalLogic(width,height)));
-        m.getItems().addAll(lifeLogic, antLogic, caveLogic,animalLogic,customLogic);
+        animalLogic.setOnAction(e -> controller.changeLogic(Singletons.getAnimalLogic(width, height)));
+        m.getItems().addAll(lifeLogic, antLogic, caveLogic, animalLogic, customLogic);
     }
 
-    public void loadViewMenus(Menu m){
+    public void loadViewMenus(Menu m) {
         /**
          * Menu items for loading view widgets to the menus pane
          */
         fpsOption = new MenuItem("FPS");
         fpsOption.setOnAction(e -> {
-            if(menusPane.getChildren().contains(Singletons.getNumberPane(this))){
+            if (menusPane.getChildren().contains(Singletons.getNumberPane(this))) {
                 menusPane.getChildren().remove(Singletons.getNumberPane(this));
                 fpsOption.setText("FPS");
-            }else {
+            } else {
                 menusPane.getChildren().add(Singletons.getNumberPane(this));
                 fpsOption.setText("FPS \u2713");
             }
@@ -341,18 +338,18 @@ public class View extends Application {
         });
         cameraOption = new MenuItem("Camera Position");
         cameraOption.setOnAction(e -> {
-            if(menusPane.getChildren().contains(Singletons.getCameraPane(this))){
+            if (menusPane.getChildren().contains(Singletons.getCameraPane(this))) {
                 menusPane.getChildren().remove(Singletons.getCameraPane(this));
                 cameraOption.setText("Camera Position");
-            }else {
+            } else {
                 menusPane.getChildren().add(Singletons.getCameraPane(this));
                 cameraOption.setText("Camera Position \u2713");
             }
         });
         //info pane must be changed each time logic is changed.
         infoOption = new MenuItem("Info");
-        infoOption.setOnAction(e->{
-            if(menusPane.getChildren().contains(Singletons.getInfoPane(this))){
+        infoOption.setOnAction(e -> {
+            if (menusPane.getChildren().contains(Singletons.getInfoPane(this))) {
                 menusPane.getChildren().remove(Singletons.getInfoPane(this));
                 infoOption.setText("Info");
             } else {
@@ -361,8 +358,8 @@ public class View extends Application {
             }
         });
         brushOption = new MenuItem("Brush");
-        brushOption.setOnAction(e->{
-            if(menusPane.getChildren().contains(Singletons.getBrushPane(this))){
+        brushOption.setOnAction(e -> {
+            if (menusPane.getChildren().contains(Singletons.getBrushPane(this))) {
                 menusPane.getChildren().remove(Singletons.getBrushPane(this));
                 brushOption.setText("Brush");
             } else {
@@ -370,6 +367,6 @@ public class View extends Application {
                 brushOption.setText("Brush \u2713");
             }
         });
-        m.getItems().addAll(fpsOption, cameraOption, infoOption,brushOption);
+        m.getItems().addAll(fpsOption, cameraOption, infoOption, brushOption);
     }
 }

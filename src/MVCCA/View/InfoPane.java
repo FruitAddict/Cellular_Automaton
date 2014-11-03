@@ -24,7 +24,7 @@ public class InfoPane extends BorderPane {
     TextArea txArea;
     Hyperlink link;
 
-    public InfoPane(View v){
+    public InfoPane(View v) {
         mainPane = new BorderPane();
         txArea = new TextArea();
         txArea.setWrapText(true);
@@ -34,34 +34,32 @@ public class InfoPane extends BorderPane {
         txArea.setEditable(false);
     }
 
-    public void update(Logic l){
+    public void update(Logic l) {
         this.getChildren().clear();
         txArea.clear();
         Label name = new Label("Info ");
         name.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
         try (
-            InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName()+".txt");
-            )
-        {
+                InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName() + ".txt");
+        ) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
             String line;
-            while((line = reader.readLine())!=null){
-                txArea.appendText(line+"\n");
-                if(line.contains("null")){
+            while ((line = reader.readLine()) != null) {
+                txArea.appendText(line + "\n");
+                if (line.contains("null")) {
                     txArea.clear();
                     txArea.appendText("No information found");
                     break;
                 }
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             txArea.appendText("There was an error loading the info file.");
         }
 
 
         try (
-            InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName()+"Link.txt");
-            )
-        {
+                InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName() + "Link.txt");
+        ) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
             String linkText = reader.readLine();
             link = new Hyperlink(linkText);
@@ -77,11 +75,11 @@ public class InfoPane extends BorderPane {
         setAlignment(name, Pos.CENTER);
         setAlignment(link, Pos.CENTER);
 
-        link.setOnAction(e->{
+        link.setOnAction(e -> {
             try {
                 URI uri = new URI(link.getText());
                 java.awt.Desktop.getDesktop().browse(uri);
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 txArea.clear();
                 txArea.appendText("Error opening link");
             }

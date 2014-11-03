@@ -14,13 +14,13 @@ public class CaveGeneratorLogic extends Logic {
     private Grid currentGrid;
     private int width;
     private int height;
-    private Color[] colorArray = {Color.web("827970"),Color.WHITE, Color.BLACK};
+    private Color[] colorArray = {Color.web("827970"), Color.WHITE, Color.BLACK};
     private Resolver resolver;
     private Brush brush;
 
-    public CaveGeneratorLogic(int width, int height){
-        this.width=width;
-        this.height=height;
+    public CaveGeneratorLogic(int width, int height) {
+        this.width = width;
+        this.height = height;
         /**
          * HARDCODED RESOLVER FOR CAVE GENERATOR
          */
@@ -34,7 +34,7 @@ public class CaveGeneratorLogic extends Logic {
              */
             @Override
             public int ifDead(int n) {
-                if (n >=5) {
+                if (n >= 5) {
                     return 2;
                 } else {
                     return 1;
@@ -43,7 +43,7 @@ public class CaveGeneratorLogic extends Logic {
 
             @Override
             public int ifAlive(int n) {
-                if (n>=4 ) {
+                if (n >= 4) {
                     return 2;
                 } else {
                     return 1;
@@ -53,8 +53,8 @@ public class CaveGeneratorLogic extends Logic {
         /**
          * END OF HARDCODED RESOLVER
          */
-        currentGrid = new Grid(width,height,1,0);
-        Utilities.applyBrush(Utilities.getBasicBrushData(),this);
+        currentGrid = new Grid(width, height, 1, 0);
+        Utilities.applyBrush(Utilities.getBasicBrushData(), this);
         clear();
     }
 
@@ -70,14 +70,14 @@ public class CaveGeneratorLogic extends Logic {
     @Override
     public void clear() {
         //Initially sets values of the whole array to 0 (dead cells)
-        genNumber=0;
+        genNumber = 0;
         currentGrid.clear();
     }
 
     @Override
     public void setCell(int x, int y, int value) {
         clear();
-        Utilities.randomFill(this,width,height,50,2);
+        Utilities.randomFill(this, width, height, 50, 2);
     }
 
     @Override
@@ -96,23 +96,23 @@ public class CaveGeneratorLogic extends Logic {
     }
 
     @Override
-    public String getUtilityButtonName(){
+    public String getUtilityButtonName() {
         return "Next";
     }
 
     @Override
-    public void performUtilityAction(){
+    public void performUtilityAction() {
         Grid snapshot = currentGrid.copy();
-        for (int i =0 ;i <width;i++){
-            for(int j=0;j<height;j++){
-                currentGrid.set(i,j,resolve(i,j,snapshot.get(i,j),snapshot));
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                currentGrid.set(i, j, resolve(i, j, snapshot.get(i, j), snapshot));
             }
         }
         genNumber++;
     }
 
     @Override
-    public void setResolver(Resolver r){
+    public void setResolver(Resolver r) {
         resolver = r;
     }
 
@@ -135,7 +135,7 @@ public class CaveGeneratorLogic extends Logic {
                 return resolver.ifDead(numOfNeighbours);
             }
             if (currentValue == 2) {
-               return resolver.ifAlive(numOfNeighbours);
+                return resolver.ifAlive(numOfNeighbours);
             }
             return 1;
         } else {

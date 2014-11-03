@@ -18,8 +18,8 @@ public class RenderHandler implements EventHandler {
     Logic logic;
     View view;
 
-    public static synchronized RenderHandler getInstance(Logic l, View v){
-        if(instance != null && Singletons.getLogicName(instance.logic).equals(Singletons.getLogicName(l))){
+    public static synchronized RenderHandler getInstance(Logic l, View v) {
+        if (instance != null && Singletons.getLogicName(instance.logic).equals(Singletons.getLogicName(l))) {
             return instance;
         } else {
             instance = new RenderHandler();
@@ -31,7 +31,7 @@ public class RenderHandler implements EventHandler {
 
     @Override
     public void handle(Event event) {
-        if(!Singletons.isPaused()) {
+        if (!Singletons.isPaused()) {
             logic.genAdvance();
             view.setAdditionalMessage(logic.getAdditionalMessage());
             view.setGeneration(logic.getGenNumber());

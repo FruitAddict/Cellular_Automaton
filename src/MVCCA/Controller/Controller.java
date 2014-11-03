@@ -19,16 +19,15 @@ import java.time.LocalDateTime;
 @SuppressWarnings("unchecked")
 
 public class Controller extends Application {
+    int fps = 60;
+    Duration duration = Duration.millis(1000 / fps);
+    Timeline timeline;
     //Holds logic and view for the MVC pattern
     private Logic logic;
     private View view;
-
-    int fps = 60;
-    Duration duration = Duration.millis(1000/fps);
-    Timeline timeline;
     //initially 60fps
 
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
 
         /**
          * Creates a new View and Logic, assigns them to the variables in this controller
@@ -39,9 +38,9 @@ public class Controller extends Application {
          * Sets the brush of starting logic to basic brush (1 pixel w/h)
          */
 
-        System.out.println("Program started at: "+ LocalDateTime.now());
+        System.out.println("Program started at: " + LocalDateTime.now());
         View view = new View();
-        logic = Singletons.getGameOfLifeLogic(view.getWidth(),view.getHeight());
+        logic = Singletons.getGameOfLifeLogic(view.getWidth(), view.getHeight());
         setThings(view, logic);
         view.setController(this);
         view.setColorsArray(logic.getColors());
@@ -51,38 +50,40 @@ public class Controller extends Application {
         clear();
         view.updateButtons();
 
-        timeline = new Timeline(new KeyFrame(duration, RenderHandler.getInstance(logic,view)));
+        timeline = new Timeline(new KeyFrame(duration, RenderHandler.getInstance(logic, view)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
     }
 
     //handles clearing the screen and drawing the borders
-    public void clear(){
+    public void clear() {
         logic.clear();
         view.setDrawMatrix(logic.getCurrentGrid());
     }
+
     //pauses/unpauses auto gen progression
-    public void pause(){
+    public void pause() {
         setLogicRunning(!Singletons.isPaused());
         view.updateButtons();
     }
 
     //advances the generation by one (mvc)
-    public void advGen(){
+    public void advGen() {
         logic.genAdvance();
         view.setGeneration(logic.getGenNumber());
         view.setDrawMatrix(logic.getCurrentGrid());
     }
+
     //sets the cell (mvc) prevents drawing out of borders, uses default 1px wide drawing
-    public void setCell(int x, int y){
-            logic.setCell(x, y, 2);
-            view.setDrawMatrix(logic.getCurrentGrid());
+    public void setCell(int x, int y) {
+        logic.setCell(x, y, 2);
+        view.setDrawMatrix(logic.getCurrentGrid());
     }
 
     //changes time between generations
-    public void setFramesPerSecond(Duration fps){
-        duration=fps;
+    public void setFramesPerSecond(Duration fps) {
+        duration = fps;
         timeline.stop();
         timeline = new Timeline(new KeyFrame(duration, RenderHandler.getInstance(logic, view)));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -99,11 +100,11 @@ public class Controller extends Application {
         Singletons.setPaused(logicRunning);
     }
 
-    public String getLogicName(){
+    public String getLogicName() {
         return Singletons.getLogicName(logic);
     }
 
-    public void changeLogic(Logic logic){
+    public void changeLogic(Logic logic) {
         /**
          * Changes the current logic.
          * setFramesPerSecond method used to renew the timeline (gameloop) using the new logic and view.
@@ -112,7 +113,7 @@ public class Controller extends Application {
         this.logic = logic;
         view.changeStageName(getLogicName());
         view.setColorsArray(logic.getColors());
-        setFramesPerSecond(Duration.millis(1000/fps));
+        setFramesPerSecond(Duration.millis(1000 / fps));
         view.reloadInfoPane();
         advGen();
         view.setAdditionalMessage(logic.getAdditionalMessage());
@@ -120,24 +121,24 @@ public class Controller extends Application {
         Singletons.getBrushPane(view).update();
     }
 
-    public void setFps(int f){
-        fps=f;
-        setFramesPerSecond(Duration.millis(1000/fps));
-    }
-
-    public int getFps(){
+    public int getFps() {
         return fps;
     }
 
-    public String getUtilityButtonName(){
+    public void setFps(int f) {
+        fps = f;
+        setFramesPerSecond(Duration.millis(1000 / fps));
+    }
+
+    public String getUtilityButtonName() {
         return logic.getUtilityButtonName();
     }
 
-    public Logic getLogic(){
+    public Logic getLogic() {
         return logic;
     }
 
-    public void utilityAction(){
+    public void utilityAction() {
         logic.performUtilityAction();
         view.setDrawMatrix(logic.getCurrentGrid());
     }

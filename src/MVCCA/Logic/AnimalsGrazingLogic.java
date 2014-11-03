@@ -24,14 +24,14 @@ public class AnimalsGrazingLogic extends Logic {
     private Random rng;
 
 
-    public AnimalsGrazingLogic(int x, int y){
+    public AnimalsGrazingLogic(int x, int y) {
         rng = new Random();
-        width=x;
-        height=y;
-        currentGrid = new Grid(width,height,1,0);
+        width = x;
+        height = y;
+        currentGrid = new Grid(width, height, 1, 0);
         currentGrid.clear();
         animalList = new CopyOnWriteArrayList<>();
-        Utilities.applyBrush(Utilities.getBasicBrushData(),this);
+        Utilities.applyBrush(Utilities.getBasicBrushData(), this);
 
         /**
          * HARDCODED RESOLVER WITH RANDOMNESS
@@ -40,7 +40,7 @@ public class AnimalsGrazingLogic extends Logic {
 
             @Override
             public int ifDead(int n) {
-                if(n==3 && rng.nextInt(101)<=2){
+                if (n == 3 && rng.nextInt(101) <= 2) {
                     return 2;
                 } else {
                     return 1;
@@ -49,9 +49,9 @@ public class AnimalsGrazingLogic extends Logic {
 
             @Override
             public int ifAlive(int n) {
-                if(n>0 && n<4){
+                if (n > 0 && n < 4) {
                     return 2;
-                } else if(rng.nextInt(101)<=5) {
+                } else if (rng.nextInt(101) <= 5) {
                     return 2;
                 } else {
                     return 1;
@@ -63,9 +63,10 @@ public class AnimalsGrazingLogic extends Logic {
          * /HARDCODED RESOLVER
          */
     }
+
     @Override
     public void clear() {
-        genNumber=0;
+        genNumber = 0;
         currentGrid.clear();
     }
 
@@ -75,10 +76,10 @@ public class AnimalsGrazingLogic extends Logic {
         genNumber++;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                currentGrid.set(i,j,resolveCell(i, j,snapshot, currentGrid.get(i, j)));
+                currentGrid.set(i, j, resolveCell(i, j, snapshot, currentGrid.get(i, j)));
             }
         }
-        for(Animal a : animalList){
+        for (Animal a : animalList) {
             a.update();
         }
     }
@@ -90,8 +91,8 @@ public class AnimalsGrazingLogic extends Logic {
 
     @Override
     public void setCell(int x, int y, int value) {
-        if(x>0 && y>0 && x<width-1 && y<height-1)
-        animalList.add(new Animal(x,y));
+        if (x > 0 && y > 0 && x < width - 1 && y < height - 1)
+            animalList.add(new Animal(x, y));
     }
 
     @Override
@@ -106,7 +107,7 @@ public class AnimalsGrazingLogic extends Logic {
 
     @Override
     public String getAdditionalMessage() {
-        return "Animals alive: "+animalList.size();
+        return "Animals alive: " + animalList.size();
     }
 
     @Override
@@ -116,7 +117,7 @@ public class AnimalsGrazingLogic extends Logic {
 
     @Override
     public void performUtilityAction() {
-        Utilities.randomFill(this,width,height,10,2);
+        Utilities.randomFill(this, width, height, 10, 2);
     }
 
     @Override
@@ -134,21 +135,21 @@ public class AnimalsGrazingLogic extends Logic {
         return brush;
     }
 
-    private int resolveCell(int x, int y, Grid snapshot, int currentValue){
-        if(currentValue!=0) {
+    private int resolveCell(int x, int y, Grid snapshot, int currentValue) {
+        if (currentValue != 0) {
             int numberOfNeighbours = Utilities.getNumberOfMooreNeighbours(x, y, width, height, snapshot);
             if (currentValue == 1) {
-                return ((resolver!=null) ? resolver.ifDead(numberOfNeighbours) : 1);
+                return ((resolver != null) ? resolver.ifDead(numberOfNeighbours) : 1);
             } else if (currentValue >= 2) {
-                return ((resolver!=null) ? resolver.ifAlive(numberOfNeighbours): 1);
+                return ((resolver != null) ? resolver.ifAlive(numberOfNeighbours) : 1);
             }
-        }else {
+        } else {
             return 0;
         }
         return 1;
     }
 
-    private class Animal{
+    private class Animal {
         private int positionX;
         private int positionY;
         private int lifeSpan;
@@ -157,38 +158,38 @@ public class AnimalsGrazingLogic extends Logic {
         private int nextDirection;
         private boolean fertile;
 
-            public Animal(int x, int y){
-                positionX = x;
-                positionY = y;
-                lifeSpan = 100;
-                currentGrid.set(positionX,positionY,3);
-                fertile = true;
-            }
+        public Animal(int x, int y) {
+            positionX = x;
+            positionY = y;
+            lifeSpan = 100;
+            currentGrid.set(positionX, positionY, 3);
+            fertile = true;
+        }
 
-        public void update(){
-            currentGrid.set(positionX,positionY,1);
+        public void update() {
+            currentGrid.set(positionX, positionY, 1);
             lifeSpan--;
-            if(lifeSpan<=0){
+            if (lifeSpan <= 0) {
                 animalList.remove(this);
                 System.out.println("Animal died.");
-                if(positionX>2 && positionY>2 && positionX<width-3 && positionY<height-3)
-                for(int i = -2; i<3;i++){
-                    for (int j=-2;j<3;j++){
-                        currentGrid.set(positionX+i,positionY+j,2);
+                if (positionX > 2 && positionY > 2 && positionX < width - 3 && positionY < height - 3)
+                    for (int i = -2; i < 3; i++) {
+                        for (int j = -2; j < 3; j++) {
+                            currentGrid.set(positionX + i, positionY + j, 2);
+                        }
                     }
-                }
 
             } else {
-                if(!fertile){
+                if (!fertile) {
                     generationsFromLastReproduction++;
-                    if(generationsFromLastReproduction>500){
-                        fertile=true;
+                    if (generationsFromLastReproduction > 500) {
+                        fertile = true;
                     }
                 }
                 nextDirection = 1 + rng.nextInt(4);
                 switch (nextDirection) {
                     case 1: {
-                        if(positionY-1>0) {
+                        if (positionY - 1 > 0) {
                             if (currentGrid.get(positionX, positionY - 1) == 2) {
                                 lifeSpan += lifeSpanPerGrassTile;
                                 currentGrid.set(positionX, positionY, 1);
@@ -206,7 +207,7 @@ public class AnimalsGrazingLogic extends Logic {
                         }
                     }
                     case 2: {
-                        if(positionX+1 < width-1) {
+                        if (positionX + 1 < width - 1) {
                             if (currentGrid.get(positionX + 1, positionY) == 2) {
                                 lifeSpan += lifeSpanPerGrassTile;
                                 currentGrid.set(positionX, positionY, 1);
@@ -219,12 +220,12 @@ public class AnimalsGrazingLogic extends Logic {
                                 currentGrid.set(positionX, positionY, 3);
                                 break;
                             }
-                        }else {
+                        } else {
                             break;
                         }
                     }
                     case 3: {
-                        if(positionY+1<height-1) {
+                        if (positionY + 1 < height - 1) {
                             if (currentGrid.get(positionX, positionY + 1) == 2) {
                                 lifeSpan += lifeSpanPerGrassTile;
                                 currentGrid.set(positionX, positionY, 1);
@@ -259,7 +260,7 @@ public class AnimalsGrazingLogic extends Logic {
                             break;
                         }
                     }
-                    default:{
+                    default: {
                         break;
                     }
                 }
@@ -268,8 +269,8 @@ public class AnimalsGrazingLogic extends Logic {
                         if (a.positionX == this.positionX && a.positionY == this.positionY && a.fertile && this.fertile) {
                             animalList.add(new Animal(positionX, positionY));
                             System.out.println("Animal was born!");
-                            a.fertile=false;
-                            this.fertile=false;
+                            a.fertile = false;
+                            this.fertile = false;
                         }
                     }
                 }

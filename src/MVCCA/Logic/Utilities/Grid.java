@@ -10,11 +10,11 @@ public class Grid {
     private int planeId;
     private int borderId;
 
-    public Grid(int width, int height, int planeId, int borderId){
+    public Grid(int width, int height, int planeId, int borderId) {
         this.planeId = planeId;
         this.borderId = borderId;
-        this.width=width;
-        this.height=height;
+        this.width = width;
+        this.height = height;
         storage = new int[width][height];
     }
 
@@ -41,21 +41,21 @@ public class Grid {
         }
     }
 
-    public int get(int x, int y){
+    public int get(int x, int y) {
         return storage[x][y];
     }
 
-    public void set(int x, int y,int value){
+    public void set(int x, int y, int value) {
         storage[x][y] = value;
     }
 
-    public int[][] getGrid(){
+    public int[][] getGrid() {
         return storage;
     }
 
-    public Grid copy(){
-        Grid temp = new Grid(width,height,planeId,borderId);
-        temp.storage = Utilities.copy2DArray(this.getGrid(),width,height);
+    public Grid copy() {
+        Grid temp = new Grid(width, height, planeId, borderId);
+        temp.storage = Utilities.copy2DArray(this.getGrid(), width, height);
         return temp;
     }
 }

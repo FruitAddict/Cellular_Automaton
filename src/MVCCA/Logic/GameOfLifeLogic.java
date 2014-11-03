@@ -21,7 +21,7 @@ public class GameOfLifeLogic extends Logic {
     final private int height;
 
     //additional message, can be anything. Can be retrieved by controller
-    private String additionalMessage="";
+    private String additionalMessage = "";
 
     //resolver for use with cell udpating
     private Resolver resolver;
@@ -30,12 +30,12 @@ public class GameOfLifeLogic extends Logic {
     private Brush brush;
 
     //color array
-    final private Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.WHITE, Color.color(1,76/255,80/255),Color.color(1,0,5/255),Color.color(127/255,0,3/255)};
+    final private Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.WHITE, Color.color(1, 76 / 255, 80 / 255), Color.color(1, 0, 5 / 255), Color.color(127 / 255, 0, 3 / 255)};
 
     //constructor taking w and height as arguements. inits the grid and clears it
-    public GameOfLifeLogic(int width, int height){
-        this.width=width;
-        this.height=height;
+    public GameOfLifeLogic(int width, int height) {
+        this.width = width;
+        this.height = height;
 
         /**
          * HARDCODED RESOLVER FOR GAME OF LIFE
@@ -68,30 +68,32 @@ public class GameOfLifeLogic extends Logic {
         /**
          * END OF HARDCODED RESOLVER
          */
-        currentGrid = new Grid(width,height,1,0);
+        currentGrid = new Grid(width, height, 1, 0);
 
         /**
          * Basic brush
          */
 
-        Utilities.applyBrush(Utilities.getBasicBrushData(),this);
+        Utilities.applyBrush(Utilities.getBasicBrushData(), this);
 
         clear();
     }
+
     @Override
     public void clear() {
-        genNumber=0;
+        genNumber = 0;
         //Initially sets values of the whole array to 0 (dead cells)
         currentGrid.clear();
 
     }
+
     @Override
-    public Grid getCurrentGrid(){
+    public Grid getCurrentGrid() {
         return currentGrid;
     }
 
     @Override
-    public void genAdvance(){
+    public void genAdvance() {
         /**
          * Advances the generation by one by creating a snapshot of the current grid
          * for the resolver to work on- passing x and y coordinates of the cell
@@ -101,19 +103,20 @@ public class GameOfLifeLogic extends Logic {
         genNumber++;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                currentGrid.set(i,j,resolve(i, j, currentGrid.get(i,j), snapshot));
+                currentGrid.set(i, j, resolve(i, j, currentGrid.get(i, j), snapshot));
             }
         }
 
     }
 
     @Override
-    public String getUtilityButtonName(){
+    public String getUtilityButtonName() {
         return "Random";
     }
+
     @Override
-    public void performUtilityAction(){
-       Utilities.randomFill(this,width,height,10,2);
+    public void performUtilityAction() {
+        Utilities.randomFill(this, width, height, 10, 2);
     }
 
     @Override
@@ -144,8 +147,7 @@ public class GameOfLifeLogic extends Logic {
 
             if (currentValue == 1) {
                 return resolver.ifDead(numOfNeighbours);
-            }
-            else if (currentValue >= 2) {
+            } else if (currentValue >= 2) {
                 return resolver.ifAlive(numOfNeighbours);
             }
             return 1;
@@ -153,24 +155,25 @@ public class GameOfLifeLogic extends Logic {
             return 0;
         }
     }
+
     @Override
-    public void setCell(int x, int y, int value){
+    public void setCell(int x, int y, int value) {
         //changes the value of a single cell in the current grid
-        if((x>2 && x <width-3) && (y>2 && y<height-3)) {
-            brush.setCells(currentGrid,x,y,value);
+        if ((x > 2 && x < width - 3) && (y > 2 && y < height - 3)) {
+            brush.setCells(currentGrid, x, y, value);
         }
     }
 
-    public int getGenNumber(){
+    public int getGenNumber() {
         return genNumber;
     }
 
-    public Color[] getColors(){
+    public Color[] getColors() {
         return colorArray;
     }
 
     @Override
-    public String getAdditionalMessage(){
+    public String getAdditionalMessage() {
         return additionalMessage;
     }
 

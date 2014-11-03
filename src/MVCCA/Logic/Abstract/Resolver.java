@@ -7,5 +7,6 @@ package MVCCA.Logic.Abstract;
  */
 public interface Resolver {
     public abstract int ifDead(int n);
+
     public abstract int ifAlive(int n);
 }

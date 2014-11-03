@@ -18,7 +18,7 @@ public class NumberPane extends BorderPane {
      * Will be reused later. Made to avoid too much code in lambda
      */
 
-    public NumberPane(int min, int max, View view){
+    public NumberPane(int min, int max, View view) {
 
         Button incrementButton = new Button("+");
         incrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 10));
@@ -26,28 +26,28 @@ public class NumberPane extends BorderPane {
         Button decrementButton = new Button("-");
         decrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 10));
 
-        Label currentValue = new Label(view.getController().getFps()+" fps");
+        Label currentValue = new Label(view.getController().getFps() + " fps");
         currentValue.setContentDisplay(ContentDisplay.CENTER);
         currentValue.setPrefWidth(90);
 
         Label nameLabel = new Label("Target FPS");
-        nameLabel.setFont(Font.font("Helvetica",FontWeight.NORMAL,FontPosture.REGULAR,20));
+        nameLabel.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
 
         HBox contentBox = new HBox();
         contentBox.setAlignment(Pos.CENTER);
-        contentBox.getChildren().addAll(decrementButton,currentValue, incrementButton);
+        contentBox.getChildren().addAll(decrementButton, currentValue, incrementButton);
         this.setCenter(contentBox);
         this.setTop(nameLabel);
-        this.setAlignment(nameLabel,Pos.CENTER);
+        this.setAlignment(nameLabel, Pos.CENTER);
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
-        incrementButton.setOnAction(e->{
-            if(view.getController().getFps()<max) {
+        incrementButton.setOnAction(e -> {
+            if (view.getController().getFps() < max) {
                 view.getController().setFps(view.getController().getFps() + 1);
                 currentValue.setText(view.getController().getFps() + " fps");
             }
         });
-        decrementButton.setOnAction(e->{
-            if(view.getController().getFps()>min) {
+        decrementButton.setOnAction(e -> {
+            if (view.getController().getFps() > min) {
                 view.getController().setFps(view.getController().getFps() - 1);
                 currentValue.setText(view.getController().getFps() + " fps");
             }

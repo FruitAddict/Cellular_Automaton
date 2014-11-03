@@ -15,7 +15,7 @@ import javafx.scene.text.FontWeight;
  */
 public class CameraPane extends BorderPane {
 
-    public CameraPane(View view){
+    public CameraPane(View view) {
 
         BorderPane mainPane = new BorderPane();
         HBox holdingBox = new HBox();
@@ -28,7 +28,7 @@ public class CameraPane extends BorderPane {
         applyButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
 
 
-        holdingBox.getChildren().addAll(xCoordInputField,yCoordInputField);
+        holdingBox.getChildren().addAll(xCoordInputField, yCoordInputField);
         holdingBox.setPrefWidth(100);
 
         mainPane.setBottom(holdingBox);
@@ -44,14 +44,14 @@ public class CameraPane extends BorderPane {
         setAlignment(name, Pos.CENTER);
         setAlignment(applyButton, Pos.CENTER);
 
-        applyButton.setOnAction(e->{
-            try{
+        applyButton.setOnAction(e -> {
+            try {
                 double valueX = Double.parseDouble(xCoordInputField.getText());
                 double valueY = Double.parseDouble(yCoordInputField.getText());
                 view.getCanvas().setTranslateX(valueX);
                 view.getCanvas().setTranslateY(valueY);
                 applyButton.setText("Apply");
-            }catch (NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 applyButton.setText("Error");
             }
         });
