@@ -174,6 +174,8 @@ public class View extends Application {
         infoOption.fire();
         cameraOption.fire();
         brushOption.fire();
+        advGenButton.fire();
+        playButton.fire();
         /**
          * /EVENT HANDLERS
          */

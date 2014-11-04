@@ -1,9 +1,7 @@
 package MVCCA.Controller;
 
 import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Singletons;
-import MVCCA.Logic.Utilities.Utilities;
 import MVCCA.View.View;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -19,7 +17,7 @@ import java.time.LocalDateTime;
 @SuppressWarnings("unchecked")
 
 public class Controller extends Application {
-    int fps = 60;
+    int fps = 30;
     Duration duration = Duration.millis(1000 / fps);
     Timeline timeline;
     //Holds logic and view for the MVC pattern

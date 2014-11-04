@@ -2,15 +2,13 @@ package MVCCA.View;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 
 public class NumberPane extends BorderPane {
     /**
@@ -26,8 +24,14 @@ public class NumberPane extends BorderPane {
         Button decrementButton = new Button("-");
         decrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 10));
 
-        Label currentValue = new Label(view.getController().getFps() + " fps");
-        currentValue.setContentDisplay(ContentDisplay.CENTER);
+        TextField currentValue = new TextField(view.getController().getFps() + " fps");
+        currentValue.focusedProperty().addListener(e->{
+            if(currentValue.isFocused()) {
+                currentValue.clear();
+            } else {
+                currentValue.setText(view.getController().getFps() + " fps");
+            }
+        });
         currentValue.setPrefWidth(90);
 
         Label nameLabel = new Label("Target FPS");
@@ -49,6 +53,18 @@ public class NumberPane extends BorderPane {
         decrementButton.setOnAction(e -> {
             if (view.getController().getFps() > min) {
                 view.getController().setFps(view.getController().getFps() - 1);
+                currentValue.setText(view.getController().getFps() + " fps");
+            }
+        });
+
+        currentValue.setOnAction(e->{
+            try{
+                int fps = Integer.parseInt(currentValue.getText());
+                if(fps>1 && fps < 200){
+                    view.getController().setFps(fps);
+                    currentValue.setText(view.getController().getFps() + " fps");
+                }
+            } catch(Exception ex){
                 currentValue.setText(view.getController().getFps() + " fps");
             }
         });
