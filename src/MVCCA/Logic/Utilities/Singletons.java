@@ -16,6 +16,7 @@ public class Singletons {
     private static volatile CaveGeneratorLogic logicCave = null;
     private static volatile CustomLogic customLogic = null;
     private static volatile AnimalsGrazingLogic animalsGrazingLogic = null;
+    private static volatile WireworldLogic wireworldLogic = null;
     private static volatile CameraPane camPane = null;
     private static volatile NumberPane numPane = null;
     private static volatile InfoPane infoPane = null;
@@ -41,6 +42,10 @@ public class Singletons {
 
     public static synchronized AnimalsGrazingLogic getAnimalLogic(int x, int y) {
         return ((animalsGrazingLogic != null) ? animalsGrazingLogic : (animalsGrazingLogic = new AnimalsGrazingLogic(x, y)));
+    }
+
+    public static synchronized WireworldLogic getWireworldLogic(int x, int y){
+        return ((wireworldLogic !=null) ? wireworldLogic : (wireworldLogic = new WireworldLogic(x,y)));
     }
 
     public static synchronized CameraPane getCameraPane(View v) {

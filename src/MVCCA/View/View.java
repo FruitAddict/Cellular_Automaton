@@ -6,6 +6,7 @@ import MVCCA.Logic.CustomLogic;
 import MVCCA.Logic.GameOfLifeLogic;
 import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Singletons;
+import MVCCA.Logic.WireworldLogic;
 import MVCCA.Resources.Resources;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -153,9 +154,7 @@ public class View extends Application {
             controller.setCell((int) e.getX(), (int) e.getY());
             redraw();
         });
-        canvas.setOnMousePressed(e -> {
-            controller.setCell((int) e.getX(), (int) e.getY());
-        });
+        canvas.setOnMousePressed(e -> controller.setCell((int) e.getX(), (int) e.getY()));
 
         //resizing
         mainPane.widthProperty().addListener(e -> {
@@ -256,6 +255,8 @@ public class View extends Application {
          * Updates GUI depending on the info received from
          * the controller.
          */
+        additionalMessageLabel.setText(controller.getLogic().getAdditionalMessage());
+        utilityButton.setText(controller.getLogic().getUtilityButtonName());
         if (Singletons.isPaused()) {
             playButton.setText("Play");
         } else if (!Singletons.isPaused()) {
@@ -294,7 +295,8 @@ public class View extends Application {
                 menusPane.getChildren().remove(Singletons.getRulesetPane(this));
             }
         }
-        if ((controller.getLogic() instanceof CustomLogic) || (controller.getLogic() instanceof GameOfLifeLogic)) {
+        if ((controller.getLogic() instanceof CustomLogic) || (controller.getLogic() instanceof GameOfLifeLogic) ||
+                                                                controller.getLogic() instanceof WireworldLogic) {
             brushOption.setDisable(false);
         } else {
             brushOption.setDisable(true);
@@ -320,7 +322,9 @@ public class View extends Application {
         customLogic.setOnAction(e -> controller.changeLogic(Singletons.getCustomLogic(width, height)));
         MenuItem animalLogic = new MenuItem("Animal Logic");
         animalLogic.setOnAction(e -> controller.changeLogic(Singletons.getAnimalLogic(width, height)));
-        m.getItems().addAll(lifeLogic, antLogic, caveLogic, animalLogic, customLogic);
+        MenuItem wireLogic = new MenuItem("Wireworld Logic");
+        wireLogic.setOnAction(e-> controller.changeLogic(Singletons.getWireworldLogic(width,height)));
+        m.getItems().addAll(lifeLogic, antLogic, caveLogic, animalLogic,wireLogic, customLogic);
     }
 
     public void loadViewMenus(Menu m) {

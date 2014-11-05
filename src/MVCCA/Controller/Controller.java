@@ -139,5 +139,6 @@ public class Controller extends Application {
     public void utilityAction() {
         logic.performUtilityAction();
         view.setDrawMatrix(logic.getCurrentGrid());
+        view.updateButtons();
     }
 }
