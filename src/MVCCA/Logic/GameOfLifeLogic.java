@@ -93,6 +93,11 @@ public class GameOfLifeLogic extends Logic {
     }
 
     @Override
+    public String getName(){
+        return "Conway's Game of Life";
+    }
+
+    @Override
     public void genAdvance() {
         /**
          * Advances the generation by one by creating a snapshot of the current grid

@@ -98,6 +98,11 @@ public class LangtonsAntLogic extends Logic {
     public Brush getBrush() {
         return brush;
     }
+    @Override
+    public String getName(){
+        return "Langton's Ant";
+    }
+
 
     public String getAdditionalMessage() {
         return additionalMessage;

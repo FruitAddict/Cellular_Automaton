@@ -62,6 +62,11 @@ public class CustomLogic extends Logic {
     }
 
     @Override
+    public String getName(){
+        return "Custom";
+    }
+
+    @Override
     public int getGenNumber() {
         return genNumber;
     }

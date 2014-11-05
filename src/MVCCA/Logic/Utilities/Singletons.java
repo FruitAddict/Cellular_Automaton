@@ -68,21 +68,6 @@ public class Singletons {
         return ((brushPane != null) ? brushPane : (brushPane = new BrushPane(v)));
     }
 
-    public static String getLogicName(Logic l) {
-        if (l instanceof GameOfLifeLogic) {
-            return "Conway's Game Of Life";
-        } else if (l instanceof LangtonsAntLogic) {
-            return "Langton's Ant";
-        } else if (l instanceof CaveGeneratorLogic) {
-            return "Cave Generator";
-        } else if (l instanceof CustomLogic) {
-            return "Custom";
-        } else if (l instanceof AnimalsGrazingLogic) {
-            return "Animals Grazing";
-        }
-        return "Logic Name Not Found";
-    }
-
     public static synchronized boolean isPaused() {
         return paused;
     }

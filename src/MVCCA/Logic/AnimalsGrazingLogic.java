@@ -126,6 +126,11 @@ public class AnimalsGrazingLogic extends Logic {
     }
 
     @Override
+    public String getName(){
+        return "Animals Grazing";
+    }
+
+    @Override
     public void setBrush(Brush b) {
         brush = b;
     }

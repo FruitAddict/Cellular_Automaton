@@ -22,6 +22,8 @@ public abstract class Logic {
 
     public abstract Color[] getColors();
 
+    public abstract String getName();
+
     /**
      * Utility button name and additional message methods should
      * return empty string ("") if you dont want those to appear

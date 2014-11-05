@@ -99,7 +99,7 @@ public class Controller extends Application {
     }
 
     public String getLogicName() {
-        return Singletons.getLogicName(logic);
+        return logic.getName();
     }
 
     public void changeLogic(Logic logic) {

@@ -86,6 +86,11 @@ public class WireworldLogic extends Logic {
     }
 
     @Override
+    public String getName(){
+        return "Wireworld";
+    }
+
+    @Override
     public Color[] getColors() {
         return colorArray;
     }

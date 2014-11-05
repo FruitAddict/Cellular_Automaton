@@ -63,6 +63,11 @@ public class CaveGeneratorLogic extends Logic {
     }
 
     @Override
+    public String getName(){
+        return "Cave Generator";
+    }
+
+    @Override
     public Grid getCurrentGrid() {
         return currentGrid;
     }
