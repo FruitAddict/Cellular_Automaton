@@ -13,10 +13,10 @@ public class RenderHandler implements EventHandler {
      * prevents some weird bugs with timeline screwing itself up.
      */
 
-    volatile static RenderHandler instance = null;
+    private volatile static RenderHandler instance = null;
 
-    Logic logic;
-    View view;
+    private Logic logic;
+    private View view;
 
     public static synchronized RenderHandler getInstance(Logic l, View v) {
         if (instance != null && instance.logic.getName().equals(l.getName())) {

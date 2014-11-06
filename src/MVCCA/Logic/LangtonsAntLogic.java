@@ -6,8 +6,6 @@ import MVCCA.Logic.Abstract.Resolver;
 import MVCCA.Logic.Utilities.Grid;
 import MVCCA.Logic.Utilities.Utilities;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -24,7 +22,6 @@ public class LangtonsAntLogic extends Logic {
     private final Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.web("94FF00"), Color.web("E89B0C"), Color.web("FF0005"), Color.web("440CE8"), Color.web("0DFCFF")};
     private CopyOnWriteArrayList<Ant> antList;
     private String additionalMessage;
-    private Resolver resolver;
     private Brush brush;
 
     public LangtonsAntLogic(int width, int height) {

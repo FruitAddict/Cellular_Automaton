@@ -69,7 +69,7 @@ public class RulesetPane extends BorderPane {
         }
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         this.setTop(nameLabel);
-        this.setAlignment(nameLabel, Pos.CENTER);
+        setAlignment(nameLabel, Pos.CENTER);
         this.setCenter(aliveGrid);
         this.setBottom(buttonBox);
 
@@ -91,12 +91,11 @@ public class RulesetPane extends BorderPane {
     private class NeighbourGrid extends GridPane {
 
         public NeighbourGrid(int valueDead, int valueAlive, int type) {
-
+            int colorArrayLength = Singletons.getCustomLogic(view.getWidth(),view.getHeight()).getColors().length;
             this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
             int value = 0;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    int colorArrayLength = view.getController().getLogic().getColors().length;
                     ValueRectangle rec = new ValueRectangle(i, j, 54, value);
                     rec.lastValue = 1;
                     value++;
@@ -105,7 +104,7 @@ public class RulesetPane extends BorderPane {
                         if (type == 0) {
                             if (rec.lastValue < colorArrayLength - 1) {
                                 ++rec.lastValue;
-                                rec.rec.setFill(view.getController().getLogic().getColors()[rec.lastValue]);
+                                rec.rec.setFill(Singletons.getCustomLogic(view.getWidth(), view.getHeight()).getColors()[rec.lastValue]);
                                 deadRules[rec.posX][rec.posY] = rec.lastValue;
                             } else if (rec.lastValue == colorArrayLength - 1) {
                                 ++rec.lastValue;
@@ -116,7 +115,7 @@ public class RulesetPane extends BorderPane {
                         } else if (type == 1) {
                             if (rec.lastValue < colorArrayLength - 1) {
                                 ++rec.lastValue;
-                                rec.rec.setFill(view.getController().getLogic().getColors()[rec.lastValue]);
+                                rec.rec.setFill(Singletons.getCustomLogic(view.getWidth(), view.getHeight()).getColors()[rec.lastValue]);
                                 aliveRules[rec.posX][rec.posY] = rec.lastValue;
                             } else if (rec.lastValue == colorArrayLength - 1) {
                                 ++rec.lastValue;

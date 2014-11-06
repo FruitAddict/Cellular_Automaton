@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
  */
 public abstract class Logic {
 
-    public int genNumber;
+    protected int genNumber;
 
     public abstract void clear();
 

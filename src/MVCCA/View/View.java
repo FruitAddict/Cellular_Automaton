@@ -25,7 +25,7 @@ import javafx.stage.Stage;
  */
 public class View extends Application {
 
-    public static double scale = 4;
+    private static double scale = 4;
     private final int width = 200;
     private final int height = 200;
     private Stage primaryStage;
@@ -119,8 +119,8 @@ public class View extends Application {
         /**
          * Scene and stage initialization, setting up menu to the top of the screen.
          */
-        primaryStage.setMinWidth(400);
-        primaryStage.setMinHeight(400);
+        primaryStage.setMinWidth(650);
+        primaryStage.setMinHeight(620);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
         Image icon = new Image(Resources.class.getResourceAsStream("icon.png"));
@@ -159,19 +159,22 @@ public class View extends Application {
         //resizing
         mainPane.widthProperty().addListener(e -> {
             scale = mainPane.getWidth() / width;
-            canvas.setScaleX(scale);
-            canvas.setScaleY(scale);
+            if(scale<3.955) {
+                canvas.setScaleX(scale);
+                canvas.setScaleY(scale);
+            }
         });
 
         mainPane.heightProperty().addListener(e -> {
             scale = mainPane.getWidth() / width;
-            canvas.setScaleX(scale);
-            canvas.setScaleY(scale);
+            if(scale<3.955) {
+                canvas.setScaleX(scale);
+                canvas.setScaleY(scale);
+            }
         });
 
         fpsOption.fire();
         infoOption.fire();
-        cameraOption.fire();
         brushOption.fire();
         advGenButton.fire();
         playButton.fire();

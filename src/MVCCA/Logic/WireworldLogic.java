@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
  * Created by FruitAddict on 2014-11-05.
  */
 public class WireworldLogic extends Logic {
-    public Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.RED, Color.BLUE, Color.YELLOW};
+    private  Color[] colorArray = {Color.web("827970"), Color.BLACK, Color.RED, Color.BLUE, Color.YELLOW};
     private int width;
     private int height;
     private Grid currentGrid;

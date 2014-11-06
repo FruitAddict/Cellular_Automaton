@@ -189,6 +189,7 @@ public class AnimalsGrazingLogic extends Logic {
                     generationsFromLastReproduction++;
                     if (generationsFromLastReproduction > 500) {
                         fertile = true;
+                        generationsFromLastReproduction=0;
                     }
                 }
                 nextDirection = 1 + rng.nextInt(4);

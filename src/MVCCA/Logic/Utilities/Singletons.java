@@ -1,7 +1,6 @@
 package MVCCA.Logic.Utilities;
 
 import MVCCA.Logic.*;
-import MVCCA.Logic.Abstract.Logic;
 import MVCCA.View.*;
 
 /**
@@ -53,7 +52,7 @@ public class Singletons {
     }
 
     public static synchronized NumberPane getNumberPane(View v) {
-        return ((numPane != null) ? numPane : (numPane = new NumberPane(1, 250, v)));
+        return ((numPane != null) ? numPane : (numPane = new NumberPane(1, 200, v)));
     }
 
     public static synchronized InfoPane getInfoPane(View v) {

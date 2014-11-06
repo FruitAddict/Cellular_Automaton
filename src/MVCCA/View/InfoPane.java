@@ -10,22 +10,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-
 import java.io.*;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 
 /**
  * Info pane to display info about logics
  */
 public class InfoPane extends BorderPane {
-    BorderPane mainPane;
-    TextArea txArea;
-    Hyperlink link;
+    private TextArea txArea;
+    private Hyperlink link;
 
     public InfoPane(View v) {
-        mainPane = new BorderPane();
         txArea = new TextArea();
         txArea.setWrapText(true);
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
@@ -40,7 +36,7 @@ public class InfoPane extends BorderPane {
         Label name = new Label("Info ");
         name.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 20));
         try (
-                InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName() + ".txt");
+                InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName() + ".txt")
         ) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
             String line;
@@ -58,7 +54,7 @@ public class InfoPane extends BorderPane {
 
 
         try (
-                InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName() + "Link.txt");
+                InputStream inStream = Resources.class.getResourceAsStream(l.getClass().getSimpleName() + "Link.txt")
         ) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
             String linkText = reader.readLine();

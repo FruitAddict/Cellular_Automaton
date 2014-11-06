@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 @SuppressWarnings("unchecked")
 
 public class Controller extends Application {
-    int fps = 30;
-    Duration duration = Duration.millis(1000 / fps);
-    Timeline timeline;
+    private int fps = 30;
+    private Duration duration = Duration.millis(1000 / fps);
+    private Timeline timeline;
     //Holds logic and view for the MVC pattern
     private Logic logic;
     private View view;

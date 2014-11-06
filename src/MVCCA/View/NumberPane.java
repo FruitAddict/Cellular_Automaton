@@ -42,7 +42,7 @@ public class NumberPane extends BorderPane {
         contentBox.getChildren().addAll(decrementButton, currentValue, incrementButton);
         this.setCenter(contentBox);
         this.setTop(nameLabel);
-        this.setAlignment(nameLabel, Pos.CENTER);
+        setAlignment(nameLabel, Pos.CENTER);
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         incrementButton.setOnAction(e -> {
             if (view.getController().getFps() < max) {
@@ -60,7 +60,7 @@ public class NumberPane extends BorderPane {
         currentValue.setOnAction(e->{
             try{
                 int fps = Integer.parseInt(currentValue.getText());
-                if(fps>1 && fps < 200){
+                if(fps>=1 && fps <= 200){
                     view.getController().setFps(fps);
                     currentValue.setText(view.getController().getFps() + " fps");
                 }
