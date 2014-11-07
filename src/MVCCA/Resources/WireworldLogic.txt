@@ -1,5 +1,0 @@
-Cells behave as follows:
-Empty(black) -> Empty
-Electron head(red) ->  Electron tail(blue)
-Electron tail ->  Conductor
-Conductor(yellow) -> Electron head if exactly one or two of the neighbouring cells are electron heads, or remains Conductor otherwise.
