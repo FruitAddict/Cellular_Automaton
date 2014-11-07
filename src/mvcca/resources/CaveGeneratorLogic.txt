@@ -1,0 +1,2 @@
+An empty cell (white) becomes a wall (black)  if it was a wall and 4 or more of its eight neighbors were walls, or if it was not a wall and 5 or more neighbors were walls.
+Please click next to advance to the next generation.

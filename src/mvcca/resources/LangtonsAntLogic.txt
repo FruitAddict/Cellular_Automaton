@@ -1,0 +1,2 @@
+At a black square, turn 90 degrees right, flip the color of the square, move forward one unit
+At a colored square, turn 90 degrees left, flip the color of the square to black, move forward one unit
