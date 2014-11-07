@@ -1,7 +1,5 @@
 Cellular_Automaton
 ==================
 
-CA projects grouped together in a single repository
-
-This project is about putting multiple cellular automatons into a single program using MVC pattern to make plugging
-different logic models under the same GUI possible.
+Cellular automatons visualizer using java, implemented using MVC pattern. Currently supports Moore's neighbourhood 
+automatons ( including a ruleset editor ). Contains a few logic modules that cannot be represented by general rules (Langton's ant, Wireworld etc).
