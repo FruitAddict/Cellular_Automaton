@@ -1,10 +1,11 @@
-package MVCCA.Logic.Utilities;
+package mvcca.logic.utilities;
 
-import MVCCA.Logic.*;
-import MVCCA.View.*;
+import mvcca.logic.*;
+import mvcca.view.*;
+import mvcca.view.utilitypanes.*;
 
 /**
- * Created by FruitAddict on 2014-10-20.
+ * Class for singletons. Provides access to logic modules.
  */
 public class Singletons {
     private Singletons() {
@@ -47,23 +48,23 @@ public class Singletons {
         return ((wireworldLogic !=null) ? wireworldLogic : (wireworldLogic = new WireworldLogic(x,y)));
     }
 
-    public static synchronized CameraPane getCameraPane(View v) {
+    public static synchronized CameraPane getCameraPane(MainWindow v) {
         return ((camPane != null) ? camPane : (camPane = new CameraPane(v)));
     }
 
-    public static synchronized NumberPane getNumberPane(View v) {
+    public static synchronized NumberPane getNumberPane(MainWindow v) {
         return ((numPane != null) ? numPane : (numPane = new NumberPane(1, 200, v)));
     }
 
-    public static synchronized InfoPane getInfoPane(View v) {
+    public static synchronized InfoPane getInfoPane(MainWindow v) {
         return ((infoPane != null) ? infoPane : (infoPane = new InfoPane(v)));
     }
 
-    public static synchronized RulesetPane getRulesetPane(View v) {
+    public static synchronized RulesetPane getRulesetPane(MainWindow v) {
         return ((rulesetPane != null) ? rulesetPane : (rulesetPane = new RulesetPane(v)));
     }
 
-    public static synchronized BrushPane getBrushPane(View v) {
+    public static synchronized BrushPane getBrushPane(MainWindow v) {
         return ((brushPane != null) ? brushPane : (brushPane = new BrushPane(v)));
     }
 

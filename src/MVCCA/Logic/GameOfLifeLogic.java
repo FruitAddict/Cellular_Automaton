@@ -1,14 +1,14 @@
-package MVCCA.Logic;
+package mvcca.logic;
 
-import MVCCA.Logic.Abstract.Brush;
-import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Abstract.Resolver;
-import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.Utilities;
+import mvcca.logic.abstracted.Brush;
+import mvcca.logic.abstracted.Logic;
+import mvcca.logic.abstracted.Resolver;
+import mvcca.logic.utilities.Grid;
+import mvcca.logic.utilities.Utilities;
 import javafx.scene.paint.Color;
 
 /**
- * Logic class for Conway's game of life. Extends abstract Logic class (for use with controller)
+ * logic class for Conway's game of life. Extends abstract logic class (for use with controller)
  * contains rules for advancing to the new generation as well as making chosen cells alive
  * stores its colors array for use with some viewer (breaks mvc but just a little: D)
  */
@@ -68,7 +68,7 @@ public class GameOfLifeLogic extends Logic {
         /**
          * END OF HARDCODED RESOLVER
          */
-        currentGrid = new Grid(width, height, 1, 0);
+        currentGrid = new Grid(width, height, 1, 0, getName());
 
         /**
          * Basic brush
@@ -81,7 +81,7 @@ public class GameOfLifeLogic extends Logic {
 
     @Override
     public void clear() {
-        genNumber = 0;
+        currentGrid.setGenNumber(0);
         //Initially sets values of the whole array to 0 (dead cells)
         currentGrid.clear();
 
@@ -90,6 +90,11 @@ public class GameOfLifeLogic extends Logic {
     @Override
     public Grid getCurrentGrid() {
         return currentGrid;
+    }
+
+    @Override
+    public void setCurrentGrid(Grid grid){
+        currentGrid = grid;
     }
 
     @Override
@@ -105,7 +110,7 @@ public class GameOfLifeLogic extends Logic {
          * current value of that cell and the snapshot to the resolver method
          */
         Grid snapshot = currentGrid.copy();
-        genNumber++;
+        currentGrid.setGenNumber(currentGrid.getGenNumber()+1);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 currentGrid.set(i, j, resolve(i, j, currentGrid.get(i, j), snapshot));
@@ -170,7 +175,7 @@ public class GameOfLifeLogic extends Logic {
     }
 
     public int getGenNumber() {
-        return genNumber;
+        return currentGrid.getGenNumber();
     }
 
     public Color[] getColors() {

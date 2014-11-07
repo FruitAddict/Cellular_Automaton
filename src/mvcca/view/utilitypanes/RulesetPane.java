@@ -1,7 +1,8 @@
-package MVCCA.View;
+package mvcca.view.utilitypanes;
 
-import MVCCA.Logic.Abstract.Resolver;
-import MVCCA.Logic.Utilities.Singletons;
+import mvcca.logic.abstracted.Resolver;
+import mvcca.logic.utilities.Singletons;
+import mvcca.view.MainWindow;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,10 +21,10 @@ import javafx.scene.text.Text;
 
 
 /**
- * RulesetPane for use with Custom Logic.
+ * RulesetPane for use with Custom logic.
  */
 public class RulesetPane extends BorderPane {
-    private View view;
+    private MainWindow mainWindow;
     private int[][] aliveRules = new int[3][3];
     private int[][] deadRules = new int[3][3];
 
@@ -31,8 +32,8 @@ public class RulesetPane extends BorderPane {
     private NeighbourGrid deadGrid;
 
 
-    public RulesetPane(View v) {
-        view = v;
+    public RulesetPane(MainWindow v) {
+        mainWindow = v;
         aliveGrid = new NeighbourGrid(1, 2, 1);
         deadGrid = new NeighbourGrid(1, 2, 0);
 
@@ -91,7 +92,7 @@ public class RulesetPane extends BorderPane {
     private class NeighbourGrid extends GridPane {
 
         public NeighbourGrid(int valueDead, int valueAlive, int type) {
-            int colorArrayLength = Singletons.getCustomLogic(view.getWidth(),view.getHeight()).getColors().length;
+            int colorArrayLength = Singletons.getCustomLogic(mainWindow.getWidth(), mainWindow.getHeight()).getColors().length;
             this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
             int value = 0;
             for (int i = 0; i < 3; i++) {
@@ -104,7 +105,7 @@ public class RulesetPane extends BorderPane {
                         if (type == 0) {
                             if (rec.lastValue < colorArrayLength - 1) {
                                 ++rec.lastValue;
-                                rec.rec.setFill(Singletons.getCustomLogic(view.getWidth(), view.getHeight()).getColors()[rec.lastValue]);
+                                rec.rec.setFill(Singletons.getCustomLogic(mainWindow.getWidth(), mainWindow.getHeight()).getColors()[rec.lastValue]);
                                 deadRules[rec.posX][rec.posY] = rec.lastValue;
                             } else if (rec.lastValue == colorArrayLength - 1) {
                                 ++rec.lastValue;
@@ -115,7 +116,7 @@ public class RulesetPane extends BorderPane {
                         } else if (type == 1) {
                             if (rec.lastValue < colorArrayLength - 1) {
                                 ++rec.lastValue;
-                                rec.rec.setFill(Singletons.getCustomLogic(view.getWidth(), view.getHeight()).getColors()[rec.lastValue]);
+                                rec.rec.setFill(Singletons.getCustomLogic(mainWindow.getWidth(), mainWindow.getHeight()).getColors()[rec.lastValue]);
                                 aliveRules[rec.posX][rec.posY] = rec.lastValue;
                             } else if (rec.lastValue == colorArrayLength - 1) {
                                 ++rec.lastValue;
@@ -151,7 +152,7 @@ public class RulesetPane extends BorderPane {
     }
 
     private void applyRules() {
-        Singletons.getCustomLogic(view.getWidth(), view.getHeight()).setResolver(new Resolver() {
+        Singletons.getCustomLogic(mainWindow.getWidth(), mainWindow.getHeight()).setResolver(new Resolver() {
             @Override
             public int ifDead(int n) {
                 if (n == 0) {

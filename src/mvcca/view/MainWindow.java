@@ -1,13 +1,15 @@
-package MVCCA.View;
+package mvcca.view;
 
-import MVCCA.Controller.Controller;
-import MVCCA.Logic.CaveGeneratorLogic;
-import MVCCA.Logic.CustomLogic;
-import MVCCA.Logic.GameOfLifeLogic;
-import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.Singletons;
-import MVCCA.Logic.WireworldLogic;
-import MVCCA.Resources.Resources;
+import mvcca.controller.Controller;
+import mvcca.logic.CaveGeneratorLogic;
+import mvcca.logic.CustomLogic;
+import mvcca.logic.GameOfLifeLogic;
+import mvcca.logic.utilities.Grid;
+import mvcca.view.utilitypanes.GridIO;
+import mvcca.logic.utilities.Singletons;
+import mvcca.logic.WireworldLogic;
+import mvcca.resources.Resources;
+import mvcca.view.utilitypanes.InfoPane;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,7 +25,7 @@ import javafx.stage.Stage;
 /**
  * REQUIRES JRE 8_20u
  */
-public class View extends Application {
+public class MainWindow extends Application {
 
     private static double scale = 4;
     private final int width = 200;
@@ -102,25 +104,28 @@ public class View extends Application {
          * 1-thread allowing in progress
          */
         MenuBar mainBar = new MenuBar();
-        Menu menuView = new Menu("View");
+        Menu menuFile = new Menu("File");
+        Menu menuTools = new Menu("Tools");
         Menu menuLogic = new Menu("Logic");
 
         /**
          * loading menus
          */
 
-        loadViewMenus(menuView);
+        loadFileMenus(menuFile);
+
+        loadViewMenus(menuTools);
 
         loadLogicMenus(menuLogic);
 
 
-        mainBar.getMenus().addAll(menuView, menuLogic);
+        mainBar.getMenus().addAll(menuFile,menuTools, menuLogic);
 
         /**
          * Scene and stage initialization, setting up menu to the top of the screen.
          */
         primaryStage.setMinWidth(650);
-        primaryStage.setMinHeight(620);
+        primaryStage.setMinHeight(680);
         primaryStage.setOnCloseRequest(e -> System.exit(0));
         primaryStage.setTitle("Cellular Automatons - " + controller.getLogicName());
         Image icon = new Image(Resources.class.getResourceAsStream("icon.png"));
@@ -311,6 +316,29 @@ public class View extends Application {
 
     }
 
+    public void loadFileMenus(Menu m){
+        MenuItem openGrid = new MenuItem("Load grid");
+        openGrid.setOnAction(e->{
+            GridIO.loadGrid(getController().getLogic(), primaryStage);
+            genLabel.setText("Generation: "+Integer.toString(getController().getLogic().getGenNumber()));
+            setDrawMatrix(getController().getLogic().getCurrentGrid());
+        });
+
+        MenuItem saveGrid = new MenuItem("Save grid");
+        saveGrid.setOnAction(e->{
+            GridIO.saveGrid(getController().getLogic(), primaryStage);
+            genLabel.setText("Generation: "+Integer.toString(getController().getLogic().getGenNumber()));
+        });
+
+        MenuItem openImageGrid = new MenuItem("Load grid from image");
+        openImageGrid.setOnAction(e->{
+            GridIO.loadFromImage(getController().getLogic(),primaryStage);
+            setDrawMatrix(getController().getLogic().getCurrentGrid());
+        });
+
+        m.getItems().addAll(openGrid, saveGrid, openImageGrid);
+    }
+
     public void loadLogicMenus(Menu m) {
         /**
          * Menu items for loading logics to the program
@@ -323,9 +351,9 @@ public class View extends Application {
         caveLogic.setOnAction(e -> controller.changeLogic(Singletons.getCaveGeneratorLogic(width, height)));
         MenuItem customLogic = new MenuItem("Custom");
         customLogic.setOnAction(e -> controller.changeLogic(Singletons.getCustomLogic(width, height)));
-        MenuItem animalLogic = new MenuItem("Animal Logic");
+        MenuItem animalLogic = new MenuItem("Animals Grazing");
         animalLogic.setOnAction(e -> controller.changeLogic(Singletons.getAnimalLogic(width, height)));
-        MenuItem wireLogic = new MenuItem("Wireworld Logic");
+        MenuItem wireLogic = new MenuItem("Wireworld");
         wireLogic.setOnAction(e-> controller.changeLogic(Singletons.getWireworldLogic(width,height)));
         m.getItems().addAll(lifeLogic, antLogic, caveLogic, animalLogic,wireLogic, customLogic);
     }

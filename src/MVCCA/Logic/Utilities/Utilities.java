@@ -1,11 +1,11 @@
-package MVCCA.Logic.Utilities;
+package mvcca.logic.utilities;
 
-import MVCCA.Logic.Abstract.Brush;
-import MVCCA.Logic.Abstract.Logic;
+import mvcca.logic.abstracted.Brush;
+import mvcca.logic.abstracted.Logic;
 
 import java.util.Random;
 
-import static MVCCA.Logic.Utilities.Point.*;
+import static mvcca.logic.utilities.Point.*;
 
 public class Utilities {
 

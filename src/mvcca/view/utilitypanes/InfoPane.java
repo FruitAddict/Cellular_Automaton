@@ -1,7 +1,8 @@
-package MVCCA.View;
+package mvcca.view.utilitypanes;
 
-import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Resources.Resources;
+import mvcca.logic.abstracted.Logic;
+import mvcca.resources.Resources;
+import mvcca.view.MainWindow;
 import javafx.geometry.Pos;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -21,7 +22,7 @@ public class InfoPane extends BorderPane {
     private TextArea txArea;
     private Hyperlink link;
 
-    public InfoPane(View v) {
+    public InfoPane(MainWindow v) {
         txArea = new TextArea();
         txArea.setWrapText(true);
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");

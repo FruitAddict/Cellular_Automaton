@@ -1,5 +1,6 @@
-package MVCCA.View;
+package mvcca.view.utilitypanes;
 
+import mvcca.view.MainWindow;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,7 +17,7 @@ public class NumberPane extends BorderPane {
      * Will be reused later. Made to avoid too much code in lambda
      */
 
-    public NumberPane(int min, int max, View view) {
+    public NumberPane(int min, int max, MainWindow mainWindow) {
 
         Button incrementButton = new Button("+");
         incrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 10));
@@ -24,12 +25,12 @@ public class NumberPane extends BorderPane {
         Button decrementButton = new Button("-");
         decrementButton.setFont(Font.font("Helvetica", FontWeight.BOLD, FontPosture.REGULAR, 10));
 
-        TextField currentValue = new TextField(view.getController().getFps() + " fps");
+        TextField currentValue = new TextField(mainWindow.getController().getFps() + " fps");
         currentValue.focusedProperty().addListener(e->{
             if(currentValue.isFocused()) {
                 currentValue.clear();
             } else {
-                currentValue.setText(view.getController().getFps() + " fps");
+                currentValue.setText(mainWindow.getController().getFps() + " fps");
             }
         });
         currentValue.setPrefWidth(90);
@@ -45,15 +46,15 @@ public class NumberPane extends BorderPane {
         setAlignment(nameLabel, Pos.CENTER);
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         incrementButton.setOnAction(e -> {
-            if (view.getController().getFps() < max) {
-                view.getController().setFps(view.getController().getFps() + 1);
-                currentValue.setText(view.getController().getFps() + " fps");
+            if (mainWindow.getController().getFps() < max) {
+                mainWindow.getController().setFps(mainWindow.getController().getFps() + 1);
+                currentValue.setText(mainWindow.getController().getFps() + " fps");
             }
         });
         decrementButton.setOnAction(e -> {
-            if (view.getController().getFps() > min) {
-                view.getController().setFps(view.getController().getFps() - 1);
-                currentValue.setText(view.getController().getFps() + " fps");
+            if (mainWindow.getController().getFps() > min) {
+                mainWindow.getController().setFps(mainWindow.getController().getFps() - 1);
+                currentValue.setText(mainWindow.getController().getFps() + " fps");
             }
         });
 
@@ -61,11 +62,11 @@ public class NumberPane extends BorderPane {
             try{
                 int fps = Integer.parseInt(currentValue.getText());
                 if(fps>=1 && fps <= 200){
-                    view.getController().setFps(fps);
-                    currentValue.setText(view.getController().getFps() + " fps");
+                    mainWindow.getController().setFps(fps);
+                    currentValue.setText(mainWindow.getController().getFps() + " fps");
                 }
             } catch(Exception ex){
-                currentValue.setText(view.getController().getFps() + " fps");
+                currentValue.setText(mainWindow.getController().getFps() + " fps");
             }
         });
 

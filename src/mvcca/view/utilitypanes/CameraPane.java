@@ -1,5 +1,6 @@
-package MVCCA.View;
+package mvcca.view.utilitypanes;
 
+import mvcca.view.MainWindow;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,14 +16,14 @@ import javafx.scene.text.FontWeight;
  */
 public class CameraPane extends BorderPane {
 
-    public CameraPane(View view) {
+    public CameraPane(MainWindow mainWindow) {
 
         BorderPane mainPane = new BorderPane();
         HBox holdingBox = new HBox();
         holdingBox.setAlignment(Pos.CENTER);
 
-        TextField xCoordInputField = new TextField(Double.toString(view.getCanvas().getTranslateX()));
-        TextField yCoordInputField = new TextField(Double.toString(view.getCanvas().getTranslateY()));
+        TextField xCoordInputField = new TextField(Double.toString(mainWindow.getCanvas().getTranslateX()));
+        TextField yCoordInputField = new TextField(Double.toString(mainWindow.getCanvas().getTranslateY()));
 
         Button applyButton = new Button("Apply");
         applyButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
@@ -48,8 +49,8 @@ public class CameraPane extends BorderPane {
             try {
                 double valueX = Double.parseDouble(xCoordInputField.getText());
                 double valueY = Double.parseDouble(yCoordInputField.getText());
-                view.getCanvas().setTranslateX(valueX);
-                view.getCanvas().setTranslateY(valueY);
+                mainWindow.getCanvas().setTranslateX(valueX);
+                mainWindow.getCanvas().setTranslateY(valueY);
                 applyButton.setText("Apply");
             } catch (NumberFormatException ex) {
                 applyButton.setText("Error");

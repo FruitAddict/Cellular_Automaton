@@ -1,14 +1,14 @@
-package MVCCA.Logic;
+package mvcca.logic;
 
-import MVCCA.Logic.Abstract.Brush;
-import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Abstract.Resolver;
-import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.Utilities;
+import mvcca.logic.abstracted.Brush;
+import mvcca.logic.abstracted.Logic;
+import mvcca.logic.abstracted.Resolver;
+import mvcca.logic.utilities.Grid;
+import mvcca.logic.utilities.Utilities;
 import javafx.scene.paint.Color;
 
 /**
- * Cave Generator Logic
+ * Cave Generator logic
  */
 public class CaveGeneratorLogic extends Logic {
     private Grid currentGrid;
@@ -53,7 +53,7 @@ public class CaveGeneratorLogic extends Logic {
         /**
          * END OF HARDCODED RESOLVER
          */
-        currentGrid = new Grid(width, height, 1, 0);
+        currentGrid = new Grid(width, height, 1, 0, getName());
         Utilities.applyBrush(Utilities.getBasicBrushData(), this);
         clear();
     }
@@ -73,9 +73,14 @@ public class CaveGeneratorLogic extends Logic {
     }
 
     @Override
+    public void setCurrentGrid(Grid grid){
+        currentGrid = grid;
+    }
+
+    @Override
     public void clear() {
         //Initially sets values of the whole array to 0 (dead cells)
-        genNumber = 0;
+        currentGrid.setGenNumber(0);
         currentGrid.clear();
     }
 
@@ -87,7 +92,7 @@ public class CaveGeneratorLogic extends Logic {
 
     @Override
     public int getGenNumber() {
-        return genNumber;
+        return currentGrid.getGenNumber();
     }
 
     @Override
@@ -113,7 +118,7 @@ public class CaveGeneratorLogic extends Logic {
                 currentGrid.set(i, j, resolve(i, j, snapshot.get(i, j), snapshot));
             }
         }
-        genNumber++;
+        currentGrid.setGenNumber(currentGrid.getGenNumber()+1);
     }
 
     @Override

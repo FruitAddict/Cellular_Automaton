@@ -1,10 +1,10 @@
-package MVCCA.Logic;
+package mvcca.logic;
 
-import MVCCA.Logic.Abstract.Brush;
-import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Abstract.Resolver;
-import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.Utilities;
+import mvcca.logic.abstracted.Brush;
+import mvcca.logic.abstracted.Logic;
+import mvcca.logic.abstracted.Resolver;
+import mvcca.logic.utilities.Grid;
+import mvcca.logic.utilities.Utilities;
 import javafx.scene.paint.Color;
 
 /**
@@ -22,7 +22,7 @@ public class WireworldLogic extends Logic {
     public WireworldLogic(int x, int y) {
         width = x;
         height = y;
-        currentGrid = new Grid(width, height, 1, 0);
+        currentGrid = new Grid(width, height, 1, 0, getName());
         currentGrid.clear();
         setCellValue = 4;
         /**
@@ -53,13 +53,13 @@ public class WireworldLogic extends Logic {
     }
     @Override
     public void clear() {
-        genNumber=0;
+        currentGrid.setGenNumber(0);
         currentGrid.clear();
     }
 
     @Override
     public void genAdvance() {
-        genNumber++;
+        currentGrid.setGenNumber(currentGrid.getGenNumber()+1);
         Grid snapshot = currentGrid.copy();
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -74,6 +74,11 @@ public class WireworldLogic extends Logic {
     }
 
     @Override
+    public void setCurrentGrid(Grid grid){
+        currentGrid = grid;
+    }
+
+    @Override
     public void setCell(int x, int y, int value) {
         if ((x > 2 && x < width - 3) && (y > 2 && y < height - 3)) {
             brush.setCells(currentGrid, x, y, setCellValue);
@@ -82,7 +87,7 @@ public class WireworldLogic extends Logic {
 
     @Override
     public int getGenNumber() {
-        return genNumber;
+        return currentGrid.getGenNumber();
     }
 
     @Override

@@ -1,6 +1,7 @@
-package MVCCA.View;
+package mvcca.view.utilitypanes;
 
-import MVCCA.Logic.Utilities.Utilities;
+import mvcca.logic.utilities.Utilities;
+import mvcca.view.MainWindow;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,13 +20,13 @@ import javafx.scene.text.FontWeight;
  * Works almost the same as RulesetPane
  */
 public class BrushPane extends BorderPane {
-    private View view;
+    private MainWindow mainWindow;
     private int[][] brushValues = new int[5][5];
     private BrushGrid grid;
 
 
-    public BrushPane(View v) {
-        view = v;
+    public BrushPane(MainWindow v) {
+        mainWindow = v;
         this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
         HBox buttonBox = new HBox();
         grid = new BrushGrid();
@@ -55,7 +56,7 @@ public class BrushPane extends BorderPane {
     public void update() {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                brushValues[i][j] = view.getController().getLogic().getBrush().data[i][j];
+                brushValues[i][j] = mainWindow.getController().getLogic().getBrush().data[i][j];
             }
         }
         grid.update();
@@ -63,7 +64,7 @@ public class BrushPane extends BorderPane {
 
     private void applyBrush() {
         int[][] copy = Utilities.copy2DArray(brushValues, 5, 5);
-        Utilities.applyBrush(copy, view.getController().getLogic());
+        Utilities.applyBrush(copy, mainWindow.getController().getLogic());
     }
 
     private class BrushGrid extends GridPane {

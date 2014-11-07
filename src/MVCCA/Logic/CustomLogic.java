@@ -1,10 +1,10 @@
-package MVCCA.Logic;
+package mvcca.logic;
 
-import MVCCA.Logic.Abstract.Brush;
-import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Abstract.Resolver;
-import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.Utilities;
+import mvcca.logic.abstracted.Brush;
+import mvcca.logic.abstracted.Logic;
+import mvcca.logic.abstracted.Resolver;
+import mvcca.logic.utilities.Grid;
+import mvcca.logic.utilities.Utilities;
 import javafx.scene.paint.Color;
 
 /**
@@ -21,7 +21,7 @@ public class CustomLogic extends Logic {
     public CustomLogic(int x, int y) {
         width = x;
         height = y;
-        currentGrid = new Grid(width, height, 1, 0);
+        currentGrid = new Grid(width, height, 1, 0,getName());
 
         /**
          * Setting basic brush
@@ -35,7 +35,7 @@ public class CustomLogic extends Logic {
     @Override
     public void clear() {
         currentGrid.clear();
-        genNumber = 0;
+        currentGrid.setGenNumber(0);
     }
 
     @Override
@@ -46,12 +46,17 @@ public class CustomLogic extends Logic {
                 currentGrid.set(i, j, resolveCell(i, j, snapshot, currentGrid.get(i, j)));
             }
         }
-        genNumber++;
+        currentGrid.setGenNumber(currentGrid.getGenNumber()+1);
     }
 
     @Override
     public Grid getCurrentGrid() {
         return currentGrid;
+    }
+
+    @Override
+    public void setCurrentGrid(Grid grid){
+        currentGrid = grid;
     }
 
     @Override
@@ -68,7 +73,7 @@ public class CustomLogic extends Logic {
 
     @Override
     public int getGenNumber() {
-        return genNumber;
+        return currentGrid.getGenNumber();
     }
 
     @Override

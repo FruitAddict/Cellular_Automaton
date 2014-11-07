@@ -1,20 +1,26 @@
-package MVCCA.Logic.Utilities;
+package mvcca.logic.utilities;
+
+import java.io.Serializable;
 
 /**
  * Created by FruitAddict on 2014-10-24.
  */
-public class Grid {
+public class Grid implements Serializable {
     private int[][] storage;
     private int width;
     private int height;
     private int planeId;
     private int borderId;
+    private int genNumber;
+    private String ownerName; //for checking if the logic type is correct during loading (See GridIO class)
 
-    public Grid(int width, int height, int planeId, int borderId) {
+    public Grid(int width, int height, int planeId, int borderId, String ownerName) {
         this.planeId = planeId;
         this.borderId = borderId;
         this.width = width;
         this.height = height;
+        this.ownerName = ownerName;
+        genNumber = 0;
         storage = new int[width][height];
     }
 
@@ -49,12 +55,24 @@ public class Grid {
         storage[x][y] = value;
     }
 
+    public void setGenNumber(int n){
+        genNumber=n;
+    }
+
+    public int getGenNumber(){
+        return genNumber;
+    }
+
+    public String getOwnerName(){
+        return ownerName;
+    }
+
     public int[][] getGrid() {
         return storage;
     }
 
     public Grid copy() {
-        Grid temp = new Grid(width, height, planeId, borderId);
+        Grid temp = new Grid(width, height, planeId, borderId,ownerName);
         temp.storage = Utilities.copy2DArray(this.getGrid(), width, height);
         return temp;
     }

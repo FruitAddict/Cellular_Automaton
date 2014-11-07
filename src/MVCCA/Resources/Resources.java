@@ -1,4 +1,4 @@
-package MVCCA.Resources;
+package mvcca.resources;
 
 /**
  * Empty class to get classpath for resources.

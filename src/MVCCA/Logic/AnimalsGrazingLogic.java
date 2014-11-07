@@ -1,10 +1,10 @@
-package MVCCA.Logic;
+package mvcca.logic;
 
-import MVCCA.Logic.Abstract.Brush;
-import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Abstract.Resolver;
-import MVCCA.Logic.Utilities.Grid;
-import MVCCA.Logic.Utilities.Utilities;
+import mvcca.logic.abstracted.Brush;
+import mvcca.logic.abstracted.Logic;
+import mvcca.logic.abstracted.Resolver;
+import mvcca.logic.utilities.Grid;
+import mvcca.logic.utilities.Utilities;
 import javafx.scene.paint.Color;
 
 import java.util.Random;
@@ -28,7 +28,7 @@ public class AnimalsGrazingLogic extends Logic {
         rng = new Random();
         width = x;
         height = y;
-        currentGrid = new Grid(width, height, 1, 0);
+        currentGrid = new Grid(width, height, 1, 0, getName());
         currentGrid.clear();
         animalList = new CopyOnWriteArrayList<>();
         Utilities.applyBrush(Utilities.getBasicBrushData(), this);
@@ -66,14 +66,14 @@ public class AnimalsGrazingLogic extends Logic {
 
     @Override
     public void clear() {
-        genNumber = 0;
+        currentGrid.setGenNumber(0);
         currentGrid.clear();
     }
 
     @Override
     public void genAdvance() {
         Grid snapshot = currentGrid.copy();
-        genNumber++;
+        currentGrid.setGenNumber(currentGrid.getGenNumber()+1);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 currentGrid.set(i, j, resolveCell(i, j, snapshot, currentGrid.get(i, j)));
@@ -97,7 +97,7 @@ public class AnimalsGrazingLogic extends Logic {
 
     @Override
     public int getGenNumber() {
-        return genNumber;
+        return currentGrid.getGenNumber();
     }
 
     @Override
@@ -138,6 +138,11 @@ public class AnimalsGrazingLogic extends Logic {
     @Override
     public Brush getBrush() {
         return brush;
+    }
+
+    @Override
+    public void setCurrentGrid(Grid grid){
+        currentGrid = grid;
     }
 
     private int resolveCell(int x, int y, Grid snapshot, int currentValue) {

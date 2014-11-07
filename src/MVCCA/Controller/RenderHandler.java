@@ -1,8 +1,8 @@
-package MVCCA.Controller;
+package mvcca.controller;
 
-import MVCCA.Logic.Abstract.Logic;
-import MVCCA.Logic.Utilities.Singletons;
-import MVCCA.View.View;
+import mvcca.logic.abstracted.Logic;
+import mvcca.logic.utilities.Singletons;
+import mvcca.view.MainWindow;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
@@ -16,15 +16,15 @@ public class RenderHandler implements EventHandler {
     private volatile static RenderHandler instance = null;
 
     private Logic logic;
-    private View view;
+    private MainWindow mainWindow;
 
-    public static synchronized RenderHandler getInstance(Logic l, View v) {
+    public static synchronized RenderHandler getInstance(Logic l, MainWindow v) {
         if (instance != null && instance.logic.getName().equals(l.getName())) {
             return instance;
         } else {
             instance = new RenderHandler();
             instance.logic = l;
-            instance.view = v;
+            instance.mainWindow = v;
             return instance;
         }
     }
@@ -33,9 +33,9 @@ public class RenderHandler implements EventHandler {
     public void handle(Event event) {
         if (!Singletons.isPaused()) {
             logic.genAdvance();
-            view.setAdditionalMessage(logic.getAdditionalMessage());
-            view.setGeneration(logic.getGenNumber());
-            view.setDrawMatrix(logic.getCurrentGrid());
+            mainWindow.setAdditionalMessage(logic.getAdditionalMessage());
+            mainWindow.setGeneration(logic.getGenNumber());
+            mainWindow.setDrawMatrix(logic.getCurrentGrid());
         }
     }
 }

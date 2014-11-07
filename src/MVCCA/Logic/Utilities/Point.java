@@ -1,4 +1,4 @@
-package MVCCA.Logic.Utilities;
+package mvcca.logic.utilities;
 
 /**
  * Point class to be used with logic neighbour checking in a loop

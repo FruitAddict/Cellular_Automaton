@@ -1,4 +1,4 @@
-package MVCCA.Logic.Abstract;
+package mvcca.logic.abstracted;
 
 /**
  * Resolver interface to handle custom rulesets.

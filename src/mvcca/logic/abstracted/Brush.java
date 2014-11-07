@@ -1,6 +1,6 @@
-package MVCCA.Logic.Abstract;
+package mvcca.logic.abstracted;
 
-import MVCCA.Logic.Utilities.Grid;
+import mvcca.logic.utilities.Grid;
 
 /**
  * Brush class
