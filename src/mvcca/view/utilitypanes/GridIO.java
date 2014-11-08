@@ -8,6 +8,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import mvcca.logic.abstracted.Logic;
 import mvcca.logic.utilities.Grid;
+import mvcca.view.MainWindow;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -57,18 +58,18 @@ public class GridIO {
         }
     }
 
-    public static void loadFromImage(Logic l, Stage stage){
+    public static void loadFromImage(MainWindow w , Logic l , Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG"),
                 new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG"),
                 new FileChooser.ExtensionFilter("BMP files (*.bmp", "*.BMP"),
-                new FileChooser.ExtensionFilter("All files","*.*"));
+                new FileChooser.ExtensionFilter("All files", "*.*"));
         File f = fileChooser.showOpenDialog(stage);
-        if(f!=null) {
+        if (f != null) {
             try {
                 BufferedImage bufferedImage = ImageIO.read(f);
                 Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                if (image.getWidth() != 198 || image.getHeight() != 198) {
+                if (image.getWidth() > w.getWidth()-2 || image.getHeight() > w.getHeight()-2) {
                     System.out.println("Image too large to turn into grid");
                 } else {
                     PixelReader pixelReader = image.getPixelReader();
@@ -93,7 +94,7 @@ public class GridIO {
                         }
                     }
 
-                    Grid newGrid = new Grid(200, 200, 1, 0, l.getName());
+                    Grid newGrid = new Grid(w.getWidth(), w.getHeight(), 1, 0, l.getName());
                     newGrid.clear();
                     for (int i = 0; i < image.getWidth(); i++) {
                         for (int j = 0; j < image.getHeight(); j++) {

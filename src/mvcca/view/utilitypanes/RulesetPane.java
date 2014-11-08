@@ -1,5 +1,7 @@
 package mvcca.view.utilitypanes;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import mvcca.logic.abstracted.Resolver;
 import mvcca.logic.utilities.Singletons;
 import mvcca.view.MainWindow;
@@ -18,6 +20,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+
+import java.io.*;
 
 
 /**
@@ -57,10 +61,16 @@ public class RulesetPane extends BorderPane {
         Button applyButton = new Button("Force Apply");
         applyButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
 
+        Button saveButton = new Button("Save");
+        saveButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
+
+        Button loadButton = new Button("Load");
+        loadButton.setFont(Font.font("Helvetica", FontWeight.NORMAL, FontPosture.REGULAR, 10));
+
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setSpacing(25);
-        buttonBox.getChildren().addAll(deadButton, aliveButton);
+        buttonBox.setSpacing(1);
+        buttonBox.getChildren().addAll(deadButton,saveButton,loadButton, aliveButton);
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -83,6 +93,41 @@ public class RulesetPane extends BorderPane {
         applyButton.setOnAction(e -> {
             applyRules();
         });
+        saveButton.setOnAction(e-> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RULESET (*.rlst)", "*.rlst"));
+            File file = fileChooser.showSaveDialog(v.getPrimaryStage());
+            if (file != null) {
+                try (
+                        ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))
+                ) {
+                    output.writeObject(aliveRules);
+                    output.writeObject(deadRules);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        loadButton.setOnAction(e->{
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RULESET (*.rlst)", "*.rlst"));
+            File file = fileChooser.showOpenDialog(v.getPrimaryStage());
+            if(file!=null){
+                try(
+                        ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))
+                        ){
+                    aliveRules = (int[][])input.readObject();
+                    deadRules = (int[][])input.readObject();
+
+                }catch(IOException | ClassNotFoundException ex){
+                    ex.printStackTrace();
+                }
+            }
+            aliveGrid.update();
+            deadGrid.update();
+        });
+
+
 
         applyRules();
 
@@ -90,15 +135,43 @@ public class RulesetPane extends BorderPane {
     }
 
     private class NeighbourGrid extends GridPane {
+        int colorArrayLength = Singletons.getCustomLogic(mainWindow.getWidth(), mainWindow.getHeight()).getColors().length;
+        int valueDead;
+        int valueAlive;
+        int type;
 
         public NeighbourGrid(int valueDead, int valueAlive, int type) {
-            int colorArrayLength = Singletons.getCustomLogic(mainWindow.getWidth(), mainWindow.getHeight()).getColors().length;
+            this.valueAlive=valueAlive;
+            this.valueDead=valueDead;
+            this.type = type;
             this.setStyle("-fx-border-color: #827970; -fx-border-width: 1");
+            update();
+        }
+
+        public void update(){
+            this.getChildren().clear();
             int value = 0;
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     ValueRectangle rec = new ValueRectangle(i, j, 54, value);
-                    rec.lastValue = 1;
+                    if(type == 0){
+                        if(deadRules[i][j] <=1){
+                            rec.rec.setFill(Color.WHITE);
+                            rec.lastValue = valueDead;
+                        } else {
+                            rec.lastValue = deadRules[i][j];
+                            rec.rec.setFill(Singletons.getCustomLogic(mainWindow.getWidth(), mainWindow.getHeight()).getColors()[rec.lastValue]);
+                        }
+
+                    } else if ( type == 1){
+                        if(aliveRules[i][j] <=1){
+                            rec.rec.setFill(Color.WHITE);
+                            rec.lastValue = valueDead;
+                        } else {
+                            rec.lastValue = aliveRules[i][j];
+                            rec.rec.setFill(Singletons.getCustomLogic(mainWindow.getWidth(), mainWindow.getHeight()).getColors()[rec.lastValue]);
+                        }
+                    }
                     value++;
                     this.add(rec, j, i);
                     rec.setOnMouseClicked(e -> {

@@ -250,6 +250,10 @@ public class MainWindow extends Application {
         additionalMessageLabel.setText(s);
     }
 
+    public Stage getPrimaryStage(){
+        return primaryStage;
+    }
+
     public void reloadInfoPane() {
         /**
          * When logic is changed, reloads information text and link in the Info pane.
@@ -317,22 +321,22 @@ public class MainWindow extends Application {
     }
 
     public void loadFileMenus(Menu m){
-        MenuItem openGrid = new MenuItem("Load grid");
+        MenuItem openGrid = new MenuItem("Load from file");
         openGrid.setOnAction(e->{
             GridIO.loadGrid(getController().getLogic(), primaryStage);
             genLabel.setText("Generation: "+Integer.toString(getController().getLogic().getGenNumber()));
             setDrawMatrix(getController().getLogic().getCurrentGrid());
         });
 
-        MenuItem saveGrid = new MenuItem("Save grid");
+        MenuItem saveGrid = new MenuItem("Save to file");
         saveGrid.setOnAction(e->{
             GridIO.saveGrid(getController().getLogic(), primaryStage);
             genLabel.setText("Generation: "+Integer.toString(getController().getLogic().getGenNumber()));
         });
 
-        MenuItem openImageGrid = new MenuItem("Load grid from image");
+        MenuItem openImageGrid = new MenuItem("Convert image");
         openImageGrid.setOnAction(e->{
-            GridIO.loadFromImage(getController().getLogic(),primaryStage);
+            GridIO.loadFromImage(this,getController().getLogic(),primaryStage);
             setDrawMatrix(getController().getLogic().getCurrentGrid());
         });
 
