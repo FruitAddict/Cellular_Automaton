@@ -139,13 +139,13 @@ public class CaveGeneratorLogic extends Logic {
     private int resolve(int x, int y, int currentValue, Grid snapshot) {
 
         if (currentValue != 0) {
-            int numOfNeighbours = Utilities.getNumberOfMooreNeighbours(x, y, width, height, snapshot);
+            int numberOfNeighbours =Utilities.getNumberOfMooreNeighbours(x,y,width,height,snapshot);
 
             if (currentValue == 1) {
-                return resolver.ifDead(numOfNeighbours);
+                return resolver.ifDead(numberOfNeighbours);
             }
             if (currentValue == 2) {
-                return resolver.ifAlive(numOfNeighbours);
+                return resolver.ifAlive(numberOfNeighbours);
             }
             return 1;
         } else {

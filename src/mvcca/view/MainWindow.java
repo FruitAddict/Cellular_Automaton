@@ -1,5 +1,11 @@
 package mvcca.view;
 
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.PixelWriter;
 import mvcca.controller.Controller;
 import mvcca.logic.CaveGeneratorLogic;
 import mvcca.logic.CustomLogic;
@@ -27,9 +33,9 @@ import javafx.stage.Stage;
  */
 public class MainWindow extends Application {
 
-    private static double scale = 4;
-    private final int width = 200;
-    private final int height = 200;
+    private static double scale = 2.6;
+    private final int width = 300;
+    private final int height = 300;
     private Stage primaryStage;
     private Controller controller;
     private Label genLabel;
@@ -47,6 +53,9 @@ public class MainWindow extends Application {
     private Button advGenButton;
     private Grid drawMatrix;
     private Color[] colorsArray;
+    private GraphicsContext gc;
+    private PixelWriter pixelWriter;
+
 
     public void start(Stage primaryStage) {
 
@@ -68,6 +77,8 @@ public class MainWindow extends Application {
         canvas.setScaleX(scale);
         canvas.setScaleY(scale);
         mainPane.setCenter(canvas);
+        gc = canvas.getGraphicsContext2D();
+        pixelWriter = gc.getPixelWriter();
 
         /**
          * Buttons:
@@ -188,7 +199,6 @@ public class MainWindow extends Application {
          */
     }
 
-
     public void setDrawMatrix(Grid matrix) {
         /**
          * Most important method here, receives new grid and draws it to the screen.
@@ -202,10 +212,10 @@ public class MainWindow extends Application {
          * This method obtains the pixelwriter for the canvas and draws pixels to the screen
          * with respect to the data stored in drawMatrix
          */
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0,0,width,height);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                gc.getPixelWriter().setColor(i, j, colorsArray[drawMatrix.get(i, j)]);
+                pixelWriter.setColor(i, j, colorsArray[drawMatrix.get(i, j)]);
             }
         }
     }

@@ -116,7 +116,6 @@ public class GameOfLifeLogic extends Logic {
                 currentGrid.set(i, j, resolve(i, j, currentGrid.get(i, j), snapshot));
             }
         }
-
     }
 
     @Override
@@ -152,13 +151,12 @@ public class GameOfLifeLogic extends Logic {
          * If the entry value of the cell is 0, it returns 0 instantly(border)
          */
         if (currentValue != 0) {
-
-            int numOfNeighbours = Utilities.getNumberOfMooreNeighbours(x, y, width, height, snapshot);
+            int numberOfNeighbours = Utilities.getNumberOfMooreNeighbours(x,y,width,height,snapshot);
 
             if (currentValue == 1) {
-                return resolver.ifDead(numOfNeighbours);
+                return resolver.ifDead(numberOfNeighbours);
             } else if (currentValue >= 2) {
-                return resolver.ifAlive(numOfNeighbours);
+                return resolver.ifAlive(numberOfNeighbours);
             }
             return 1;
         } else {
